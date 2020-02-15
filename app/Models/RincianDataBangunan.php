@@ -18,9 +18,14 @@ class RincianDataBangunan extends Model
         "atap_id",
         "dinding_id",
         "lantai_id",
-        "langit_langit_id",
-        "user_id",
+        "langit_id",
+        "spop_id",
     ];
+
+    public function Spop()
+    {
+        return $this->belongsTo("App\Models\Spop");
+    }
 
     public function jenisPenggunaanBangunan()
     {

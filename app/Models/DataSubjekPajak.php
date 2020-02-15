@@ -14,8 +14,14 @@ class DataSubjekPajak extends Model
         "nomor_ktp",
         "status_id",
         "pekerjaan_id",
-        "desa_id"
+        "desa_id",
+        "spop_id"
     ];
+
+    public function spop()
+    {
+        return $this->belongsTo("App\Models\Spop");
+    }
 
     public function status()
     {

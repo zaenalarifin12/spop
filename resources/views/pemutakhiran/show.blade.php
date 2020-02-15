@@ -20,10 +20,11 @@
               <div class="breadcrumb-item">Advanced Forms</div>
             </div>
           </div>
-
+          
+          {{ dd($spop) }}
           <div class="section-body" >
             <h2 class="section-title">Surat Pemberitahuan Objek Pajak</h2>
-            <p class="section-lead">Jenis Transaksi <b>Perekaman Data<b></p>
+            <p class="section-lead">Jenis Transaksi <b>Pemutakhiran Data<b></p>
 
             <div class="container">
                 <div class="col-12 col-md-12 col-lg-12">
@@ -42,61 +43,63 @@
                                     <div class="col-12 col-md-12 col-lg-12">
                                       <div class="card">
                                         <div class="card-header">
-                                          <h4>Input Data</h4>
+                                          <h4>Data</h4>
                                         </div>
                                         <div class="card-body">
                                           <div class="form-group">
                                             <label>NOP</label>
-                                            <input type="text" name="nop" required class="form-control" value="9869667868768">
+                                            <input type="text" name="nop" required class="form-control" value="{{ $spop->nop }}">
                                           </div>
                       
                                           <div class="alert alert-info">
                                               <p class="text-center">Data Letak Objek Pajak</p> 
                                           </div>
-                      
-                                          <div class="form-group">
-                                              <label>Nama Jalan</label>
-                                              <textarea name="dlop_nama_jalan" class="form-control" id="" cols="30" rows="10"></textarea>
-                                          </div>
-                      
-                                          <div class="form-group">
-                                              <label>Blok / KAV Nomor</label>
-                                              <textarea name="dlop_blok" class="form-control" id="" cols="30" rows="10"></textarea>
-                                          </div>
-                      
-                                          <div class="form-group">
-                                              <label>Kecamatan</label>
-                                              <select class="form-control" name="dlop_kecamatan">
+
+                                            <div class="form-group">
+                                                <label>Nama Jalan</label>
+                                                {{ dd($spop->dataLetakObjek) }}
+                                                <textarea name="dlop_nama_jalan" class="form-control"  cols="30" rows="10">{{ $spop->dataLetakObjek->nama_jalan }}</textarea>
+                                            </div>
+                        
+                                            <div class="form-group">
+                                                <label>Blok / KAV Nomor</label>
+                                                <textarea name="dlop_blok" class="form-control"  cols="30" rows="10">{{ $spop->dataLetakObjek->blok_kav }}</textarea>
+                                            </div>
+                        
+                                            <div class="form-group">
+                                                <label>Kecamatan</label>
+                                                <select class="form-control" name="dlop_kecamatan">
                                                 <option>Kecamatan 1</option>
                                                 <option>Kecamatan 2</option>
                                                 <option>Kecamatan 3</option>
-                                              </select>
-                                          </div>
-                      
-                                          <div class="form-group">
-                                              <label>Desa</label>
-                                              <select class="form-control" name="dlop_desa">
+                                                </select>
+                                            </div>
+                        
+                                            <div class="form-group">
+                                                <label>Desa</label>
+                                                <select class="form-control" name="dlop_desa">
                                                 <option>Desa 1</option>
                                                 <option>Desa 2</option>
                                                 <option>Desa 3</option>
-                                              </select>
-                                          </div>
-                      
-                                          <div class="row">
-                                              <div class="col">
-                                                  <div class="form-group">
-                                                      <label>RW</label>
-                                                      <input type="text" class="form-control" name="dlop_rw" id="">
-                                                  </div>
-                                              </div>
-                                              <div class="col">
-                                                  <div class="form-group">
-                                                      <label>RT</label>
-                                                      <input type="text" class="form-control" name="dlop_rt" id="">
-                                                  </div>
-                                              </div>
-                                          </div>
-                                          
+                                                </select>
+                                            </div>
+                        
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="form-group">
+                                                        <label>RW</label>
+                                                        <input type="text" class="form-control" name="dlop_rw"  value="{{ $spop->dataLetakObjek->rw }}">
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="form-group">
+                                                        <label>RT</label>
+                                                        <input type="text" class="form-control" name="dlop_rt"  value="{{ $spop->dataLetakObjek->rt }}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                     
+                                          {{-- {{ dd($spop) }} --}}
                                           <div class="alert alert-info">
                                              <p class="text-center">Data Subjek Pajak</p> 
                                           </div>
@@ -127,12 +130,12 @@
                       
                                           <div class="form-group">
                                               <label>Nama Subjek Pajak</label>
-                                              <input type="text" class="form-control" name="dsp_nama_subjek_pajak" id="">
+                                              <input type="text" class="form-control" name="dsp_nama_subjek_pajak"  value="{{$spop->dataSubjekPajak->nama_subjek_pajak}}">
                                           </div>
                       
                                           <div class="form-group">
                                               <label>Nama Jalan</label>
-                                              <input type="text" class="form-control" name="dsp_nama_jalan" id="">
+                                              <input type="text" class="form-control" name="dsp_nama_jalan"  value="{{ $spop->dataSubjekPajak->nama_jalan }}">
                                           </div>
                       
                                           <div class="form-group">
@@ -157,29 +160,29 @@
                                               <div class="col">
                                                   <div class="form-group">
                                                       <label>RW</label>
-                                                      <input type="text" class="form-control" name="dsp_rw" id="">
+                                                      <input type="text" class="form-control" name="dsp_rw"  value="{{ $spop->dataSubjekPajak->rw }}">
                                                   </div>
                                               </div>
                                               <div class="col">
                                                   <div class="form-group">
                                                       <label>RT</label>
-                                                      <input type="text" class="form-control" name="dsp_rt" id="">
+                                                      <input type="text" class="form-control" name="dsp_rt"  {{ $spop->dataSubjekPajak->rt }}>
                                                   </div>
                                               </div>
                                           </div>
                                           
                                           <div class="form-group">
                                               <label>Nomor KTP</label>
-                                              <input type="text" class="form-control" name="dsp_no_ktp" id="">
+                                              <input type="text" class="form-control" name="dsp_no_ktp"  value="{{ $spop->dataSubjekPajak->nomor_ktp }}">
                                           </div>
-                      
+                                          
                                           <div class="alert alert-info">
                                               <p class="text-center">Data Tanah</p> 
                                           </div>
                       
                                           <div class="form-group">
                                               <label>Luas Tanah</label>
-                                              <input type="text" class="form-control" name="dsp_luas_tanah" id="">
+                                              {{-- <input type="text" class="form-control" name="dsp_luas_tanah"  value="{{$spop->dataTanah->luas_tanah}}"> --}}
                                           </div>
                       
                                           <div class="form-group">
@@ -203,18 +206,6 @@
                       
                                           <!-- for tanah dan bangunan -->
                                           <div class="collapse" id="collapseExample">
-                      
-                                              <div class="alert alert-info">
-                                                  <p class="text-center">Data Bangunan</p> 
-                                              </div>
-                      
-                                              <div class="form-group">
-                                                  <label>Jumlah Bangunan</label>
-                                                  <span class="btn btn-primary" id="minus">-</span>
-                                                  <input type="button" class="btn btn-success" name="" id="value_bangunan" value="1">
-                                                  <span id="plus" class="btn btn-primary" >+</span>
-                                              </div>
-                      
                                           </div>
                                         </div>
                                       </div>
@@ -222,30 +213,59 @@
                                   </div>
                             </div>
                           </div>
-                          <div class="accordion">
-                            <div class="accordion-header" role="button" data-toggle="collapse" data-target="#panel-body-2">
-                              <h4>Bangunan 1</h4>
+                        
+                        @foreach ($spop->rincianDataBangunans as $item)
+                        <div class="accordion">
+                            <div class="accordion-header" role="button" data-toggle="collapse" data-target="#panel-body-{{$loop->iteration}}">
+                              <h4>Bangunan {{$loop->iteration}}</h4>
                             </div>
-                            <div class="accordion-body collapse" id="panel-body-2" data-parent="#accordion">
+                            <div class="accordion-body collapse" id="panel-body-{{$loop->iteration}}" data-parent="#accordion">
                                 <div class="col-12 col-md-12 col-lg-12">
                                     <div class="card card-danger">
                                       <div class="card-header">
-                                        <h4>Bangunan Ke - 1</h4>
+                                        <h4>Bangunan Ke - {{$loop->iteration}}</h4>
                                       </div>
                                       <div class="card-body">
                                         
                                         <div class="alert alert-info">
                                             <p class="text-center">Rincian Data Bangunan</p> 
                                         </div>
-                    
+                                        <div class="form-group">
+                                            <label class="form-label">Icon input</label>
+                                            <div class="selectgroup selectgroup-pills">
+                                              <label class="selectgroup-item">
+                                                <input type="radio" name="icon-input" value="1" class="selectgroup-input" checked="">
+                                                <span class="selectgroup-button selectgroup-button-icon"><i class="fas fa-sun"></i></span>
+                                              </label>
+                                              <label class="selectgroup-item">
+                                                <input type="radio" name="icon-input" value="2" class="selectgroup-input">
+                                                <span class="selectgroup-button selectgroup-button-icon"><i class="fas fa-moon"></i></span>
+                                              </label>
+                                              <label class="selectgroup-item">
+                                                <input type="radio" name="icon-input" value="3" class="selectgroup-input">
+                                                <span class="selectgroup-button selectgroup-button-icon"><i class="fas fa-cloud-rain"></i></span>
+                                              </label>
+                                              <label class="selectgroup-item">
+                                                <input type="radio" name="icon-input" value="4" class="selectgroup-input">
+                                                <span class="selectgroup-button selectgroup-button-icon"><i class="fas fa-cloud"></i></span>
+                                              </label>
+                                            </div>
+                                          </div>
                                         <div class="form-group">
                                             <label class="form-label">Jenis Penggunaan Bangunan</label>
                                             <div class="selectgroup selectgroup-pills">
-                                                @foreach ($jenisPenggunaanBangunans as $item)
-                                                    <label class="selectgroup-item">
-                                                        <input type="radio" name="penggunaan" value="{{ $item->id }}" class="selectgroup-input">
-                                                        <span class="selectgroup-button">{{ $item->nama }}</span>
-                                                    </label>
+                                                @foreach ($jenisPenggunaanBangunans as $items)
+                                                    @if ($item->jenisPenggunaanBangunan->id == $items->id)
+                                                        <label class="selectgroup-item">
+                                                            <input type="radio" name="penggunaan" value="{{ $items->id }}" class="selectgroup-input" checked="checked">
+                                                            <span class="selectgroup-button">{{ $items->nama }}</span>
+                                                        </label>
+                                                    @else
+                                                        <label class="selectgroup-item">
+                                                            <input type="radio" name="penggunaan" value="{{ $items->id }}" class="selectgroup-input" checked="checked">
+                                                            <span class="selectgroup-button">{{ $items->nama }}</span>
+                                                        </label>    
+                                                    @endif
                                                 @endforeach
                                             </div>
                                         </div>
@@ -254,13 +274,13 @@
                                             <div class="col">
                                                 <div class="form-group">
                                                     <label>Luas Bangunan</label>
-                                                    <input type="text" class="form-control" name="luas_bangunan" id="">
+                                                    <input type="text" class="form-control" name="luas_bangunan" >
                                                 </div>
                                             </div>
                                             <div class="col">
                                                 <div class="form-group">
                                                     <label>Jumlah Lantai</label>
-                                                    <input type="text" class="form-control" name="jumlah_lantai" id="">
+                                                    <input type="text" class="form-control" name="jumlah_lantai" >
                                                 </div>
                                             </div>
                                         </div>
@@ -268,13 +288,13 @@
                                             <div class="col">
                                                 <div class="form-group">
                                                     <label>Tahun Dibangun</label>
-                                                    <input type="text" class="form-control" name="tahun_dibangun" id="">
+                                                    <input type="text" class="form-control" name="tahun_dibangun" >
                                                 </div>
                                             </div>
                                             <div class="col">
                                                 <div class="form-group">
                                                     <label>Tahun Direnovasi</label>
-                                                    <input type="text" class="form-control" name="tahun_renovasi" id="" >
+                                                    <input type="text" class="form-control" name="tahun_renovasi"  >
                                                 </div>
                                             </div>
                                         </div>
@@ -283,13 +303,13 @@
                                             <div class="col">
                                                 <div class="form-group">
                                                     <label>Jumlah Bangunan</label>
-                                                    <input type="text" class="form-control" name="jumlah_bangunan" id="" >
+                                                    <input type="text" class="form-control" name="jumlah_bangunan"  >
                                                 </div>
                                             </div>
                                             <div class="col">
                                                 <div class="form-group">
                                                     <label>Daya Listrik Terpasang (WATT)</label>
-                                                    <input type="text" class="form-control" name="daya" id="" >
+                                                    <input type="text" class="form-control" name="daya"  >
                                                 </div>
                                             </div>
                                         </div>
@@ -377,26 +397,14 @@
                                                 </div>
                                             </div>
                                         </div>
-
+                                        </div>
                                     </div>
-                                  </div>
-                            
+                                </div>
                             </div>
-                            </div>
-                          </div>
-                          <div class="accordion">
-                            <div class="accordion-header" role="button" data-toggle="collapse" data-target="#panel-body-3">
-                              <h4>Bangunan 2</h4>
-                            </div>
-                            <div class="accordion-body collapse" id="panel-body-3" data-parent="#accordion">
-                              <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                              tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                              quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                              consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                              cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                              proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                            </div>
-                          </div>
+                        @endforeach
+
+                    </div>
+
                           <div class="form-group">
                                 <div class="row">
                                     <div class="col">

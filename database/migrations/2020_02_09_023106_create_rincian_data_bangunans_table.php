@@ -27,7 +27,7 @@ class CreateRincianDataBangunansTable extends Migration
             $table->unsignedBigInteger('dinding_id');
             $table->unsignedBigInteger('lantai_id');
             $table->unsignedBigInteger('langit_id');
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('spop_id');
             $table->timestamps();
 
             $table->foreign('jenis_penggunaan_bangunan_id')
@@ -44,8 +44,8 @@ class CreateRincianDataBangunansTable extends Migration
                     ->references("id")->on("lantais");
             $table->foreign('langit_id')
                     ->references("id")->on("langits");
-            $table->foreign('user_id')
-                    ->references("id")->on("users");
+            $table->foreign('spop_id')
+                    ->references("id")->on("spops");
         });
     }
 

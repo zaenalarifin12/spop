@@ -16,10 +16,10 @@ class CreateSpopsTable extends Migration
         Schema::create('spops', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('nop');
-            $table->string('nop_asal');
-            $table->unsignedBigInteger('data_letak_objek_id');
-            $table->unsignedBigInteger('data_subjek_pajak_id');
-            $table->unsignedBigInteger('data_tanah_id');
+            $table->string('nop_asal')->nullable();
+            $table->unsignedBigInteger('data_letak_objek_id')->nullable();
+            $table->unsignedBigInteger('data_subjek_pajak_id')->nullable();
+            $table->unsignedBigInteger('data_tanah_id')->nullable();
             
             $table->timestamps();
 

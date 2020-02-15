@@ -11,17 +11,21 @@
 |
 */
 
+
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/rujukan',                       'RujukanController@index');
 
-Route::get('/pemutakhiran/create',                      'PemutakhiranController@create');
-Route::post('/pemutakhiran/create',                     'PemutakhiranController@store');
-Route::get('/pemutakhiran/{nop}/bangunan/create',       'PemutakhiranController@createBangunan');
-Route::post('/pemutakhiran/{nop}/bangunan/create',      'PemutakhiranController@storeBangunan');
-Route::get('/pemutakhiran/{nop}',                       'PemutakhiranController@show');
+Route::get('/rujukan',                              'RujukanController@index');
+Route::get('/rujukan/json',                         'RujukanController@json');
+
+Route::get('/pemutakhiran/create/{nop}',            'PemutakhiranController@create');
+Route::post('/pemutakhiran/create/{nop}',           'PemutakhiranController@store');
+Route::get('/pemutakhiran/{nop}/bangunan/create',   'PemutakhiranController@createBangunan');
+Route::post('/pemutakhiran/{nop}/bangunan/create',  'PemutakhiranController@storeBangunan');
+Route::get('/pemutakhiran/{nop}',                   'PemutakhiranController@show');
+
 // Route::get('/create/{idPerson}', 'TransaksiController@createId');
 
 
