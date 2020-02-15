@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Status;
 use App\Models\Pekerjaan;
+use App\Models\JenisTanah;
 use App\Models\JenisPenggunaanBangunan;
 use App\Models\RincianDataBangunan;
 use App\Models\DataLetakObjek;
@@ -29,6 +30,7 @@ class PemutakhiranController extends Controller
         if (empty($nop_rujukan))
             die("nop rujukan tidak ditemukan");
 
+        $jenisTanah                 = JenisTanah::get();
         $statuses                   = Status::get();
         $pekerjaans                 = Pekerjaan::get();
         $jenisPenggunaanBangunans   = JenisPenggunaanBangunan::get();
@@ -40,6 +42,7 @@ class PemutakhiranController extends Controller
         $langits                    = Langit::get();
 
         return view("pemutakhiran.create", compact([
+            "jenisTanah",
             "statuses",
             "pekerjaans",
             "jenisPenggunaanBangunans",
@@ -63,6 +66,7 @@ class PemutakhiranController extends Controller
                 break;
             case "tambah":
                 // proses simpan
+                
                 $rujukan = Rujukan::where("nop", $nop)->pluck("nop")->first();
                 if (empty($rujukan))
                     die("nop belum ada");
@@ -87,6 +91,7 @@ class PemutakhiranController extends Controller
                     "dsp_luas_tanah"        => "required",
                     "jenis_tanah"           => "required",
                 ]);
+                
                 $spop = Spop::create([
                     "nop" => (str_replace(".", "", $rujukan))
                 ]);

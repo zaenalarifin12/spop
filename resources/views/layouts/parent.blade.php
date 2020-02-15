@@ -10,10 +10,10 @@
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
   <!-- CSS Libraries -->
-  <link rel="stylesheet" href="../node_modules/jqvmap/dist/jqvmap.min.css">
-  <link rel="stylesheet" href="../node_modules/summernote/dist/summernote-bs4.css">
-  <link rel="stylesheet" href="../node_modules/owl.carousel/dist/assets/owl.carousel.min.css">
-  <link rel="stylesheet" href="../node_modules/owl.carousel/dist/assets/owl.theme.default.min.css">
+  <link rel="stylesheet" href="{{ asset("assets/node/jqvmap.min.css")}}">
+  <link rel="stylesheet" href="{{ asset("assets/node/summernote-bs4.css") }}">
+  <link rel="stylesheet" href="{{ asset("assets/node/owl.carousel.min.css") }}">
+  <link rel="stylesheet" href="{{ asset("assets/node/owl.theme.default.min.css") }}">
 
   <!-- Template CSS -->
   <link rel="stylesheet" href="{{ asset("assets/css/style.css") }}">
@@ -93,11 +93,11 @@
   <script src="{{ asset("assets/js/stisla.js")}}"></script>
 
   <!-- JS Libraies -->
-  <script src="../node_modules/jquery-sparkline/jquery.sparkline.min.js"></script>
-  <script src="../node_modules/chart.js/dist/Chart.min.js"></script>
-  <script src="../node_modules/owl.carousel/dist/owl.carousel.min.js"></script>
-  <script src="../node_modules/summernote/dist/summernote-bs4.js"></script>
-  <script src="../node_modules/chocolat/dist/js/jquery.chocolat.min.js"></script>
+  <script src="{{ asset("assets/node/jquery.sparkline.min.js")}}"></script>
+  <script src="{{ asset("assets/node/dist/Chart.min.js")}}"></script>
+  <script src="{{ asset("assets/node/dist/owl.carousel.min.js")}}"></script>
+  <script src="{{ asset("assets/node/summernote-bs4.js")}}"></script>
+  <script src="{{ asset("assets/node/js/jquery.chocolat.min.js")}}"></script>
 
   <!-- Template JS File -->
   <script src="{{ asset("assets/js/scripts.js")}}"></script>
