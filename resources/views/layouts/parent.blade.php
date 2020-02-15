@@ -61,6 +61,7 @@
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-fire"></i><span>Dashboard</span></a>
                 <ul class="dropdown-menu">
                   <li><a class="nav-link" href="{{ url("/") }}">SPOP</a></li>
+                  <li><a class="nav-link" href="{{ url("/rujukan") }}">Rujukan</a></li>
                 </ul>
               </li>
             </ul>

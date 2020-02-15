@@ -22,7 +22,7 @@
           </div>
 
           <div class="section-body" >
-        <form action="{{ url("/pemutakhiran/create") }}" method="post">  
+        <form action="{{ url("/pemutakhiran/create/". $nop_rujukan) }}" method="post">  
             <h2 class="section-title">Surat Pemberitahuan Objek Pajak</h2>
             <p class="section-lead">Jenis Transaksi <b>Perekaman Data<b></p>
 
@@ -36,38 +36,38 @@
                     <div class="card-body">
                       <div class="form-group">
                         <label>NOP</label>
-                        <input type="text" name="nop" required class="form-control" value="9869667868768">
+                        <input type="text" name="nop" required class="form-control" value="{{ str_replace(".", "", $nop_rujukan) }}">
                       </div>
   
                       <div class="alert alert-info">
-                          <p class="text-center">Data Letak Objek Pajak</p> 
+                          <p class="text-lg-center">Data Letak Objek Pajak</p> 
                       </div>
   
                       <div class="form-group">
                           <label>Nama Jalan</label>
-                          <textarea name="dlop_nama_jalan" class="form-control" id="" cols="30" rows="10"></textarea>
+                          <textarea name="dlop_nama_jalan" class="form-control" id="" cols="30" rows="10">{{ old("dlop_nama_jalan") }}</textarea>
                       </div>
   
                       <div class="form-group">
                           <label>Blok / KAV Nomor</label>
-                          <textarea name="dlop_blok" class="form-control" id="" cols="30" rows="10"></textarea>
+                          <textarea name="dlop_blok" class="form-control" id="" cols="30" rows="10">{{ old("dlop_blok") }}</textarea>
                       </div>
   
                       <div class="form-group">
                           <label>Kecamatan</label>
                           <select class="form-control" name="dlop_kecamatan">
-                            <option>Kecamatan 1</option>
-                            <option>Kecamatan 2</option>
-                            <option>Kecamatan 3</option>
+                            <option value="1">Kecamatan 1</option>
+                            <option value="2">Kecamatan 2</option>
+                            <option value="3">Kecamatan 3</option>
                           </select>
                       </div>
   
                       <div class="form-group">
                           <label>Desa</label>
                           <select class="form-control" name="dlop_desa">
-                            <option>Desa 1</option>
-                            <option>Desa 2</option>
-                            <option>Desa 3</option>
+                            <option value="1">Desa 1</option>
+                            <option value="2">Desa 2</option>
+                            <option value="3">Desa 3</option>
                           </select>
                       </div>
   
@@ -75,13 +75,13 @@
                           <div class="col">
                               <div class="form-group">
                                   <label>RW</label>
-                                  <input type="text" class="form-control" name="dlop_rw" id="">
+                                  <input type="number" class="form-control" name="dlop_rw" id="" value="{{ old('dlop_rw')}}">
                               </div>
                           </div>
                           <div class="col">
                               <div class="form-group">
                                   <label>RT</label>
-                                  <input type="text" class="form-control" name="dlop_rt" id="">
+                                  <input type="number" class="form-control" name="dlop_rt" id="" value="{{ old('dlop_rt') }}">
                               </div>
                           </div>
                       </div>
@@ -95,7 +95,7 @@
                           <div class="selectgroup selectgroup-pills">
                               @foreach ($statuses as $status)
                                 <label class="selectgroup-item">
-                                    <input type="radio" name="status" value="{{ $status->id }}" class="selectgroup-input">
+                                    <input type="radio" name="status" value="{{ $status->id }}" class="selectgroup-input" {{ old("pekerjaan") ? "checked" : null}}>
                                     <span class="selectgroup-button">{{ $status->nama }}</span>
                                 </label>      
                               @endforeach
@@ -106,39 +106,46 @@
                           <label class="form-label">Pekerjaan</label>
                           <div class="selectgroup selectgroup-pills">
                               @foreach ($pekerjaans as $pekerjaan)
+                              @if (!empty(old('pekerjaan')))
+                                <label class="selectgroup-item">
+                                    <input type="radio" name="pekerjaan" value="{{ $pekerjaan->id}}" class="selectgroup-input" checked>
+                                    <span class="selectgroup-button">{{ $pekerjaan->nama}}</span>
+                                </label>
+                              @else
                                 <label class="selectgroup-item">
                                     <input type="radio" name="pekerjaan" value="{{ $pekerjaan->id}}" class="selectgroup-input" >
                                     <span class="selectgroup-button">{{ $pekerjaan->nama}}</span>
                                 </label>
+                              @endif
                               @endforeach
                           </div>
                       </div>
   
                       <div class="form-group">
                           <label>Nama Subjek Pajak</label>
-                          <input type="text" class="form-control" name="dsp_nama_subjek_pajak" id="">
+                      <input type="text" class="form-control" name="dsp_nama_subjek_pajak" value="{{ old("dsp_nama_subjek_pajak") }}">
                       </div>
   
                       <div class="form-group">
                           <label>Nama Jalan</label>
-                          <input type="text" class="form-control" name="dsp_nama_jalan" id="">
+                          <input type="text" class="form-control" name="dsp_nama_jalan" value="{{ old('dsp_nama_jalan') }}">
                       </div>
   
                       <div class="form-group">
                           <label>Kecamatan</label>
                           <select class="form-control" name="dsp_kecamatan">
-                            <option>Kecamatan 1</option>
-                            <option>Kecamatan 2</option>
-                            <option>Kecamatan 3</option>
+                            <option value="1">Kecamatan 1</option>
+                            <option value="2">Kecamatan 2</option>
+                            <option value="3">Kecamatan 3</option>
                           </select>
                       </div>
   
                       <div class="form-group">
                           <label>Desa</label>
                           <select class="form-control" name="dsp_desa">
-                            <option>Desa 1</option>
-                            <option>Desa 2</option>
-                            <option>Desa 3</option>
+                            <option value="1">Desa 1</option>
+                            <option value="2">Desa 2</option>
+                            <option value="3">Desa 3</option>
                           </select>
                       </div>
   
@@ -146,20 +153,20 @@
                           <div class="col">
                               <div class="form-group">
                                   <label>RW</label>
-                                  <input type="text" class="form-control" name="dsp_rw" id="">
+                                  <input type="number" class="form-control" name="dsp_rw" value="{{ old("dsp_rw") }}">
                               </div>
                           </div>
                           <div class="col">
                               <div class="form-group">
                                   <label>RT</label>
-                                  <input type="text" class="form-control" name="dsp_rt" id="">
+                                  <input type="number" class="form-control" name="dsp_rt" value="{{ old("dsp_rt") }}">
                               </div>
                           </div>
                       </div>
                       
                       <div class="form-group">
-                          <label>Nomor KTP</label>
-                          <input type="text" class="form-control" name="dsp_no_ktp" id="">
+                            <label>Nomor KTP</label>
+                            <input type="number" class="form-control" name="dsp_no_ktp" value="{{ old("dsp_no_ktp") }}">
                       </div>
   
                       <div class="alert alert-info">
@@ -168,7 +175,7 @@
   
                       <div class="form-group">
                           <label>Luas Tanah</label>
-                          <input type="text" class="form-control" name="dsp_luas_tanah" id="">
+                          <input type="number" class="form-control" name="dsp_luas_tanah" value="{{ old("dsp_luas_tanah") }}">
                       </div>
   
                       <div class="form-group">
@@ -197,13 +204,6 @@
                               <p class="text-center">Data Bangunan</p> 
                           </div>
   
-                          <div class="form-group">
-                              <label>Jumlah Bangunan</label>
-                              <span class="btn btn-primary" id="minus">-</span>
-                              <input type="button" class="btn btn-success" name="" id="value_bangunan" value="1">
-                              <span id="plus" class="btn btn-primary" >+</span>
-                          </div>
-  
                       </div>
                     </div>
                   </div>
@@ -217,7 +217,6 @@
                       <h4>Bangunan Ke - 1</h4>
                     </div>
                     <div class="card-body">
-                      
                       <div class="alert alert-info">
                         <p class="text-center">Rincian Data Bangunan</p> 
                     </div>
@@ -238,13 +237,13 @@
                         <div class="col">
                             <div class="form-group">
                                 <label>Luas Bangunan</label>
-                                <input type="text" class="form-control" name="luas_bangunan" id="">
+                                <input type="text" class="form-control" name="luas_bangunan" value="{{ old("luas_bangunan") }}">
                             </div>
                         </div>
                         <div class="col">
                             <div class="form-group">
                                 <label>Jumlah Lantai</label>
-                                <input type="text" class="form-control" name="jumlah_lantai" id="">
+                                <input type="text" class="form-control" name="jumlah_lantai" value="{{ old("jumlah_lantai") }}">
                             </div>
                         </div>
                     </div>
@@ -252,13 +251,13 @@
                         <div class="col">
                             <div class="form-group">
                                 <label>Tahun Dibangun</label>
-                                <input type="text" class="form-control" name="tahun_dibangun" id="">
+                                <input type="text" class="form-control" name="tahun_dibangun" value="{{ old("tahun_dibangun") }}">
                             </div>
                         </div>
                         <div class="col">
                             <div class="form-group">
                                 <label>Tahun Direnovasi</label>
-                                <input type="text" class="form-control" name="tahun_renovasi" id="" >
+                                <input type="text" class="form-control" name="tahun_renovasi" value="{{ old("tahun_renovasi") }}" >
                             </div>
                         </div>
                     </div>
@@ -267,13 +266,13 @@
                         <div class="col">
                             <div class="form-group">
                                 <label>Jumlah Bangunan</label>
-                                <input type="text" class="form-control" name="jumlah_bangunan" id="" >
+                                <input type="text" class="form-control" name="jumlah_bangunan" value="{{ old("jumlah_bangunan")}}">
                             </div>
                         </div>
                         <div class="col">
                             <div class="form-group">
                                 <label>Daya Listrik Terpasang (WATT)</label>
-                                <input type="text" class="form-control" name="daya" id="" >
+                                <input type="text" class="form-control" name="daya" value="{{ old("daya") }}" >
                             </div>
                         </div>
                     </div>

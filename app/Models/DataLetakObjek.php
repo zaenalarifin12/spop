@@ -9,8 +9,14 @@ class DataLetakObjek extends Model
     protected $fillable = [
         "nama_jalan",
         "desa_id",
-        "blok/kav nomor",
+        "blok_kav",
         "rw",
-        "rt"
+        "rt",
+        "spop_id"
     ];
+
+    public function spop()
+    {
+        return $this->belongsTo("App\Models\Spop");
+    }
 }

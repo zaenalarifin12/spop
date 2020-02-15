@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
             LantaiTableSeeder::class,
             PekerjaanTableSeeder::class,
             StatusTableSeeder::class,
+            KecamatanTableSeeder::class,
+            DesaTableSeeder::class,
         ]);
     }
 }
