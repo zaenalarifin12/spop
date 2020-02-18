@@ -29,8 +29,8 @@ class Spop extends Model
         return $this->hasOne("App\Models\DataSubjekPajak");
     }
 
-    // public function dataTanah()
-    // {
-    //     return $this->hasOne("App\Models\DataTanah");
-    // }
+    public function dataTanah()
+    {
+        return $this->hasOne("App\Models\DataTanah");
+    }
 }

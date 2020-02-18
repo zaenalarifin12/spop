@@ -19,7 +19,7 @@ class CreateDataTanahsTable extends Migration
             $table->unsignedbigInteger('jenis_tanah_id');
             $table->timestamps();
 
-            $table->foreign('jenis_tanah_id')->references("id")->on("jenis_tanahs");
+            $table->foreign('jenis_tanah_id')->references("id")->on("jenis_tanahs")->onDelete("cascade");
         });
     }
 

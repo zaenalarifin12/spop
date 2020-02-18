@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             AtapTableSeeder::class,
             DindingTableSeeder::class,
             JenisPenggunaanBangunanTableSeeder::class,
+            JenisTanahTableSeeder::class,
             KondisiTableSeeder::class,
             KonstruksiTableSeeder::class,
             LangitTableSeeder::class,

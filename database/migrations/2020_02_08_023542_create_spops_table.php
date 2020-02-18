@@ -24,11 +24,11 @@ class CreateSpopsTable extends Migration
             $table->timestamps();
 
             $table->foreign('data_letak_objek_id')
-                ->references("id")->on("data_letak_objeks");
+                ->references("id")->on("data_letak_objeks")->onDelete("cascade");
             $table->foreign('data_subjek_pajak_id')
-                ->references("id")->on("data_subjek_pajaks");
+                ->references("id")->on("data_subjek_pajaks")->onDelete("cascade");
             $table->foreign('data_tanah_id')
-                ->references("id")->on("data_tanahs");
+                ->references("id")->on("data_tanahs")->onDelete("cascade");
         });
     }
 

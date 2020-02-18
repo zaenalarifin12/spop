@@ -12,6 +12,7 @@ class RincianDataBangunan extends Model
         "tahun_dibangun",
         "tahun_renovasi",
         "daya_listrik",
+        "jumlah_bangunan",
         "jenis_penggunaan_bangunan_id",
         "kondisi_id",
         "konstruksi_id",
@@ -22,7 +23,7 @@ class RincianDataBangunan extends Model
         "spop_id",
     ];
 
-    public function Spop()
+    public function spop()
     {
         return $this->belongsTo("App\Models\Spop");
     }

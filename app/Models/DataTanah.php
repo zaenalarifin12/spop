@@ -15,8 +15,8 @@ class DataTanah extends Model
        return $this->belongsTo("App\Models\JenisTanah");
    }
 
-//    public function Spop()
-//    {
-//        return $this->belongsTo("App\Models\Spop");
-//    }
+   public function Spop()
+   {
+       return $this->belongsTo("App\Models\Spop");
+   }
 }

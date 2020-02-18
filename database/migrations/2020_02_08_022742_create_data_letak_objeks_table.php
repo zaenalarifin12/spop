@@ -22,7 +22,7 @@ class CreateDataLetakObjeksTable extends Migration
             $table->unsignedBigInteger('desa_id');
             $table->timestamps();
 
-            $table->foreign('desa_id')->references("id")->on("desas");
+            $table->foreign('desa_id')->references("id")->on("desas")->onDelete("cascade");
         });
     }
 

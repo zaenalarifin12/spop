@@ -16,13 +16,19 @@ class AddForeignSpopsTable extends Migration
         Schema::table('data_letak_objeks', function (Blueprint $table) {
             $table->unsignedBigInteger('spop_id')->after("desa_id");
 
-            $table->foreign('spop_id')->references("id")->on("spops");
+            $table->foreign('spop_id')->references("id")->on("spops")->onDelete("cascade");
         });
 
         Schema::table('data_subjek_pajaks', function (Blueprint $table) {
             $table->unsignedBigInteger('spop_id')->after("desa_id");
 
-            $table->foreign('spop_id')->references("id")->on("spops");
+            $table->foreign('spop_id')->references("id")->on("spops")->onDelete("cascade");
+        });
+
+        Schema::table('data_tanahs', function (Blueprint $table) {
+            $table->unsignedBigInteger('spop_id')->after("jenis_tanah_id");
+
+            $table->foreign('spop_id')->references("id")->on("spops")->onDelete("cascade");
         });
     }
 

@@ -34,15 +34,16 @@
         <ul class="navbar-nav navbar-right">
           <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
             <img alt="image" src="{{ asset("assets/img/avatar/avatar-1.png")}}" class="rounded-circle mr-1">
-            <div class="d-sm-none d-lg-inline-block">Nama Yang Login</div></a>
+            <div class="d-sm-none d-lg-inline-block">{{ Auth::user()->name }}</div></a>
             <div class="dropdown-menu dropdown-menu-right">
-              <a href="features-profile.html" class="dropdown-item has-icon">
+              <a href="{{ url("/profile/".Auth::user()->nip)}}" class="dropdown-item has-icon">
                 <i class="far fa-user"></i> Profile
               </a>
               <div class="dropdown-divider"></div>
-              <a href="#" class="dropdown-item has-icon text-danger">
-                <i class="fas fa-sign-out-alt"></i> Logout
-              </a>
+              <form action="{{ url("/logout") }}" method="post" style="display:inline">
+                @csrf
+                <button type="submit" class="dropdown-item has-icon text-danger"> Logout</button>
+              </form>
             </div>
           </li>
         </ul>
@@ -60,17 +61,13 @@
               <li class="nav-item dropdown active">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-fire"></i><span>Dashboard</span></a>
                 <ul class="dropdown-menu">
-                  <li><a class="nav-link" href="{{ url("/") }}">SPOP</a></li>
+                  <li><a class="nav-link" href="{{ url("/spop") }}">Pemutakhiran</a></li>
                   <li><a class="nav-link" href="{{ url("/rujukan") }}">Rujukan</a></li>
+                  <li><a class="nav-link" href="{{ url("/perekaman") }}">Perekaman Data</a></li>
+                  <li><a class="nav-link" href="{{ url("/pemutakhiran/cari") }}">Cari rujukan</a></li>
                 </ul>
               </li>
             </ul>
-
-            <div class="mt-4 mb-4 p-3 hide-sidebar-mini">
-              <a href="https://getstisla.com/docs" class="btn btn-primary btn-lg btn-block btn-icon-split">
-                <i class="fas fa-rocket"></i> Logout
-              </a>
-            </div>
         </aside>
       </div>
 
@@ -94,10 +91,10 @@
 
   <!-- JS Libraies -->
   <script src="{{ asset("assets/node/jquery.sparkline.min.js")}}"></script>
-  <script src="{{ asset("assets/node/dist/Chart.min.js")}}"></script>
-  <script src="{{ asset("assets/node/dist/owl.carousel.min.js")}}"></script>
+  <script src="{{ asset("assets/node/Chart.min.js")}}"></script>
+  <script src="{{ asset("assets/node/owl.carousel.min.js")}}"></script>
   <script src="{{ asset("assets/node/summernote-bs4.js")}}"></script>
-  <script src="{{ asset("assets/node/js/jquery.chocolat.min.js")}}"></script>
+  <script src="{{ asset("assets/node/jquery.chocolat.min.js")}}"></script>
 
   <!-- Template JS File -->
   <script src="{{ asset("assets/js/scripts.js")}}"></script>

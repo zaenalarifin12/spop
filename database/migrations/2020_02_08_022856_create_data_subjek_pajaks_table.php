@@ -25,9 +25,9 @@ class CreateDataSubjekPajaksTable extends Migration
             $table->unsignedBigInteger('desa_id');
             $table->timestamps();
 
-            $table->foreign('status_id')->references("id")->on("statuses");
-            $table->foreign('pekerjaan_id')->references("id")->on("pekerjaans");
-            $table->foreign('desa_id')->references("id")->on("desas");
+            $table->foreign('status_id')->references("id")->on("statuses")->onDelete("cascade");
+            $table->foreign('pekerjaan_id')->references("id")->on("pekerjaans")->onDelete("cascade");
+            $table->foreign('desa_id')->references("id")->on("desas")->onDelete("cascade");
         });
     }
 

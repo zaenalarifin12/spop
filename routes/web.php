@@ -12,28 +12,35 @@
 */
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', "HomeController@index");
 
 
-Route::get('/rujukan',                              'RujukanController@index');
-Route::get('/rujukan/json',                         'RujukanController@json');
 
-Route::get('/pemutakhiran/create/{nop}',            'PemutakhiranController@create');
-Route::post('/pemutakhiran/create/{nop}',           'PemutakhiranController@store');
-Route::get('/pemutakhiran/{nop}/bangunan/create',   'PemutakhiranController@createBangunan');
-Route::post('/pemutakhiran/{nop}/bangunan/create',  'PemutakhiranController@storeBangunan');
-Route::get('/pemutakhiran/{nop}',                   'PemutakhiranController@show');
+Route::get('/rujukan',                               'RujukanController@index');
+Route::get('/rujukan/json',                          'RujukanController@json');
 
-// Route::get('/create/{idPerson}', 'TransaksiController@createId');
+Route::get('/spop',                                  'SpopController@index');
+Route::get('/spop/json',                             'SpopController@json');
 
+Route::get('/pemutakhiran/cari',                     'PemutakhiranController@cari');
+Route::get('/pemutakhiran/create/{nop}',             'PemutakhiranController@create');
+Route::post('/pemutakhiran/create/{nop}',            'PemutakhiranController@store');
+Route::get('/pemutakhiran/{nop}/bangunan/create',    'PemutakhiranController@createBangunan');
+Route::post('/pemutakhiran/{nop}/bangunan/create',   'PemutakhiranController@storeBangunan');
+Route::get('/pemutakhiran/{nop}',                    'PemutakhiranController@show');
+Route::get('/pemutakhiran/{nop}/bangunan/{id}',      'PemutakhiranController@showBangunan');
+Route::get('/pemutakhiran/{nop}/bangunan/{id}/edit', 'PemutakhiranController@editBangunan');
+Route::put('/pemutakhiran/{nop}/bangunan/{id}',      'PemutakhiranController@updateBangunan');
 
-// Auth::routes();
+Route::get('/perekaman',                            'PerekamanController@index');
+Route::get('/perekaman/json',               'PerekamanController@json');
+Route::get('/perekaman/create',             'PerekamanController@create');
+
+Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/register', function() {
-    return view("profile.register");
+    return view("auth.register");
 });
 Route::get('/profile', function() {
     return view("profile.show");
@@ -41,3 +48,5 @@ Route::get('/profile', function() {
 Route::get('/pemutakhiran', function() {
     return view("pemutakhiran.index");
 });
+
+Route::get('/profile/{nop}',      'UserController@show');
