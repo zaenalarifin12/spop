@@ -16,7 +16,11 @@ class CreateKecamatansTable extends Migration
         Schema::create('kecamatans', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('nama');
+
+            $table->unsignedBigInteger('kabupaten_id');
             $table->timestamps();
+
+            $table->foreign('kabupaten_id')->references("id")->on("kabupatens")->onDelete("cascade");
         });
     }
 

@@ -1,7 +1,7 @@
 @extends('layouts.parent')
 
 @section('title')
-    perekaman data
+    Pemutakhiran Data
 @endsection
 
 @section('style')
@@ -13,7 +13,7 @@
      <div class="main-content">
         <section class="section">
           <div class="section-header">
-            <h1 class="text-info text-uppercase">Perekaman Data</h1>
+            <h1 class="text-info text-uppercase">Pemutakhiran Data</h1>
             <div class="section-header-breadcrumb">
               <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
               <div class="breadcrumb-item"><a href="#">Forms</a></div>
@@ -28,6 +28,18 @@
 
             <div class="container">
                 <div class="col-12 col-md-12 col-lg-12">
+
+                    @if (session("msg"))
+                        <div class="alert alert-success alert-dismissible show fade">
+                            <div class="alert-body">
+                            <button class="close" data-dismiss="alert">
+                                <span>×</span>
+                            </button>
+                            {{ session("msg") }}
+                            </div>
+                        </div>
+                    @endif
+
                     <div class="card">
                       <div class="card-header">
                         <h4>Data Spop</h4>
@@ -50,10 +62,10 @@
                                             <label>NOP</label>
                                             <input type="text" disabled name="nop" required class="form-control" value="{{ $spop->nop }}">
                                           </div>
-                      
-                                          <div class="alert alert-info">
-                                              <p class="text-center">Data Letak Objek Pajak</p> 
-                                          </div>
+                        
+                                            <div class="alert alert-info">
+                                                <p class="text-center">Data Letak Objek Pajak</p> 
+                                            </div>
 
                                             <div class="form-group">
                                                 <label>Nama Jalan</label>
@@ -65,24 +77,11 @@
                                                 <textarea disabled name="dlop_blok" class="form-control"  cols="30" rows="10">{{ $spop->dataLetakObjek->blok_kav }}</textarea>
                                             </div>
                         
-                                            <div class="form-group">
-                                                <label>Kecamatan</label>
-                                                <select class="form-control" name="dlop_kecamatan">
-                                                    <option>Kecamatan 1</option>
-                                                    <option>Kecamatan 2</option>
-                                                    <option>Kecamatan 3</option>
-                                                </select>
+                                            <div class="ui-widget form-group">
+                                                <label for="kab">Desa: </label>
+                                                <input id="kab" disabled class="form-control" value="{{ $spop->dataLetakObjek->desa->nama }}" />
                                             </div>
-                        
-                                            <div class="form-group">
-                                                <label>Desa</label>
-                                                <select class="form-control" name="dlop_desa">
-                                                <option>Desa 1</option>
-                                                <option>Desa 2</option>
-                                                <option>Desa 3</option>
-                                                </select>
-                                            </div>
-                        
+
                                             <div class="row">
                                                 <div class="col">
                                                     <div class="form-group">
@@ -98,34 +97,33 @@
                                                 </div>
                                             </div>
                                      
-                                          {{-- {{ dd($spop) }} --}}
-                                          <div class="alert alert-info">
-                                             <p class="text-center">Data Subjek Pajak</p> 
-                                          </div>
+                                            <div class="alert alert-info">
+                                                <p class="text-center">Data Subjek Pajak</p> 
+                                            </div>
                       
-                                          <div class="form-group">
-                                              <label class="form-label">Status</label>
-                                              <div class="selectgroup selectgroup-pills">
-                                                  @foreach ($statuses as $status)
-                                                    <label class="selectgroup-item">
-                                                        <input type="radio" disabled name="status" value="{{ $status->id }}" class="selectgroup-input" {{ $spop->dataSubjekPajak->status->id == $status->id ? "checked" : null}}>
-                                                        <span class="selectgroup-button">{{ $status->nama }}</span>
-                                                    </label>      
-                                                  @endforeach
-                                              </div>
-                                          </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Status</label>
+                                                <div class="selectgroup selectgroup-pills">
+                                                    @foreach ($statuses as $status)
+                                                        <label class="selectgroup-item">
+                                                            <input type="radio" disabled name="status" value="{{ $status->id }}" class="selectgroup-input" {{ $spop->dataSubjekPajak->status->id == $status->id ? "checked" : null}}>
+                                                            <span class="selectgroup-button">{{ $status->nama }}</span>
+                                                        </label>      
+                                                    @endforeach
+                                                </div>
+                                            </div>
                       
-                                          <div class="form-group">
-                                              <label class="form-label">Pekerjaan</label>
-                                              <div class="selectgroup selectgroup-pills">
-                                                  @foreach ($pekerjaans as $pekerjaan)
-                                                    <label class="selectgroup-item">
-                                                        <input disabled type="radio" name="pekerjaan" value="{{ $pekerjaan->id}}" class="selectgroup-input" {{ $spop->dataSubjekPajak->status->id == $pekerjaan->id ? "checked" : null}}>
-                                                        <span class="selectgroup-button">{{ $pekerjaan->nama}}</span>
-                                                    </label>
-                                                  @endforeach
-                                              </div>
-                                          </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Pekerjaan</label>
+                                                <div class="selectgroup selectgroup-pills">
+                                                    @foreach ($pekerjaans as $pekerjaan)
+                                                        <label class="selectgroup-item">
+                                                            <input disabled type="radio" name="pekerjaan" value="{{ $pekerjaan->id}}" class="selectgroup-input" {{ $spop->dataSubjekPajak->status->id == $pekerjaan->id ? "checked" : null}}>
+                                                            <span class="selectgroup-button">{{ $pekerjaan->nama}}</span>
+                                                        </label>
+                                                    @endforeach
+                                                </div>
+                                            </div>
                       
                                           <div class="form-group">
                                               <label>Nama Subjek Pajak</label>
@@ -137,35 +135,27 @@
                                               <input type="text" disabled class="form-control" name="dsp_nama_jalan"  value="{{ $spop->dataSubjekPajak->nama_jalan }}">
                                           </div>
                       
-                                          <div class="form-group">
-                                              <label>Kecamatan</label>
-                                              <select class="form-control" name="dsp_kecamatan">
-                                                <option>Kecamatan 1</option>
-                                                <option>Kecamatan 2</option>
-                                                <option>Kecamatan 3</option>
-                                              </select>
-                                          </div>
+                                        <div class="ui-widget form-group">
+                                            <label for="desa_">Desa: </label>
+                                            <input id="desa_" disabled class="form-control" value="{{ $spop->dataSubjekPajak->desa }}" />
+                                        </div>
                       
-                                          <div class="form-group">
-                                              <label>Desa</label>
-                                              <select class="form-control" name="dsp_desa">
-                                                <option>Desa 1</option>
-                                                <option>Desa 2</option>
-                                                <option>Desa 3</option>
-                                              </select>
-                                          </div>
+                                        <div class="ui-widget form-group">
+                                            <label for="kab">Kabupaten: </label>
+                                            <input id="kab" disabled class="form-control" value="{{ $spop->dataSubjekPajak->kabupaten }}" />
+                                        </div>
                       
-                                          <div class="row">
-                                              <div class="col">
-                                                  <div class="form-group">
-                                                      <label>RW</label>
-                                                      <input type="text" disabled class="form-control" name="dsp_rw"  value="{{ $spop->dataSubjekPajak->rw }}">
-                                                  </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label>RW</label>
+                                                    <input type="text" disabled class="form-control" name="dsp_rw"  value="{{ $spop->dataSubjekPajak->rw }}">
+                                                </div>
                                               </div>
                                               <div class="col">
                                                   <div class="form-group">
                                                       <label>RT</label>
-                                                      <input type="text" disabled class="form-control" name="dsp_rt"  {{ $spop->dataSubjekPajak->rt }}>
+                                                      <input type="text" disabled class="form-control" name="dsp_rt"  value="{{ $spop->dataSubjekPajak->rt }}" >
                                                   </div>
                                               </div>
                                           </div>
@@ -181,7 +171,7 @@
                       
                                           <div class="form-group">
                                               <label>Luas Tanah</label>
-                                              <input type="text" disabled class="form-control" name="dsp_luas_tanah"  value="{{ $spop->dataTanah->luas_tanah}}">
+                                              <input type="text" disabled class="form-control" name="dsp_luas_tanah"  value="{{ $spop->dataTanah->luas_tanah }}">
                                           </div>
 
                                           {{-- relasi data tanah masih belum --}}
@@ -194,9 +184,16 @@
                                                         <span class="selectgroup-button" >{{ $item->nama }}</span>
                                                     </label>
                                                 @endforeach
-                                                
                                               </div>
                                           </div>
+
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <a href="{{ url("pemutakhiran/$spop->nop/edit") }}" class="btn btn-primary btn-block">Edit</a>
+                                                </div>
+                                            </div>
+                                        </div>
                       
                                           <!-- for tanah dan bangunan -->
                                           <div class="collapse" id="collapseExample">
@@ -204,7 +201,7 @@
                                         </div>
                                       </div>
                                     </div>
-                                  </div>
+                                </div>
                             </div>
                           </div>
                         
@@ -356,7 +353,11 @@
                                         <div class="form-group">
                                             <div class="row">
                                                 <div class="col">
-                                                    <button class="btn btn-danger btn-block">Hapus</button>
+                                                    <form action="{{ url("pemutakhiran/$spop->nop/bangunan/$rincianDataBangunan->id") }}" method="post" style="display:inline">
+                                                        <button type="submit" class="btn btn-danger btn-block">Hapus</button>
+                                                        @csrf
+                                                        @method("DELETE")
+                                                    </form>
                                                 </div>
                                                 <div class="col">
                                                     <a href="{{ url("pemutakhiran/$spop->nop/bangunan/$rincianDataBangunan->id/edit") }}" class="btn btn-info btn-block">Edit</a>

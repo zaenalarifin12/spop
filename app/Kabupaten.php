@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Desa extends Model
+class Kabupaten extends Model
 {
     protected $fillable = ["id", "nama"];
 
-    public function dataLetakObjek()
+    public function kecamatans()
     {
-        return $this->hasMany("App\Models\DataLetakObjek");
+        return $this->hasMany("App\Models\Kecamatan");
     }
 }

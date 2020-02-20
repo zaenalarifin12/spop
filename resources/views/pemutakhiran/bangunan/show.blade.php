@@ -208,6 +208,18 @@
                                 @endforeach
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col">
+                                    <a href="{{ url("/pemutakhiran/".$rincianDataBangunan->spop->nop) }}" class="btn btn-info btn-block">Kembali</a>
+                                </div>
+                                <div class="col">
+                                    <a href="{{ url("/pemutakhiran/".$rincianDataBangunan->spop->nop."/bangunan/create") }}" class="btn btn-success btn-block">Tambah Bangunan baru</a>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     
                   </div>

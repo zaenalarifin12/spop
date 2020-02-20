@@ -23,6 +23,7 @@
         </div>
       </div>
 
+
       <div class="section-body" >
         <div class="container">
           <div class="row">
@@ -31,19 +32,70 @@
                   <div class="card-body">
                       <div class="row">
                           <div class="form-group">
-                            <label>Pick Your Color</label>
+                            <label>Cari NOP</label>
                               <form action="{{ url("/pemutakhiran/cari") }}" method="get" class="input-group">
-                                <input type="text" name="search" class="form-control" />
-                                <div class="input-group-append">
-                                    <button type="submit" class="form-control">Cari </button>
-                                </div>
+                                <input type="text" name="pr"      class="form-control" disabled value="33"/>
+                                <input type="text" name="dtii"    class="form-control" disabled value="18"/>
+                                <input type="text" name="kec"     autocomplete="off" pattern=".{3,3}" minlength="3" maxlength="3" class="form-control" value="{{ old("kec") }}"/>
+                                <input type="text" name="des"     autocomplete="off" pattern=".{3,3}" minlength="3" maxlength="3" class="form-control" value="{{ old("des") }}"/>
+                                <input type="text" name="blok"    autocomplete="off" pattern=".{3,3}" minlength="3" maxlength="3" class="form-control" value="{{ old("blok") }}"/>
+                                <input type="text" name="no_urut" autocomplete="off" pattern=".{4,4}" minlength="4" maxlength="4" class="form-control" value="{{ old("no_urut") }}"/>
+                                <input type="text" name="kode"    autocomplete="off" pattern=".{1,1}" minlength="1" maxlength="1" class="form-control" value="{{ old("kode") }}"/>
+                                <button type="submit" class="form-control">Cari </button>
                               </form>
                           </div>
                       </div>
                       @if (isset($rujukan))
-                          lakslakslkas
-                      @endif
+                                <p>Data Rujukan</p>
+                                <div class="form-group">
+                                  <label>Tahun</label>
+                                  <input type="text" disabled class="form-control" value="{{ $rujukan->tahun }}">
+                                </div>
 
+                                <div class="form-group">
+                                  <label>NOP</label>
+                                  <input type="text" disabled class="form-control" value="{{ $rujukan->nop }}">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Nama Subjek Pajak</label>
+                                    <textarea disabled class="form-control" cols="30" rows="10">{{ $rujukan->nama_subjek_pajak }}</textarea>
+                                </div>
+              
+                                <div class="form-group">
+                                  <label>Alamat wajib pajak</label>
+                                  <textarea disabled class="form-control" cols="30" rows="10">{{ $rujukan->alamat_wp }}</textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Alamat Objek Pajak</label>
+                                    <input type="text" disabled class="form-control" value="{{ $rujukan->alamat_op }}">
+                                </div>
+            
+                                <div class="form-group">
+                                    <label>Luas Bumi SPPT</label>
+                                    <input type="text" disabled class="form-control" value="{{ $rujukan->luas_bumi_sppt }}">
+                                </div>
+            
+                                <div class="form-group">
+                                  <label>Luas Bangunan SPPT</label>
+                                  <input type="text" disabled class="form-control" value="{{ $rujukan->luas_bng_sppt }}">
+                                </div>
+                              
+                                <div class="form-group">
+                                    <label>NJOP Bumi SPPT</label>
+                                    <input type="text" disabled class="form-control" value="{{ $rujukan->njop_bumi_sppt}}">
+                                </div>
+
+                                <div class="form-group">
+                                  <label>PBB</label>
+                                  <input type="text" disabled class="form-control" value="{{ $rujukan->pbb }}">
+                                </div>
+
+                                <div class="form-group">
+                                  <a href="{{ url("/pemutakhiran/create/$rujukan->nop") }}" class="btn btn-primary btn-block">Usulan perubahan</a>
+                                </div>
+                      @endif
                     </div>
                   </div>
               </div>

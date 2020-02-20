@@ -5,7 +5,9 @@
 @endsection
 
 @section('style')
-    
+    <link rel="stylesheet" href="{{ asset("assets/node/select2.min.css")}}">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
 @endsection
 
 @section('content')
@@ -22,10 +24,22 @@
           </div>
 
           <div class="section-body" >
-        <form action="{{ url("/pemutakhiran/create/". $nop_rujukan) }}" method="post">  
+        <form action="{{ url("/pemutakhiran/create/". $rujukan->nop) }}" method="post">  
             <div class="container-fluid" id="parent">
               <div class="row">
                 <div class="col-12 col-md-12 col-lg-12">
+
+                    @if (session("msg"))
+                        <div class="alert alert-danger alert-dismissible show fade">
+                            <div class="alert-body">
+                            <button class="close" data-dismiss="alert">
+                                <span>×</span>
+                            </button>
+                            {{ session("msg") }}
+                            </div>
+                        </div>
+                    @endif
+                    
                   <div class="card">
                     <div class="card-header">
                       <h4>PEMUTAKHIRAN DATA </h4>
@@ -33,16 +47,29 @@
                     <div class="card-body">
                       <div class="form-group">
                         <label>NOP</label>
-                        <input type="text" name="nop" required class="form-control" value="{{ str_replace(".", "", $nop_rujukan) }}">
+                        <div class="input-group">
+                            <input type="text" disabled name="pr"        required class="form-control" value="{{ $my_nop[0] }}">
+                            <input type="text" disabled name="dt"        required class="form-control" value="{{ $my_nop[1] }}">
+                            <input type="text" disabled name="kec"       required class="form-control" value="{{ $my_nop[2] }}">
+                            <input type="text" disabled name="des"       required class="form-control" value="{{ $my_nop[3] }}">
+                            <input type="text" disabled name="blok"      required class="form-control" value="{{ $my_nop[4] }}">
+                            <input type="text" disabled name="no_urut"   required class="form-control" value="{{ $my_nop[5] }}">
+                            <input type="text" disabled name="kode"      required class="form-control" value="{{ $my_nop[6] }}">
+                        </div>
                       </div>
   
                       <div class="alert alert-info">
                           <p class="text-lg-center">Data Letak Objek Pajak</p> 
                       </div>
   
+                    <div class="form-group">
+                        <label>Data Lama</label>
+                        <textarea disabled class="form-control" cols="30" rows="10">{{  $rujukan->alamat_op }}</textarea>
+                    </div>
+
                       <div class="form-group">
                             <label>Nama Jalan</label>
-                            <textarea name="dlop_nama_jalan" class="form-control @error("dlop_nama_jalan") is-invalid @enderror" id="" cols="30" rows="10">{{ old("dlop_nama_jalan") }}</textarea>
+                            <textarea name="dlop_nama_jalan" class="form-control @error("dlop_nama_jalan") is-invalid @enderror" id="" cols="30" rows="10">{{  old("dlop_nama_jalan") }}</textarea>
                             @error("dlop_nama_jalan")
                                 <div class="invalid-feedback"> 
                                     Nama Jalan Harus Di isi
@@ -60,29 +87,17 @@
                             @enderror
                       </div>
   
-                      <div class="form-group">
-                          <label>Kecamatan</label>
-                          <select class="form-control" name="dlop_kecamatan">
-                            <option value="1">Kecamatan 1</option>
-                            <option value="2">Kecamatan 2</option>
-                            <option value="3">Kecamatan 3</option>
-                          </select>
-                      </div>
-  
-                      <div class="form-group">
-                          <label>Desa</label>
-                          <select class="form-control" name="dlop_desa">
-                            <option value="1">Desa 1</option>
-                            <option value="2">Desa 2</option>
-                            <option value="3">Desa 3</option>
-                          </select>
-                      </div>
+
+                    <div class="ui-widget form-group">
+                        <label for="desa">Desa: </label>
+                        <input id="desa" name="dlop_desa" class="form-control" value="{{ $wp_desa }}">
+                    </div>
   
                       <div class="row">
                           <div class="col">
                               <div class="form-group">
                                   <label>RW</label>
-                                  <input type="number" class="form-control @error("dlop_rw") is-invalid @enderror" name="dlop_rw" id="" value="{{ old('dlop_rw')}}">
+                                  <input type="number" class="form-control @error("dlop_rw") is-invalid @enderror" name="dlop_rw" id="" value="{{ old('dlop_rw') ? old('dlop_rw') : $op_rw}}">
                                     @error("dlop_rw")
                                         <div class="invalid-feedback"> 
                                             RW harus di isi
@@ -93,7 +108,7 @@
                           <div class="col">
                               <div class="form-group">
                                   <label>RT</label>
-                                  <input type="number" class="form-control @error("dlop_rt") is-invalid @enderror" name="dlop_rt" id="" value="{{ old('dlop_rt') }}">
+                                  <input type="number" class="form-control @error("dlop_rt") is-invalid @enderror" name="dlop_rt" id="" value="{{ old('dlop_rt') ? old('dlop_rt') : $op_rt}}">
                                     @error("dlop_rt")
                                         <div class="invalid-feedback"> 
                                             RW harus di isi
@@ -145,7 +160,7 @@
   
                       <div class="form-group">
                             <label>Nama Subjek Pajak</label>
-                            <input type="text" class="form-control @error('dsp_nama_subjek_pajak') is-invalid @enderror" name="dsp_nama_subjek_pajak" value="{{ old("dsp_nama_subjek_pajak") }}">
+                            <input type="text" class="form-control @error('dsp_nama_subjek_pajak') is-invalid @enderror" name="dsp_nama_subjek_pajak" value="{{ old("dsp_nama_subjek_pajak") ? old("dsp_nama_subjek_pajak") : $rujukan->nama_subjek_pajak }}">
                             @error("dsp_nama_subjek_pajak")
                                 <div class="invalid-feedback"> 
                                     Nama subjek pajak harus di isi
@@ -162,30 +177,32 @@
                                 </div>
                             @enderror
                       </div>
-  
-                      <div class="form-group">
-                          <label>Kecamatan</label>
-                          <select class="form-control" name="dsp_kecamatan">
-                            <option value="1">Kecamatan 1</option>
-                            <option value="2">Kecamatan 2</option>
-                            <option value="3">Kecamatan 3</option>
-                          </select>
-                      </div>
-  
-                      <div class="form-group">
-                          <label>Desa</label>
-                          <select class="form-control" name="dsp_desa">
-                            <option value="1">Desa 1</option>
-                            <option value="2">Desa 2</option>
-                            <option value="3">Desa 3</option>
-                          </select>
-                      </div>
-  
+
+                    <div class="ui-widget form-group">
+                        <label for="desa2">Desa: </label>
+                        <input id="desa2" name="dsp_desa" class="form-control @error('dsp_desa') is-invalid @enderror" value="{{ old('dsp_desa') }}" />
+                        @error("dsp_desa")
+                            <div class="invalid-feedback"> 
+                                Desa harus di isi
+                            </div>
+                        @enderror
+                    </div>
+
+                    <div class="ui-widget form-group">
+                        <label for="kab">Kabupaten: </label>
+                        <input id="kab" name="dsp_kabupaten" class="form-control @error('dsp_kabupaten') is-invalid @enderror" value="{{ old('dsp_kabupaten') }}" />
+                        @error("dsp_kabupaten")
+                            <div class="invalid-feedback"> 
+                                Kabupaten harus di isi
+                            </div>
+                        @enderror
+                    </div>
+
                       <div class="row">
                           <div class="col">
                               <div class="form-group">
                                     <label>RW</label>
-                                    <input type="number" class="form-control @error('dsp_rw') is-invalid @enderror" name="dsp_rw" value="{{ old("dsp_rw") }}">
+                                    <input type="number" class="form-control @error('dsp_rw') is-invalid @enderror" name="dsp_rw" value="{{ old("dsp_rw") ? old("dsp_rw") : $wp_rw }}">
                                     @error("dsp_rw")
                                         <div class="invalid-feedback"> 
                                             RW harus di isi
@@ -196,7 +213,7 @@
                           <div class="col">
                               <div class="form-group">
                                     <label>RT</label>
-                                    <input type="number" class="form-control @error('dsp_rt') is-invalid @enderror" name="dsp_rt" value="{{ old("dsp_rt") }}">
+                                    <input type="number" class="form-control @error('dsp_rt') is-invalid @enderror" name="dsp_rt" value="{{ old("dsp_rt") ? old("dsp_rt") : $wp_rt }}">
                                     @error("dsp_rt")
                                         <div class="invalid-feedback"> 
                                             RT harus di isi
@@ -222,7 +239,7 @@
   
                       <div class="form-group">
                             <label>Luas Tanah</label>
-                            <input type="number" class="form-control @error('dsp_luas_tanah') is-invalid @enderror" name="dsp_luas_tanah" value="{{ old("dsp_luas_tanah") }}">
+                            <input type="number" class="form-control @error('dsp_luas_tanah') is-invalid @enderror" name="dsp_luas_tanah" value="{{ old("dsp_luas_tanah") ? old("dsp_luas_tanah") : $rujukan->luas_bumi_sppt }}">
                             @error("dsp_luas_tanah")
                                 <div class="invalid-feedback"> 
                                     Luas Tanah harus di isi
@@ -500,6 +517,8 @@
 
     <!-- Page Specific JS File -->
     <script src="{{ asset("assets/js/page/forms-advanced-forms.js")}}"></script>
+    <script src="{{ asset("assets/node/select2.full.min.js")}}"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     {{-- custom --}}
 
     <script>
@@ -689,5 +708,15 @@
             `)
             */
         });
+    </script>
+
+    <script type="text/javascript">
+        $( function() {
+            var DesaTags = {!! strtoupper($desas) !!}
+            
+            $( "#desa" ).autocomplete({
+                source: DesaTags
+            });
+        } );
     </script>
 @endsection

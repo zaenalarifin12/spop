@@ -12,4 +12,9 @@ class Kecamatan extends Model
     {
         return $this->hasMany("App\Models\Kecamatan");
     }
+
+    public function kabupaten()
+    {
+        return $this->belongsTo("App\Models\Kabupaten");
+    }
 }

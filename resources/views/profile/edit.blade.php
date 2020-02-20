@@ -1,7 +1,7 @@
 @extends('layouts.parent')
 
 @section('title')
-    perekaman data
+    Edit profil anda
 @endsection
 
 @section('style')
@@ -27,7 +27,7 @@
                 <div class="col-12 col-md-12 col-lg-12">
                   <div class="card">
                     <div class="card-header">
-                      <h4>Profil Anda</h4>
+                      <h4>Edit Profil Anda</h4>
                     </div>
                     <div class="card-body">
                           <div class="row">
@@ -49,7 +49,9 @@
                           </div>
         
                           <div class="form-group">
-                            <a href="{{ url("profile/$user->nip/edit") }}" class="btn btn-primary btn-lg btn-block">Edit</a>
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">
+                              Edit
+                            </button>
                           </div>
                         </form>
                       </div>
@@ -64,9 +66,6 @@
 @endsection
 
 @section('script')
-    
-    {{-- import --}}
-
     <!-- Page Specific JS File -->
     <script src="{{ asset("assets/js/page/forms-advanced-forms.js")}}"></script>
 @endsection

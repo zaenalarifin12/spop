@@ -4,7 +4,12 @@
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
   <title>@yield('title')</title>
-
+  <!-- 
+    **AUTHOR**
+    ZAINAL ARIFIN
+    085226370746
+    github.com/zaenalarif
+  -->
   <!-- General CSS Files -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
@@ -61,9 +66,12 @@
               <li class="nav-item dropdown active">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-fire"></i><span>Dashboard</span></a>
                 <ul class="dropdown-menu">
-                  <li><a class="nav-link" href="{{ url("/spop") }}">Pemutakhiran</a></li>
-                  <li><a class="nav-link" href="{{ url("/rujukan") }}">Rujukan</a></li>
-                  <li><a class="nav-link" href="{{ url("/perekaman") }}">Perekaman Data</a></li>
+                  @if (Auth::user()->role == 1)
+                    <li><a class="nav-link" href="{{ url("/spop") }}">Pemutakhiran</a></li>
+                    <li><a class="nav-link" href="{{ url("/rujukan") }}">Rujukan</a></li>
+                    <li><a class="nav-link" href="{{ url("/perekaman") }}">Perekaman Data</a></li>
+                    <li><a class="nav-link" href="{{ url("/users") }}">Data Users</a></li>
+                  @endif
                   <li><a class="nav-link" href="{{ url("/pemutakhiran/cari") }}">Cari rujukan</a></li>
                 </ul>
               </li>
@@ -103,6 +111,11 @@
   <!-- Page Specific JS File -->
   {{-- <script src="{{ asset("assets/js/page/index.js")}}"></script> --}}
 
+  <script>
+    $(function(){
+      $(':input[type=number]').on('mousewheel',function(e){ $(this).blur(); });
+    });
+  </script>
   @yield('script')
 </body>
 </html>

@@ -20,20 +20,24 @@ use App\Models\Lantai;
 use App\Models\Langit;
 use App\Models\Rujukan;
 use App\Models\Spop;
+use App\Models\Kecamatan;
+use App\Models\Desa;
+
 
 class PemutakhiranController extends Controller
 {
     public function create($nop)
     {
-        $nop_rujukan = Rujukan::where("nop", $nop)->pluck("nop")->first();
+        $rujukan = Rujukan::where("nop", $nop)->first();
 
-        if (empty($nop_rujukan))
+        if (empty($rujukan))
             die("nop rujukan tidak ditemukan");
 
         $spop = Spop::where("nop", str_replace(".", "", $nop))->first();
-            if(!empty($spop)){
-                return redirect("/pemutakhiran/$spop->nop");
-            }
+        if(!empty($spop)){
+            // jika sudah ada maka langsung ke detail
+            return redirect("/pemutakhiran/$spop->nop");
+        }
             
         $jenisTanah                 = JenisTanah::get();
         $statuses                   = Status::get();
@@ -45,8 +49,43 @@ class PemutakhiranController extends Controller
         $dindings                   = Dinding::get();
         $lantais                    = Lantai::get();
         $langits                    = Langit::get();
+        $kecamatans                 = Kecamatan::get();
+        $desas                      = Desa::get()->pluck("nama");
 
+        $my_nop = explode(".", $rujukan->nop);
+        
+        $wajib_pajak = explode(" ", $rujukan->alamat_wp);
+
+        $objek_pajak = explode(" ", $rujukan->alamat_op);
+
+        $wp_desa       = $wajib_pajak[1];
+        $wp_rt         = $wajib_pajak[4];
+        $wp_rw         = $wajib_pajak[6];
+        $wp_kecamatan  = $wajib_pajak[7];
+
+        $op_desa       = $objek_pajak[1];
+        $op_rt         = $objek_pajak[4];
+        $op_rw         = $objek_pajak[6];
+
+        /**
+         * TODO 
+         * mengambil data kabupaten pati
+         * mengambil data tiap kabupaten
+         * mengambil desa berdasarkan kab
+         */
         return view("pemutakhiran.create", compact([
+            "rujukan",
+            "my_nop",
+
+            "wp_desa",
+            "wp_rt",
+            "wp_rw",
+            "wp_kecamatan",
+
+            "op_desa",
+            "op_rt",
+            "op_rw",
+
             "jenisTanah",
             "statuses",
             "pekerjaans",
@@ -57,7 +96,8 @@ class PemutakhiranController extends Controller
             "dindings",
             "lantais",
             "langits",
-            "nop_rujukan"
+            "kecamatans",
+            "desas"
         ]));
     }
 
@@ -69,10 +109,8 @@ class PemutakhiranController extends Controller
                  * VALIDASI FORM
                  */
                 $this->validate($request, [
-                    "nop"                   => "required",
                     "dlop_nama_jalan"       => "required",
                     "dlop_blok"             => "required",
-                    "dlop_kecamatan"        => "required",
                     "dlop_desa"             => "required",
                     "dlop_rw"               => "required",
                     "dlop_rt"               => "required",
@@ -80,13 +118,13 @@ class PemutakhiranController extends Controller
                     "pekerjaan"             => "required",
                     "dsp_nama_subjek_pajak" => "required",
                     "dsp_nama_jalan"        => "required",
-                    "dsp_kecamatan"         => "required",
+                    "dsp_kabupaten"         => "required",
                     "dsp_desa"              => "required",
                     "dsp_rw"                => "required",
                     "dsp_rt"                => "required",
                     "dsp_no_ktp"            => "required",
                     "dsp_luas_tanah"        => "required",
-                    "jenis_tanah"           => "required", //  masih kurang validasi 1,2,3
+                    "jenis_tanah"           => "required", //  masih kurang validasi 2,3
                 ]);
 
                 $rujukan = Rujukan::where("nop", $nop)->pluck("nop")->first(); #mencari rujukan di table
@@ -100,14 +138,15 @@ class PemutakhiranController extends Controller
                 elseif(empty($pekerjaan))
                     die("pekerjaan tidak ada");
                 
+                
                 $spop       = new Spop();
                 $spop->nop  = (str_replace(".", "", $rujukan));
                 $spop->save();
 
+                $desa = Desa::where("nama", "$request->dlop_desa")->first();
                 $DataLetakObjekPajak = DataLetakObjek::create([
                     "nama_jalan"        => $request->dlop_nama_jalan,
-                    "desa_id"           => $request->dlop_desa,
-                    // $request->dlop_kecamatan;
+                    "desa_id"           => $desa->id,
                     "blok_kav"          => $request->dlop_blok,
                     "rw"                => $request->dlop_rw,
                     "rt"                => $request->dlop_rt,
@@ -122,7 +161,8 @@ class PemutakhiranController extends Controller
                     "nomor_ktp"         => $request->dsp_no_ktp,
                     "status_id"         => $status,
                     "pekerjaan_id"      => $pekerjaan,
-                    "desa_id"           => $request->dsp_desa,
+                    "desa"              => $request->dsp_desa,
+                    "kabupaten"         => $request->dsp_kabupaten,
                     "spop_id"           => $spop->id
                 ]);
                 
@@ -197,7 +237,6 @@ class PemutakhiranController extends Controller
                     "langit"                => "required",
                 ]);
 
-                
                 $rujukan = Rujukan::where("nop", $nop)->pluck("nop")->first(); #mencari rujukan di table
                 if (empty($rujukan))
                     die("nop belum ada");
@@ -487,6 +526,7 @@ class PemutakhiranController extends Controller
     {
         $spop = Spop::with([
             "dataLetakObjek",
+            "dataLetakObjek.desa",
             "dataSubjekPajak",
             "dataSubjekPajak.status",
             "dataSubjekPajak.pekerjaan",
@@ -525,6 +565,132 @@ class PemutakhiranController extends Controller
             "langits",
             "jenisTanah"
         ]));
+    }
+
+    public function edit($nop)
+    {
+        $spop = Spop::with([
+            "dataLetakObjek",
+            "dataLetakObjek.desa",
+            "dataSubjekPajak",
+            "dataSubjekPajak.status",
+            "dataSubjekPajak.pekerjaan",
+            // "dataTanah",
+            "rincianDataBangunans",
+            "rincianDataBangunans.kondisi",
+            "rincianDataBangunans.konstruksi",
+            "rincianDataBangunans.atap",
+            "rincianDataBangunans.lantai",
+            "rincianDataBangunans.langit",
+            ])->where("nop", $nop)->first();
+
+        if(empty($spop)){
+            abort(404);
+        }
+
+        $desas                      = Desa::get()->pluck("nama");
+
+        $statuses                   = Status::get();
+        $pekerjaans                 = Pekerjaan::get();
+        $jenisPenggunaanBangunans   = JenisPenggunaanBangunan::get();
+        $kondisis                   = Kondisi::get();
+        $konstruksis                = Konstruksi::get();
+        $ataps                      = Atap::get();
+        $dindings                   = Dinding::get();
+        $lantais                    = Lantai::get();
+        $langits                    = Langit::get();
+        $jenisTanah                 = JenisTanah::get();
+
+        return view("pemutakhiran.edit", compact([
+            "spop",
+            "desas",
+
+            "statuses",
+            "pekerjaans",
+            "nop",
+            "jenisPenggunaanBangunans",
+            "kondisis",
+            "konstruksis",
+            "ataps",
+            "dindings",
+            "lantais",
+            "langits",
+            "jenisTanah"
+        ]));
+    }
+
+    public function update(Request $request, $nop)
+    {
+        /**
+         * VALIDASI FORM
+         */
+        $this->validate($request, [
+            "dlop_nama_jalan"       => "required",
+            "dlop_blok"             => "required",
+            "dlop_desa"             => "required",
+            "dlop_rw"               => "required",
+            "dlop_rt"               => "required",
+            "status"                => "required",
+            "pekerjaan"             => "required",
+            "dsp_nama_subjek_pajak" => "required",
+            "dsp_nama_jalan"        => "required",
+            "dsp_kabupaten"         => "required",
+            "dsp_desa"              => "required",
+            "dsp_rw"                => "required",
+            "dsp_rt"                => "required",
+            "dsp_no_ktp"            => "required",
+            "dsp_luas_tanah"        => "required",
+            "jenis_tanah"           => "required", //  masih kurang validasi 2,3
+        ]);
+
+        $spop = Spop::where("nop", $nop)->first(); #mencari rujukan di table
+        if (empty($spop))
+            die("Nop tidak ada");
+
+        $status     = Status::where("id", $request->status)->pluck("id")->first();
+        $pekerjaan  = Pekerjaan::where("id", $request->pekerjaan)->pluck("id")->first();
+
+        if (empty($status))
+            die("status tidak ada");
+        elseif(empty($pekerjaan))
+            die("pekerjaan tidak ada");
+
+        $desa = Desa::where("nama", "$request->dlop_desa")->first();
+        $DataLetakObjekPajak = DataLetakObjek::where("spop_id", $spop->id)
+            ->update([
+                "nama_jalan"        => $request->dlop_nama_jalan,
+                "desa_id"           => $desa->id,
+                "blok_kav"          => $request->dlop_blok,
+                "rw"                => $request->dlop_rw,
+                "rt"                => $request->dlop_rt,
+            ]);
+        
+        $DataSubjekPajak = DataSubjekPajak::where("spop_id", $spop->id)
+            ->update([
+                "nama_subjek_pajak" => $request->dsp_nama_subjek_pajak,
+                "nama_jalan"        => $request->dsp_nama_jalan,
+                "rt"                => $request->dsp_rt,
+                "rw"                => $request->dsp_rw,
+                "nomor_ktp"         => $request->dsp_no_ktp,
+                "status_id"         => $status,
+                "pekerjaan_id"      => $pekerjaan,
+                "desa"              => $request->dsp_desa,
+                "kabupaten"         => $request->dsp_kabupaten,
+            ]);
+
+        if($request->jenis_tanah == 2 || $request->jenis_tanah == 3 || $request->jenis_tanah == 1){
+
+            $dataTanah = DataTanah::where("spop_id", $spop->id)->update([
+                "luas_tanah"        => $request->dsp_luas_tanah,
+                "jenis_tanah_id"    => $request->jenis_tanah,
+            ]);
+
+                // jika nop ngga kosong
+                return redirect("/pemutakhiran/" . $spop->nop)->with("msg", "data pemilik telah berhasil diubah");
+            // redirect to add new
+        }else{
+            die("jenis tanah yang di pilih tidak ada");
+        }
     }
 
     public function editBangunan($nop, $id)
@@ -669,19 +835,69 @@ class PemutakhiranController extends Controller
 
     }
 
+    public function destroyBangunan($nop, $id)
+    {
+        $spop = Spop::where("nop", $nop)->first();
+        $rincianDataBangunan = RincianDataBangunan::where([
+            ["id", $id],
+            ["spop_id", $spop->id]
+        ])->first();
+
+        if(empty($rincianDataBangunan)){
+            abort(404);
+        }
+        $rincianDataBangunan->delete();
+        
+        return redirect("/pemutakhiran/".$spop->nop)->with("msg", "data bangunan berhasil di hapus");
+    }
+
     public function cari(Request $request)
     {
-        $cari = urlencode($request->search);
-        if(empty($cari)){
+        // $pt     = urlencode($request->pt);
+        // $dtii   = urlencode($request->dtii);
+        $kec    = urlencode($request->kec);
+        $des    = urlencode($request->des);
+        $blok   = urlencode($request->blok);
+        $no_urut= urlencode($request->no_urut);
+        $kode   = urlencode($request->kode);
+
+        if( empty(trim($kec))  && empty(trim($des))  && empty(trim($blok)) && empty(trim($no_urut)) && empty(trim($kode)) ){
             return view("pemutakhiran.cari");
         }else{
-            $rujukan = Rujukan::where("nop", $cari)->first();
+            // 33 18
+            $nop            = "33.18.$kec.$des.$blok.$no_urut.$kode";
+            $nop_replace    = str_replace(".", "", $nop);
             
-            if (!empty($rujukan)) {
-                return view("pemutakhiran.cari", compact($rujukan));
-            } else {
-                return "rujukan not found";
+            $rujukan    = Rujukan::where("nop", $nop)->first();
+            $spop = Spop::with([
+                "dataLetakObjek",
+                "dataSubjekPajak",
+                "dataSubjekPajak.status",
+                "dataSubjekPajak.pekerjaan",
+                // "dataTanah",
+                "rincianDataBangunans",
+                "rincianDataBangunans.kondisi",
+                "rincianDataBangunans.konstruksi",
+                "rincianDataBangunans.atap",
+                "rincianDataBangunans.lantai",
+                "rincianDataBangunans.langit",
+                ])->where("nop", $nop_replace)->first();
+
+            // jika spop gak kosong maka masukan spop
+            // jika sopo kosong dan maka uji rujukan jika berhasil redirect
+            // jika gak ada maka berikan pesan tidak ada
+
+            if (!empty($spop)) {
+                return redirect()->action(
+                    "PemutakhiranController@show", ["nop" => $nop_replace]
+                );
+
+            }elseif(empty($spop) && !empty($rujukan)){
+                return view("pemutakhiran.cari", compact("rujukan"));
+            }else{
+                return view("pemutakhiran.cari")->with("msg", "nomor nop tidak ada");
             }
         }
     }
+
 }

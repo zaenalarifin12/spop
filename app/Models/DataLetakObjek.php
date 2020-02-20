@@ -19,4 +19,9 @@ class DataLetakObjek extends Model
     {
         return $this->belongsTo("App\Models\Spop");
     }
+
+    public function desa()
+    {
+        return $this->belongsTo("App\Models\Desa");
+    }
 }

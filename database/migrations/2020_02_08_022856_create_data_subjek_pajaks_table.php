@@ -22,12 +22,12 @@ class CreateDataSubjekPajaksTable extends Migration
             $table->string('nomor_ktp');
             $table->unsignedBigInteger('status_id');
             $table->unsignedBigInteger('pekerjaan_id');
-            $table->unsignedBigInteger('desa_id');
+            $table->string('desa');
+            $table->string('kabupaten');
             $table->timestamps();
 
             $table->foreign('status_id')->references("id")->on("statuses")->onDelete("cascade");
             $table->foreign('pekerjaan_id')->references("id")->on("pekerjaans")->onDelete("cascade");
-            $table->foreign('desa_id')->references("id")->on("desas")->onDelete("cascade");
         });
     }
 

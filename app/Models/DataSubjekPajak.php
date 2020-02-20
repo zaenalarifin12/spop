@@ -14,7 +14,8 @@ class DataSubjekPajak extends Model
         "nomor_ktp",
         "status_id",
         "pekerjaan_id",
-        "desa_id",
+        "desa",
+        "kabupaten",
         "spop_id"
     ];
 
@@ -31,10 +32,5 @@ class DataSubjekPajak extends Model
     public function pekerjaan()
     {
         return $this->belongsTo("App\Models\Pekerjaan");
-    }
-
-    public function desa()
-    {
-        return $this->belongsTo("App\Models\Desa");
     }
 }
