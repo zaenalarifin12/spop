@@ -1,7 +1,7 @@
 @extends('layouts.parent')
 
 @section('title')
-    Pemutakhiran Data
+    Perekaman Data
 @endsection
 
 @section('style')
@@ -13,10 +13,10 @@
      <div class="main-content">
         <section class="section">
           <div class="section-header">
-            <h1 class="text-info text-uppercase">Pemutakhiran Data</h1>
+            <h1 class="text-info text-uppercase">Perekaman Data</h1>
             <div class="section-header-breadcrumb">
               <div class="breadcrumb-item active"><a href="#">Home</a></div>
-              <div class="breadcrumb-item"><a href="#">Pemutakhiran</a></div>
+              <div class="breadcrumb-item"><a href="#">Perekaman</a></div>
               <div class="breadcrumb-item">Lihat</div>
             </div>
           </div>
@@ -39,7 +39,7 @@
 
                     <div class="card">
                       <div class="card-header">
-                        <h4>Data Pemutakhiran</h4>
+                        <h4>Data Perekaman</h4>
                       </div>
                       <div class="card-body">
                         <div id="accordion">
@@ -52,16 +52,30 @@
                                     <div class="col-12 col-md-12 col-lg-12">
                                       <div class="card">
                                         <div class="card-body">
+
+                                        <div class="form-group">
+                                        <label>NOP</label>
+                                            <div class="input-group">                            
+                                                <input type="text" disabled name="pr"        required class="form-control" value="{{ substr($spop->nop, 0,2) }}">
+                                                <input type="text" disabled name="dt"        required class="form-control" value="{{ substr($spop->nop, 2,2) }}">
+                                                <input type="text" disabled name="kec"       required class="form-control" value="{{ substr($spop->nop, 4,3) }}">
+                                                <input type="text" disabled name="des"       required class="form-control" value="{{ substr($spop->nop, 7,3) }}">
+                                                <input type="text" disabled name="blok"      required class="form-control" value="{{ substr($spop->nop, 10,3) }}">
+                                                <input type="text" disabled name="no_urut"   required class="form-control" value="{{ substr($spop->nop, 13,4) }}">
+                                                <input type="text" disabled name="kode"      required class="form-control" value="{{ substr($spop->nop, 17,18) }}">
+                                            </div>
+                                        </div>
+
                                           <div class="form-group">
                                             <label>NOP</label>
                                                 <div class="input-group">                            
-                                                    <input type="text" disabled name="pr"        required class="form-control" value="{{ substr($spop->nop, 0,2) }}">
-                                                    <input type="text" disabled name="dt"        required class="form-control" value="{{ substr($spop->nop, 2,2) }}">
-                                                    <input type="text" disabled name="kec"       required class="form-control" value="{{ substr($spop->nop, 4,3) }}">
-                                                    <input type="text" disabled name="des"       required class="form-control" value="{{ substr($spop->nop, 7,3) }}">
-                                                    <input type="text" disabled name="blok"      required class="form-control" value="{{ substr($spop->nop, 10,3) }}">
-                                                    <input type="text" disabled name="no_urut"   required class="form-control" value="{{ substr($spop->nop, 13,4) }}">
-                                                    <input type="text" disabled name="kode"      required class="form-control" value="{{ substr($spop->nop, 17,18) }}">
+                                                    <input type="text" disabled name="pr"        required class="form-control" value="{{ substr($spop->nop_asal, 0,2) }}">
+                                                    <input type="text" disabled name="dt"        required class="form-control" value="{{ substr($spop->nop_asal, 2,2) }}">
+                                                    <input type="text" disabled name="kec"       required class="form-control" value="{{ substr($spop->nop_asal, 4,3) }}">
+                                                    <input type="text" disabled name="des"       required class="form-control" value="{{ substr($spop->nop_asal, 7,3) }}">
+                                                    <input type="text" disabled name="blok"      required class="form-control" value="{{ substr($spop->nop_asal, 10,3) }}">
+                                                    <input type="text" disabled name="no_urut"   required class="form-control" value="{{ substr($spop->nop_asal, 13,4) }}">
+                                                    <input type="text" disabled name="kode"      required class="form-control" value="{{ substr($spop->nop_asal, 17,18) }}">
                                                 </div>
                                           </div>
                         
@@ -192,7 +206,7 @@
                                         <div class="form-group">
                                             <div class="row">
                                                 <div class="col">
-                                                    <a href="{{ url("pemutakhiran/$spop->uuid/edit") }}" class="btn btn-primary btn-block">Edit</a>
+                                                    <a href="{{ url("perekaman/$spop->uuid/edit") }}" class="btn btn-primary btn-block">Edit</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -355,14 +369,14 @@
                                         <div class="form-group">
                                             <div class="row">
                                                 <div class="col">
-                                                    <form action="{{ url("pemutakhiran/$spop->uuid/bangunan/$rincianDataBangunan->uuid") }}" method="post" style="display:inline">
+                                                    <form action="{{ url("perekaman/$spop->uuid/bangunan/$rincianDataBangunan->uuid") }}" method="post" style="display:inline">
                                                         <button type="submit" class="btn btn-danger btn-block">Hapus</button>
                                                         @csrf
                                                         @method("DELETE")
                                                     </form>
                                                 </div>
                                                 <div class="col">
-                                                    <a href="{{ url("pemutakhiran/$spop->uuid/bangunan/$rincianDataBangunan->uuid/edit") }}" class="btn btn-info btn-block">Edit</a>
+                                                    <a href="{{ url("perekaman/$spop->uuid/bangunan/$rincianDataBangunan->uuid/edit") }}" class="btn btn-info btn-block">Edit</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -377,7 +391,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col">
-                                        <a href="{{ url("/pemutakhiran/$spop->uuid/bangunan/create") }}" class="btn btn-info btn-block">Tambah Bngunan bangunan</a>
+                                        <a href="{{ url("/perekaman/$spop->uuid/bangunan/create") }}" class="btn btn-info btn-block">Tambah Bngunan bangunan</a>
                                     </div>
                                 </div>
                             </div>

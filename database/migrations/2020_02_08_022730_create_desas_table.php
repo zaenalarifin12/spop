@@ -16,10 +16,7 @@ class CreateDesasTable extends Migration
         Schema::create('desas', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('nama');
-            $table->unsignedBigInteger('kecamatan_id');
             $table->timestamps();
-
-            $table->foreign('kecamatan_id')->references("id")->on("kecamatans")->onDelete("cascade");
         });
     }
 

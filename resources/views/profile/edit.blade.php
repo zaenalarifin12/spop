@@ -29,32 +29,34 @@
                     <div class="card-header">
                       <h4>Edit Profil Anda</h4>
                     </div>
-                    <div class="card-body">
+                    <form action="{{ url("/profile/$user->nip") }}" method="post">
+                      <div class="card-body">
                           <div class="row">
                             <div class="form-group col-6">
                               <label for="">NIP</label>
-                              <input id="" type="text" class="form-control" value="{{ $user->nip }}">
+                                <input id="" type="text" class="form-control" name="nip" value="{{ old("nip") ? old("nip") : $user->nip }}">
                             </div>
                             <div class="form-group col-6">
                               <label for="last_name">Nama</label>
-                              <input id="last_name" type="text" class="form-control" name="last_name" value="{{ $user->name }}">
+                              <input id="last_name" type="text" class="form-control" name="name" value="{{ old("name") ? old("name") : $user->name }}">
                             </div>
                           </div>
-        
                           <div class="form-group">
                             <label for="email">Instansi</label>
-                            <input id="email" type="text" class="form-control" name="email" value="{{ $user->instansi }}">
+                            <input id="email" type="text" class="form-control" name="instansi" value="{{ old("instansi") ? old("instansi") : $user->instansi }}">
                             <div class="invalid-feedback">
                             </div>
                           </div>
-        
+          
                           <div class="form-group">
+                            @csrf
+                            @method("PUT")
                             <button type="submit" class="btn btn-primary btn-lg btn-block">
                               Edit
                             </button>
                           </div>
-                        </form>
-                      </div>
+                        </div>
+                    </form>
                   </div>
                 </div>
               </div>

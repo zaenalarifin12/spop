@@ -1,7 +1,7 @@
 @extends('layouts.parent')
 
 @section('title')
-    pemutakhiran data
+    Tambah Bangunan
 @endsection
 
 @section('style')
@@ -21,7 +21,7 @@
             </div>
           </div>
 
-          {{-- {{ dd(session("urutan_bangunan")) }} --}}
+          
           <div class="section-body" >
         <form action="{{ url("/pemutakhiran/$nop/bangunan/create") }}" method="post">  
             <h2 class="section-title">Surat Pemberitahuan Objek Pajak</h2>
@@ -33,7 +33,7 @@
                 <div class="col-12 col-md-12 col-lg-12">
                   <div class="card card-danger">
                     <div class="card-header">
-                      <h4>Bangunan Ke - {{ session("urutan_bangunan") }}</h4>
+                      <h4>Bangunan Ke - {{ $urutan_bangunan }}</h4>
                     </div>
   
                     <div class="card-body">
@@ -65,7 +65,7 @@
                                 <input type="text" class="form-control @error('luas_bangunan') is-invalid @enderror" name="luas_bangunan" value="{{ old("luas_bangunan") }}">
                                 @error("luas_bangunan")
                                 <div class="invalid-feedback"> 
-                                    Luas bangunan harus di isi
+                                    Luas bangunan harus di isi, harus angka dan minimal 0
                                 </div>
                                 @enderror
                             </div>
@@ -76,7 +76,7 @@
                                 <input type="text" class="form-control @error("jumlah_lantai") is-invalid @enderror" name="jumlah_lantai" value="{{ old("jumlah_lantai") }}">
                                 @error("jumlah_lantai")
                                     <div class="invalid-feedback"> 
-                                        Jumlah Lantai harus di isi
+                                        Jumlah Lantai harus di isi, harus angka dan minimal 0
                                     </div>
                                 @enderror
                             </div>
@@ -89,7 +89,7 @@
                                 <input type="text" class="form-control @error('tahun_dibangun') is-invalid @enderror" name="tahun_dibangun" value="{{ old("tahun_dibangun") }}">
                                 @error("tahun_dibangun")
                                     <div class="invalid-feedback"> 
-                                        Tahun dibangun harus di isi
+                                        Tahun dibangun harus di isi, harus angka dan 4 digit
                                     </div>
                                 @enderror
                             </div>
@@ -100,7 +100,7 @@
                                 <input type="text" class="form-control @error('tahun_renovasi') is-invalid @enderror" name="tahun_renovasi" value="{{ old("tahun_renovasi") }}" >
                                 @error("tahun_renovasi")
                                     <div class="invalid-feedback"> 
-                                        tahun renovasi harus di isi
+                                        tahun renovasi harus di isi, harus angka dan 4 digit
                                     </div>
                                 @enderror
                             </div>
@@ -114,7 +114,7 @@
                                 <input type="number" min="1" class="form-control @error('jumlah_bangunan') is-invalid @enderror" name="jumlah_bangunan" value="{{ old("jumlah_bangunan")}}">
                                 @error("jumlah_bangunan")
                                     <div class="invalid-feedback"> 
-                                        Jumlah bangunan harus di isi
+                                        Jumlah bangunan harus di isi, minimal 0
                                     </div>
                                 @enderror
                             </div>
@@ -125,7 +125,7 @@
                                 <input type="number" min="1" class="form-control @error('daya') is-invalid @enderror" name="daya" value="{{ old("daya") }}" >
                                 @error("daya")
                                     <div class="invalid-feedback"> 
-                                        Daya harus di isi
+                                        Daya harus di isi, minimal 0
                                     </div>
                                 @enderror
                             </div>

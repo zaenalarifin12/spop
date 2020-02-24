@@ -15,9 +15,8 @@
           <div class="section-header">
             <h1 class="text-info text-uppercase">Profil Anda</h1>
             <div class="section-header-breadcrumb">
-              <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
-              <div class="breadcrumb-item"><a href="#">Forms</a></div>
-              <div class="breadcrumb-item">Advanced Forms</div>
+              <div class="breadcrumb-item active"><a href="#">Home</a></div>
+              <div class="breadcrumb-item">Profile</div>
             </div>
           </div>
           
@@ -33,17 +32,17 @@
                           <div class="row">
                             <div class="form-group col-6">
                               <label for="">NIP</label>
-                              <input id="" type="text" class="form-control" value="{{ $user->nip }}">
+                              <input id="" disabled type="text" class="form-control" value="{{ $user->nip }}">
                             </div>
                             <div class="form-group col-6">
                               <label for="last_name">Nama</label>
-                              <input id="last_name" type="text" class="form-control" name="last_name" value="{{ $user->name }}">
+                              <input id="last_name" disabled type="text" class="form-control" value="{{ $user->name }}">
                             </div>
                           </div>
         
                           <div class="form-group">
                             <label for="email">Instansi</label>
-                            <input id="email" type="text" class="form-control" name="email" value="{{ $user->instansi }}">
+                            <input id="email" disabled type="text" class="form-control" value="{{ $user->instansi }}">
                             <div class="invalid-feedback">
                             </div>
                           </div>

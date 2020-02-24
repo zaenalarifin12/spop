@@ -15,6 +15,7 @@ class CreateRincianDataBangunansTable extends Migration
     {
         Schema::create('rincian_data_bangunans', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('uuid')->unique();
             $table->integer('luas_bangunan');
             $table->integer('tahun_dibangun');
             $table->integer('tahun_renovasi');

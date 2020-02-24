@@ -15,12 +15,13 @@ class CreateSpopsTable extends Migration
     {
         Schema::create('spops', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('nop');
+            $table->string('uuid')->unique();
+            $table->string('nop')->nullable();
             $table->string('nop_asal')->nullable();
             $table->unsignedBigInteger('data_letak_objek_id')->nullable();
             $table->unsignedBigInteger('data_subjek_pajak_id')->nullable();
             $table->unsignedBigInteger('data_tanah_id')->nullable();
-            
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
 
             $table->foreign('data_letak_objek_id')
@@ -29,6 +30,8 @@ class CreateSpopsTable extends Migration
                 ->references("id")->on("data_subjek_pajaks")->onDelete("cascade");
             $table->foreign('data_tanah_id')
                 ->references("id")->on("data_tanahs")->onDelete("cascade");
+            $table->foreign('user_id')
+                ->references("id")->on("users")->onDelete("cascade"); 
         });
     }
 

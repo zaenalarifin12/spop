@@ -13,18 +13,19 @@
      <div class="main-content">
         <section class="section">
           <div class="section-header">
-            <h1 class="text-info text-uppercase">Tambah Bangunan</h1>
+            <h1 class="text-info text-uppercase">Perekaman Data</h1>
             <div class="section-header-breadcrumb">
-              <div class="breadcrumb-item active"><a href="#">Pemutakhiran</a></div>
-              <div class="breadcrumb-item"><a href="#">Bangunan</a></div>
-              <div class="breadcrumb-item">Tambah</div>
+              <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
+              <div class="breadcrumb-item"><a href="#">Forms</a></div>
+              <div class="breadcrumb-item">Advanced Forms</div>
             </div>
           </div>
 
+          
           <div class="section-body" >
-        <form action="{{ url("/pemutakhiran/$uuid/bangunan/create") }}" method="post">  
+        <form action="{{ url("/perekaman/$nop/bangunan/create") }}" method="post">  
             <h2 class="section-title">Surat Pemberitahuan Objek Pajak</h2>
-            <p class="section-lead">Jenis Transaksi <b>Pemutakhiran Data<b></p>
+            <p class="section-lead">Jenis Transaksi <b>Perekaman Data<b></p>
 
             <div class="container-fluid">
   
@@ -64,7 +65,7 @@
                                 <input type="text" class="form-control @error('luas_bangunan') is-invalid @enderror" name="luas_bangunan" value="{{ old("luas_bangunan") }}">
                                 @error("luas_bangunan")
                                 <div class="invalid-feedback"> 
-                                    Luas bangunan harus di isi
+                                    Luas bangunan harus di isi, harus angka dan minimal 0
                                 </div>
                                 @enderror
                             </div>
@@ -75,7 +76,7 @@
                                 <input type="text" class="form-control @error("jumlah_lantai") is-invalid @enderror" name="jumlah_lantai" value="{{ old("jumlah_lantai") }}">
                                 @error("jumlah_lantai")
                                     <div class="invalid-feedback"> 
-                                        Jumlah Lantai harus di isi
+                                        Jumlah Lantai harus di isi, harus angka dan minimal 0
                                     </div>
                                 @enderror
                             </div>
@@ -88,7 +89,7 @@
                                 <input type="text" class="form-control @error('tahun_dibangun') is-invalid @enderror" name="tahun_dibangun" value="{{ old("tahun_dibangun") }}">
                                 @error("tahun_dibangun")
                                     <div class="invalid-feedback"> 
-                                        Tahun dibangun harus di isi
+                                        Tahun dibangun harus di isi, harus angka dan 4 digit
                                     </div>
                                 @enderror
                             </div>
@@ -99,7 +100,7 @@
                                 <input type="text" class="form-control @error('tahun_renovasi') is-invalid @enderror" name="tahun_renovasi" value="{{ old("tahun_renovasi") }}" >
                                 @error("tahun_renovasi")
                                     <div class="invalid-feedback"> 
-                                        tahun renovasi harus di isi
+                                        tahun renovasi harus di isi, harus angka dan 4 digit
                                     </div>
                                 @enderror
                             </div>
@@ -113,7 +114,7 @@
                                 <input type="number" min="1" class="form-control @error('jumlah_bangunan') is-invalid @enderror" name="jumlah_bangunan" value="{{ old("jumlah_bangunan")}}">
                                 @error("jumlah_bangunan")
                                     <div class="invalid-feedback"> 
-                                        Jumlah bangunan harus di isi
+                                        Jumlah bangunan harus di isi, minimal 0
                                     </div>
                                 @enderror
                             </div>
@@ -124,7 +125,7 @@
                                 <input type="number" min="1" class="form-control @error('daya') is-invalid @enderror" name="daya" value="{{ old("daya") }}" >
                                 @error("daya")
                                     <div class="invalid-feedback"> 
-                                        Daya harus di isi
+                                        Daya harus di isi, minimal 0
                                     </div>
                                 @enderror
                             </div>

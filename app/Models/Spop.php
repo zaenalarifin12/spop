@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Spop extends Model
 {
     protected $fillable = [
+        "uuid",
         "nop",
         "nop_asal",
         "data_letak_objek_id",

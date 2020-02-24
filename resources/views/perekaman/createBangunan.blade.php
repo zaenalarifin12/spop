@@ -15,16 +15,16 @@
           <div class="section-header">
             <h1 class="text-info text-uppercase">Tambah Bangunan</h1>
             <div class="section-header-breadcrumb">
-              <div class="breadcrumb-item active"><a href="#">Pemutakhiran</a></div>
+              <div class="breadcrumb-item active"><a href="#">Perekaman</a></div>
               <div class="breadcrumb-item"><a href="#">Bangunan</a></div>
               <div class="breadcrumb-item">Tambah</div>
             </div>
           </div>
 
           <div class="section-body" >
-        <form action="{{ url("/pemutakhiran/$uuid/bangunan/create") }}" method="post">  
+        <form action="{{ url("/perekaman/$uuid/bangunan/create") }}" method="post">  
             <h2 class="section-title">Surat Pemberitahuan Objek Pajak</h2>
-            <p class="section-lead">Jenis Transaksi <b>Pemutakhiran Data<b></p>
+            <p class="section-lead">Jenis Transaksi <b>Perekaman Data<b></p>
 
             <div class="container-fluid">
   

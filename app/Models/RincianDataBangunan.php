@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class RincianDataBangunan extends Model
 {
     protected $fillable = [
+        "uuid",
         "luas_bangunan",
         "jumlah_lantai",
         "tahun_dibangun",

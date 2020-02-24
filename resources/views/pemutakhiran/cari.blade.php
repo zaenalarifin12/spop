@@ -33,15 +33,17 @@
                       <div class="row">
                           <div class="form-group">
                             <label>Cari NOP</label>
-                              <form action="{{ url("/pemutakhiran/cari") }}" method="get" class="input-group">
-                                <input type="text" name="pr"      class="form-control" disabled value="33"/>
-                                <input type="text" name="dtii"    class="form-control" disabled value="18"/>
-                                <input type="text" name="kec"     autocomplete="off" pattern=".{3,3}" minlength="3" maxlength="3" class="form-control" value="{{ old("kec") }}"/>
-                                <input type="text" name="des"     autocomplete="off" pattern=".{3,3}" minlength="3" maxlength="3" class="form-control" value="{{ old("des") }}"/>
-                                <input type="text" name="blok"    autocomplete="off" pattern=".{3,3}" minlength="3" maxlength="3" class="form-control" value="{{ old("blok") }}"/>
-                                <input type="text" name="no_urut" autocomplete="off" pattern=".{4,4}" minlength="4" maxlength="4" class="form-control" value="{{ old("no_urut") }}"/>
-                                <input type="text" name="kode"    autocomplete="off" pattern=".{1,1}" minlength="1" maxlength="1" class="form-control" value="{{ old("kode") }}"/>
-                                <button type="submit" class="form-control">Cari </button>
+                              <form action="{{ url("/pemutakhiran/cari") }}" method="get">
+                                <div class="input-group mb-2">
+                                  <input type="text" name="pr"      class="form-control" disabled value="33"/>
+                                  <input type="text" name="dtii"    class="form-control" disabled value="18"/>
+                                  <input type="text" name="kec"     autocomplete="off" pattern=".{3,3}" minlength="3" maxlength="3" class="form-control" value="{{ old("kec") }}"/>
+                                  <input type="text" name="des"     autocomplete="off" pattern=".{3,3}" minlength="3" maxlength="3" class="form-control" value="{{ old("des") }}"/>
+                                  <input type="text" name="blok"    autocomplete="off" pattern=".{3,3}" minlength="3" maxlength="3" class="form-control" value="{{ old("blok") }}"/>
+                                  <input type="text" name="no_urut" autocomplete="off" pattern=".{4,4}" minlength="4" maxlength="4" class="form-control" value="{{ old("no_urut") }}"/>
+                                  <input type="text" name="kode"    autocomplete="off" pattern=".{1,1}" minlength="1" maxlength="1" class="form-control" value="{{ old("kode") }}"/>
+                                </div>
+                              <button type="submit" class="form-control btn btn-outline-primary">Cari </button>
                               </form>
                           </div>
                       </div>
@@ -93,7 +95,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                  <a href="{{ url("/pemutakhiran/create/$rujukan->nop") }}" class="btn btn-primary btn-block">Usulan perubahan</a>
+                                  <a href="{{ url("/pemutakhiran/create/$rujukan->uuid") }}" class="btn btn-primary btn-block">Usulan perubahan</a>
                                 </div>
                       @endif
                     </div>

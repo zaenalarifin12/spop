@@ -34,6 +34,7 @@
       <nav class="navbar navbar-expand-lg main-navbar">
         <form class="form-inline mr-auto">
           <ul class="navbar-nav mr-3">
+            <li><a href="#" data-toggle="sidebar" class="nav-link nav-link-lg"><i class="fas fa-bars"></i></a></li>
           </ul>
         </form>
         <ul class="navbar-nav navbar-right">
@@ -63,18 +64,24 @@
           </div>
             <ul class="sidebar-menu">
               <li class="menu-header">Dashboard</li>
-              <li class="nav-item dropdown active">
-                <a href="#" class="nav-link has-dropdown"><i class="fas fa-fire"></i><span>Dashboard</span></a>
+
+              <li><a class="nav-link" href="{{ url("/pemutakhiran/cari") }}"><i class="fas fa-pencil-ruler"></i> Cari Data Rujukan</a></li>
+
+              <li class="nav-item dropdown">
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-fire"></i><span>Pemutakhiran</span></a>
                 <ul class="dropdown-menu">
-                  @if (Auth::user()->role == 1)
-                    <li><a class="nav-link" href="{{ url("/spop") }}">Pemutakhiran</a></li>
-                    <li><a class="nav-link" href="{{ url("/rujukan") }}">Rujukan</a></li>
-                    <li><a class="nav-link" href="{{ url("/perekaman") }}">Perekaman Data</a></li>
-                    <li><a class="nav-link" href="{{ url("/users") }}">Data Users</a></li>
-                  @endif
-                  <li><a class="nav-link" href="{{ url("/pemutakhiran/cari") }}">Cari rujukan</a></li>
+                  <li><a class="nav-link" href="{{ url("/pemutakhiran") }}">Daftar Pemutakhiran</a></li>
                 </ul>
               </li>
+
+              <li class="nav-item dropdown">
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-fire"></i><span>Perekaman</span></a>
+                <ul class="dropdown-menu">
+                  <li><a class="nav-link" href="{{ url("/perekaman") }}">Daftar Perekaman</a></li>
+                  <li><a class="nav-link" href="{{ url("/perekaman/create") }}">Perekaman Baru</a></li>
+                </ul>
+              </li>
+
             </ul>
         </aside>
       </div>

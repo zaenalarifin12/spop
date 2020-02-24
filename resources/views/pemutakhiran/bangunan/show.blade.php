@@ -31,7 +31,7 @@
                 <div class="col-12 col-md-12 col-lg-12">
                   <div class="card card-danger">
                     <div class="card-header">
-                      <h4>Bangunan Ke - </h4>
+                      <h4>Bangunan </h4>
                     </div>
   
                     <div class="card-body">
@@ -46,7 +46,7 @@
                         <div class="selectgroup selectgroup-pills">
                             @foreach ($jenisPenggunaanBangunans as $item)
                                 <label class="selectgroup-item">
-                                    <input type="radio" name="penggunaan" value="{{ $item->id }}" class="selectgroup-input" 
+                                    <input disabled type="radio" name="penggunaan" value="{{ $item->id }}" class="selectgroup-input" 
                                     @if($item->id == $rincianDataBangunan->jenisPenggunaanBangunan->id)
                                         checked   
                                     @endif
@@ -61,13 +61,13 @@
                         <div class="col">
                             <div class="form-group">
                                 <label>Luas Bangunan</label>
-                                <input type="text" class="form-control" name="luas_bangunan" value="{{ $rincianDataBangunan->luas_bangunan }}">
+                                <input disabled type="text" class="form-control" name="luas_bangunan" value="{{ $rincianDataBangunan->luas_bangunan }}">
                             </div>
                         </div>
                         <div class="col">
                             <div class="form-group">
                                 <label>Jumlah Lantai</label>
-                                <input type="text" class="form-control" name="jumlah_lantai" value="{{ $rincianDataBangunan->jumlah_lantai }}">
+                                <input disabled type="text" class="form-control" name="jumlah_lantai" value="{{ $rincianDataBangunan->jumlah_lantai }}">
                             </div>
                         </div>
                     </div>
@@ -75,13 +75,13 @@
                         <div class="col">
                             <div class="form-group">
                                 <label>Tahun Dibangun</label>
-                                <input type="text" class="form-control" name="tahun_dibangun" value="{{ $rincianDataBangunan->tahun_dibangun }}">
+                                <input disabled type="text" class="form-control" name="tahun_dibangun" value="{{ $rincianDataBangunan->tahun_dibangun }}">
                             </div>
                         </div>
                         <div class="col">
                             <div class="form-group">
                                 <label>Tahun Direnovasi</label>
-                                <input type="text" class="form-control" name="tahun_renovasi" value="{{ $rincianDataBangunan->tahun_renovasi }}" >
+                                <input disabled type="text" class="form-control" name="tahun_renovasi" value="{{ $rincianDataBangunan->tahun_renovasi }}" >
                             </div>
                         </div>
                     </div>
@@ -90,13 +90,13 @@
                         <div class="col">
                             <div class="form-group">
                                 <label>Jumlah Bangunan</label>
-                                <input type="number" min="1" class="form-control" name="jumlah_bangunan" value="{{ $rincianDataBangunan->jumlah_bangunan }}">
+                                <input disabled type="number" min="1" class="form-control" name="jumlah_bangunan" value="{{ $rincianDataBangunan->jumlah_bangunan }}">
                             </div>
                         </div>
                         <div class="col">
                             <div class="form-group">
                                 <label>Daya Listrik Terpasang (WATT)</label>
-                                <input type="number" min="1" class="form-control" name="daya" value="{{ $rincianDataBangunan->daya_listrik }}" >
+                                <input disabled type="number" min="1" class="form-control" name="daya" value="{{ $rincianDataBangunan->daya_listrik }}" >
                             </div>
                         </div>
                     </div>
@@ -108,7 +108,7 @@
                         <div class="selectgroup selectgroup-pills">
                             @foreach ($kondisis as $kondisi)
                                 <label class="selectgroup-item">
-                                    <input type="radio" name="kondisi" value="{{ $kondisi->id }}" class="selectgroup-input" 
+                                    <input disabled type="radio" name="kondisi" value="{{ $kondisi->id }}" class="selectgroup-input" 
                                     @if($kondisi->id == $rincianDataBangunan->kondisi->id)
                                         checked   
                                     @endif
@@ -126,7 +126,7 @@
                         <div class="selectgroup selectgroup-pills">
                             @foreach ($konstruksis as $item)
                                 <label class="selectgroup-item">
-                                    <input type="radio" name="konstruksi" value="{{ $item->id }}" class="selectgroup-input" 
+                                    <input disabled type="radio" name="konstruksi" value="{{ $item->id }}" class="selectgroup-input" 
                                     @if($item->id == $rincianDataBangunan->konstruksi->id)
                                         checked   
                                     @endif
@@ -144,7 +144,7 @@
                         <div class="selectgroup selectgroup-pills">
                             @foreach ($ataps as $item)
                                 <label class="selectgroup-item">
-                                    <input type="radio" name="atap" value="{{ $item->id }}" class="selectgroup-input" 
+                                    <input disabled type="radio" name="atap" value="{{ $item->id }}" class="selectgroup-input" 
                                     @if($item->id == $rincianDataBangunan->atap->id)
                                         checked   
                                     @endif
@@ -162,7 +162,7 @@
                         <div class="selectgroup selectgroup-pills">
                             @foreach ($dindings as $item)
                                 <label class="selectgroup-item">
-                                    <input type="radio" name="dinding" value="{{$item->id}}" class="selectgroup-input" 
+                                    <input disabled type="radio" name="dinding" value="{{$item->id}}" class="selectgroup-input" 
                                     @if($item->id == $rincianDataBangunan->dinding->id)
                                         checked   
                                     @endif
@@ -180,7 +180,7 @@
                         <div class="selectgroup selectgroup-pills">
                             @foreach ($lantais as $item)
                                 <label class="selectgroup-item">
-                                    <input type="radio" name="lantai" value="{{$item->id}}" class="selectgroup-input" 
+                                    <input disabled type="radio" name="lantai" value="{{$item->id}}" class="selectgroup-input" 
                                     @if($item->id == $rincianDataBangunan->lantai->id)
                                         checked   
                                     @endif
@@ -198,7 +198,7 @@
                             <div class="selectgroup selectgroup-pills">
                                 @foreach ($langits as $item)
                                     <label class="selectgroup-item">
-                                        <input type="radio" name="langit" value="{{$item->id}}" class="selectgroup-input" 
+                                        <input disabled type="radio" name="langit" value="{{$item->id}}" class="selectgroup-input" 
                                         @if($item->id == $rincianDataBangunan->langit->id)
                                             checked   
                                         @endif
@@ -212,10 +212,10 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col">
-                                    <a href="{{ url("/pemutakhiran/".$rincianDataBangunan->spop->nop) }}" class="btn btn-info btn-block">Kembali</a>
+                                    <a href="{{ url("/pemutakhiran/".$rincianDataBangunan->spop->uuid) }}" class="btn btn-info btn-block">Kembali</a>
                                 </div>
                                 <div class="col">
-                                    <a href="{{ url("/pemutakhiran/".$rincianDataBangunan->spop->nop."/bangunan/create") }}" class="btn btn-success btn-block">Tambah Bangunan baru</a>
+                                    <a href="{{ url("/pemutakhiran/".$rincianDataBangunan->spop->uuid."/bangunan/create") }}" class="btn btn-success btn-block">Tambah Bangunan baru</a>
                                 </div>
                             </div>
                         </div>

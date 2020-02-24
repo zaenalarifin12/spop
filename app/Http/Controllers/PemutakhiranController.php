@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 use App\Models\Status;
 use App\Models\Pekerjaan;
@@ -20,23 +21,43 @@ use App\Models\Lantai;
 use App\Models\Langit;
 use App\Models\Rujukan;
 use App\Models\Spop;
-use App\Models\Kecamatan;
 use App\Models\Desa;
 
+use Auth;
+use DataTables;
 
 class PemutakhiranController extends Controller
 {
-    public function create($nop)
+    public function index()
     {
-        $rujukan = Rujukan::where("nop", $nop)->first();
+        return view("pemutakhiran.index");
+    }
 
-        if (empty($rujukan))
-            die("nop rujukan tidak ditemukan");
+    public function json()
+    {
+        if (Auth::user()->role == 1){
+            $spops = Spop::where("nop_asal", null)->get();
+        }else{
+            $spops = Spop::where("nop_asal", null)->where("user_id", Auth::user()->id)->get();
+        }
 
-        $spop = Spop::where("nop", str_replace(".", "", $nop))->first();
+        return DataTables::of($spops)
+        ->addColumn('action', function($row) {
+            return '<a href="/pemutakhiran/'. $row->uuid .'" class="btn btn-primary">Lihat</a>';
+        })->make(true);
+    }
+
+    public function create($uuid)
+    {
+        $rujukan = Rujukan::where("uuid", $uuid)->first();
+
+        if (empty($rujukan)) abort(404);
+            // die("nop rujukan tidak ditemukan");
+
+        $spop = Spop::where("nop", str_replace(".", "", $rujukan->nop))->first();
         if(!empty($spop)){
             // jika sudah ada maka langsung ke detail
-            return redirect("/pemutakhiran/$spop->nop");
+            return redirect("/pemutakhiran/$spop->uuid");
         }
             
         $jenisTanah                 = JenisTanah::get();
@@ -49,7 +70,6 @@ class PemutakhiranController extends Controller
         $dindings                   = Dinding::get();
         $lantais                    = Lantai::get();
         $langits                    = Langit::get();
-        $kecamatans                 = Kecamatan::get();
         $desas                      = Desa::get()->pluck("nama");
 
         $my_nop = explode(".", $rujukan->nop);
@@ -67,12 +87,6 @@ class PemutakhiranController extends Controller
         $op_rt         = $objek_pajak[4];
         $op_rw         = $objek_pajak[6];
 
-        /**
-         * TODO 
-         * mengambil data kabupaten pati
-         * mengambil data tiap kabupaten
-         * mengambil desa berdasarkan kab
-         */
         return view("pemutakhiran.create", compact([
             "rujukan",
             "my_nop",
@@ -96,12 +110,11 @@ class PemutakhiranController extends Controller
             "dindings",
             "lantais",
             "langits",
-            "kecamatans",
             "desas"
         ]));
     }
 
-    public function store(Request $request, $nop)
+    public function store(Request $request, $uuid)
     {
         switch ($request->input("action")) {
             case "save":
@@ -110,40 +123,48 @@ class PemutakhiranController extends Controller
                  */
                 $this->validate($request, [
                     "dlop_nama_jalan"       => "required",
-                    "dlop_blok"             => "required",
+                    // "dlop_blok"             => "required",
                     "dlop_desa"             => "required",
-                    "dlop_rw"               => "required",
-                    "dlop_rt"               => "required",
+                    "dlop_rw"               => "required|numeric|digits:2",
+                    "dlop_rt"               => "required|numeric|digits:3",
                     "status"                => "required",
                     "pekerjaan"             => "required",
                     "dsp_nama_subjek_pajak" => "required",
                     "dsp_nama_jalan"        => "required",
                     "dsp_kabupaten"         => "required",
                     "dsp_desa"              => "required",
-                    "dsp_rw"                => "required",
-                    "dsp_rt"                => "required",
-                    "dsp_no_ktp"            => "required",
-                    "dsp_luas_tanah"        => "required",
+                    "dsp_rw"                => "required|numeric|digits:2",
+                    "dsp_rt"                => "required|numeric|digits:3",
+                    "dsp_no_ktp"            => "required|numeric|digits:16",
+                    "dsp_luas_tanah"        => "required|numeric",
                     "jenis_tanah"           => "required", //  masih kurang validasi 2,3
                 ]);
 
-                $rujukan = Rujukan::where("nop", $nop)->pluck("nop")->first(); #mencari rujukan di table
-                if (empty($rujukan))
-                    die("nop belum ada");
-
+                $rujukan = Rujukan::where("uuid", $uuid)->pluck("nop")->first(); #mencari rujukan di table
+                
+                if (empty($rujukan)) abort(404);
+                    // die("nop belum ada");
+                    
                 $status     = Status::where("id", $request->status)->pluck("id")->first();
                 $pekerjaan  = Pekerjaan::where("id", $request->pekerjaan)->pluck("id")->first();
-                if (empty($status))
-                    die("status tidak ada");
-                elseif(empty($pekerjaan))
-                    die("pekerjaan tidak ada");
+                if (empty($status)) abort(404);
+                    // die("status tidak ada");
+                elseif(empty($pekerjaan)) abort(404);
+                    // die("pekerjaan tidak ada");
                 
                 
-                $spop       = new Spop();
-                $spop->nop  = (str_replace(".", "", $rujukan));
+                $uu = Str::random(40) .time();
+                if(Spop::where("uuid", $uu)->first() != null)
+                    $uu = Str::random(40) .time();
+                
+                $spop           = new Spop();
+                $spop->uuid     = $uu;
+                $spop->nop      = (str_replace(".", "", $rujukan));
+                $spop->user_id  = Auth::user()->id;
                 $spop->save();
 
                 $desa = Desa::where("nama", "$request->dlop_desa")->first();
+
                 $DataLetakObjekPajak = DataLetakObjek::create([
                     "nama_jalan"        => $request->dlop_nama_jalan,
                     "desa_id"           => $desa->id,
@@ -191,44 +212,41 @@ class PemutakhiranController extends Controller
                     ]);
 
                      // jika nop ngga kosong
-                     return redirect("/pemutakhiran/" . $spop->nop);
+                     return redirect("/pemutakhiran/" . $spop->uuid);
                     // redirect to add new
                 }else{
                     die("jenis tanah yang di pilih tidak ada");
                 }
                 break;
-            case "tambah":
-                           
+            case "tambah":    
                 /**
                  * VALIDASI FORM
                  */
                 $this->validate($request, [
-                    "nop"                   => "required",
                     "dlop_nama_jalan"       => "required",
-                    "dlop_blok"             => "required",
-                    "dlop_kecamatan"        => "required",
+                    // "dlop_blok"             => "required",
                     "dlop_desa"             => "required",
-                    "dlop_rw"               => "required",
-                    "dlop_rt"               => "required",
+                    "dlop_rw"               => "required|numeric|digits:2",
+                    "dlop_rt"               => "required|numeric|digits:3",
                     "status"                => "required",
                     "pekerjaan"             => "required",
                     "dsp_nama_subjek_pajak" => "required",
                     "dsp_nama_jalan"        => "required",
-                    "dsp_kecamatan"         => "required",
+                    "dsp_kabupaten"         => "required",
                     "dsp_desa"              => "required",
-                    "dsp_rw"                => "required",
-                    "dsp_rt"                => "required",
-                    "dsp_no_ktp"            => "required",
-                    "dsp_luas_tanah"        => "required",
+                    "dsp_rw"                => "required|numeric|digits:2",
+                    "dsp_rt"                => "required|numeric|digits:3",
+                    "dsp_no_ktp"            => "required|numeric|digits:16",
+                    "dsp_luas_tanah"        => "required|numeric",
                     "jenis_tanah"           => "required|in:1", //  masih kurang validasi 1,2,3
                     // BANGUNAN
                     "penggunaan"            => "required",
-                    "luas_bangunan"         => "required",
-                    "jumlah_lantai"         => "required",
-                    "tahun_dibangun"        => "required",
-                    "tahun_renovasi"        => "required",
-                    "jumlah_bangunan"       => "required",
-                    "daya"                  => "required",
+                    "luas_bangunan"         => "required|numeric|min:0",
+                    "jumlah_lantai"         => "required|numeric|min:0",
+                    "tahun_dibangun"        => "required|numeric|digits:4",
+                    "tahun_renovasi"        => "required|numeric|digits:4",
+                    "jumlah_bangunan"       => "required|numeric|min:0",
+                    "daya"                  => "required|numeric|min:0",
                     "kondisi"               => "required",
                     "konstruksi"            => "required",
                     "atap"                  => "required",
@@ -237,7 +255,7 @@ class PemutakhiranController extends Controller
                     "langit"                => "required",
                 ]);
 
-                $rujukan = Rujukan::where("nop", $nop)->pluck("nop")->first(); #mencari rujukan di table
+                $rujukan = Rujukan::where("uuid", $uuid)->first(); #mencari rujukan di table
                 if (empty($rujukan))
                     die("nop belum ada");
 
@@ -248,14 +266,21 @@ class PemutakhiranController extends Controller
                 elseif(empty($pekerjaan))
                     die("pekerjaan tidak ada");
                 
-                $spop       = new Spop();
-                $spop->nop  = (str_replace(".", "", $rujukan));
+                $uu = Str::random(40) .time();
+                if(Spop::where("uuid", $uu)->first() != null)
+                    $uu = $uu.time();
+                        
+                $spop           = new Spop();
+                $spop->uuid     = $uu;
+                $spop->nop      = str_replace(".", "", $rujukan->nop);
+                $spop->user_id  = Auth::user()->id;
                 $spop->save();
 
+                $desa = Desa::where("nama", "$request->dlop_desa")->first();
+                
                 $DataLetakObjekPajak = DataLetakObjek::create([
                     "nama_jalan"        => $request->dlop_nama_jalan,
-                    "desa_id"           => $request->dlop_desa,
-                    // $request->dlop_kecamatan;
+                    "desa_id"           => $desa->id,
                     "blok_kav"          => $request->dlop_blok,
                     "rw"                => $request->dlop_rw,
                     "rt"                => $request->dlop_rt,
@@ -270,7 +295,8 @@ class PemutakhiranController extends Controller
                     "nomor_ktp"         => $request->dsp_no_ktp,
                     "status_id"         => $status,
                     "pekerjaan_id"      => $pekerjaan,
-                    "desa_id"           => $request->dsp_desa,
+                    "desa"              => $request->dsp_desa,
+                    "kabupaten"         => $request->dsp_kabupaten,
                     "spop_id"           => $spop->id
                 ]);
                 
@@ -296,7 +322,13 @@ class PemutakhiranController extends Controller
                         "spop_id"           => $spop->id,
                     ]);
 
+                    $random = Str::random(40);
+                    if(RincianDataBangunan::where("uuid", $random)->first() != null){
+                        $random = Str::random(40) .time();
+                    }    
+
                     $RincianDataBangunan = RincianDataBangunan::create([
+                        "uuid"                          => $random,
                         "jenis_penggunaan_bangunan_id"  => $jenisPenggunaanBangunan,
                         "luas_bangunan"                 => $request->luas_bangunan,
                         "jumlah_lantai"                 => $request->jumlah_lantai,
@@ -322,11 +354,8 @@ class PemutakhiranController extends Controller
                         "jenis_tanah_id"    => $request->jenis_tanah
                     ]);
 
-                     // session for urutan bangunan
-                     session(["urutan_bangunan" => 2]);
-
                      // jika nop ngga kosong
-                     return redirect("/pemutakhiran/" . $spop->nop . "/bangunan/create");
+                     return redirect("/pemutakhiran/" . $spop->uuid . "/bangunan/create");
                      // redirect to bangunan new
 
                 }else
@@ -338,10 +367,17 @@ class PemutakhiranController extends Controller
         }
     }
 
-    public function createBangunan($nop)
+    public function createBangunan($uuid)
     {
-        $nop;
-        $value = session('urutan_bangunan');
+        $uuid;
+        $spop = Spop::with("rincianDataBangunans")->where("uuid", $uuid)->first();
+        
+        $jumlah_bangunan = $spop->rincianDataBangunans->count();
+        if($jumlah_bangunan != 0){
+            $value = $jumlah_bangunan+1;    
+        }else{
+            $value = 1;  
+        }
 
         $jenisPenggunaanBangunans   = JenisPenggunaanBangunan::get();
         $kondisis                   = Kondisi::get();
@@ -359,11 +395,11 @@ class PemutakhiranController extends Controller
             "dindings",
             "lantais",
             "langits",
-            "nop"
+            "uuid"
         ]))->with("urutan_bangunan", $value);
     }
 
-    public function storeBangunan(Request $request, $nop)
+    public function storeBangunan(Request $request, $uuid)
     {
 
         switch ($request->input("action")) {
@@ -375,12 +411,12 @@ class PemutakhiranController extends Controller
                 $this->validate($request, [
                     // BANGUNAN
                     "penggunaan"            => "required",
-                    "luas_bangunan"         => "required",
-                    "jumlah_lantai"         => "required",
-                    "tahun_dibangun"        => "required",
-                    "tahun_renovasi"        => "required",
-                    "jumlah_bangunan"       => "required",
-                    "daya"                  => "required",
+                    "luas_bangunan"         => "required|numeric|min:0",
+                    "jumlah_lantai"         => "required|numeric|min:0",
+                    "tahun_dibangun"        => "required|numeric|digits:4",
+                    "tahun_renovasi"        => "required|numeric|digits:4",
+                    "jumlah_bangunan"       => "required|numeric|min:0",
+                    "daya"                  => "required|numeric|min:0",
                     "kondisi"               => "required",
                     "konstruksi"            => "required",
                     "atap"                  => "required",
@@ -389,8 +425,7 @@ class PemutakhiranController extends Controller
                     "langit"                => "required",
                 ]);
                 
-                $spop  = Spop::where("nop", $nop)->first();
-
+                $spop  = Spop::where("uuid", $uuid)->first();
 
                 $kondisi                    = Kondisi::where("id", $request->kondisi)->pluck("id")->first();
                 $jenisPenggunaanBangunan    = JenisPenggunaanBangunan::where("id", $request->penggunaan)->pluck("id")->first();
@@ -399,7 +434,6 @@ class PemutakhiranController extends Controller
                 $dinding                    = Dinding::where("id", $request->dinding)->pluck("id")->first();
                 $lantai                     = Lantai::where("id", $request->lantai)->pluck("id")->first();
                 $langit                     = Langit::where("id", $request->langit)->pluck("id")->first();
-                
 
                 if (empty($spop))
                     die("nop belum ada");
@@ -419,7 +453,13 @@ class PemutakhiranController extends Controller
                 if (empty($langit))
                     die("langit tidak ada");
                         
+                $random = Str::random(40);
+                if(RincianDataBangunan::where("uuid", $random)->first() != null){
+                    $random = Str::random(40) .time();
+                }
+
                 $RincianDataBangunan = RincianDataBangunan::create([
+                    "uuid"                          => $random,
                     "jenis_penggunaan_bangunan_id"  => $jenisPenggunaanBangunan,
                     "luas_bangunan"                 => $request->luas_bangunan,
                     "jumlah_lantai"                 => $request->jumlah_lantai,
@@ -438,23 +478,22 @@ class PemutakhiranController extends Controller
 
                 // redirect to add new
                 session()->forget('urutan_bangunan'); // menghapus session
-                return redirect("/pemutakhiran/" . $spop->nop)->with("msg", "data berhasil ditambahkan");
+                return redirect("/pemutakhiran/" . $spop->uuid)->with("msg", "bangunan berhasil ditambahkan");
 
                 break;
             case "tambah":     
                 /**
                  * VALIDASI FORM
                  */
-
                 $this->validate($request, [
                     // BANGUNAN
                     "penggunaan"            => "required",
-                    "luas_bangunan"         => "required",
-                    "jumlah_lantai"         => "required",
-                    "tahun_dibangun"        => "required",
-                    "tahun_renovasi"        => "required",
-                    "jumlah_bangunan"       => "required",
-                    "daya"                  => "required",
+                    "luas_bangunan"         => "required|numeric|min:0",
+                    "jumlah_lantai"         => "required|numeric|min:0",
+                    "tahun_dibangun"        => "required|numeric|digits:4",
+                    "tahun_renovasi"        => "required|numeric|digits:4",
+                    "jumlah_bangunan"       => "required|numeric|min:0",
+                    "daya"                  => "required|numeric|min:0",
                     "kondisi"               => "required",
                     "konstruksi"            => "required",
                     "atap"                  => "required",
@@ -463,7 +502,7 @@ class PemutakhiranController extends Controller
                     "langit"                => "required",
                 ]);
                 
-                $spop  = Spop::where("nop", $nop)->first();
+                $spop  = Spop::where("uuid", $uuid)->first();
 
                 $kondisi                    = Kondisi::where("id", $request->kondisi)->pluck("id")->first();
                 $jenisPenggunaanBangunan    = JenisPenggunaanBangunan::where("id", $request->penggunaan)->pluck("id")->first();
@@ -491,8 +530,13 @@ class PemutakhiranController extends Controller
                 if (empty($langit))
                     die("langit tidak ada");
                         
+                $random = Str::random(40);
+                if(RincianDataBangunan::where("uuid", $random)->first() != null){
+                    $random = Str::random(40) .time();
+                }
 
                 $RincianDataBangunan = RincianDataBangunan::create([
+                    "uuid"                          => $random,
                     "jenis_penggunaan_bangunan_id"  => $jenisPenggunaanBangunan,
                     "luas_bangunan"                 => $request->luas_bangunan,
                     "jumlah_lantai"                 => $request->jumlah_lantai,
@@ -509,12 +553,11 @@ class PemutakhiranController extends Controller
                     "spop_id"                       => $spop->id
                 ]);
                 
-                $nop;
                 $value = session('urutan_bangunan');
                 $value++;
                 session(["urutan_bangunan" => $value]);
                 // jika nop ngga kosong
-                return redirect("/pemutakhiran/" . $spop->nop . "/bangunan/create");
+                return redirect("/pemutakhiran/" . $spop->uuid . "/bangunan/create");
                 // redirect to bangunan new
                 break;
             default:
@@ -522,7 +565,7 @@ class PemutakhiranController extends Controller
         }
     }
 
-    public function show($nop)
+    public function show($uuid)
     {
         $spop = Spop::with([
             "dataLetakObjek",
@@ -537,7 +580,7 @@ class PemutakhiranController extends Controller
             "rincianDataBangunans.atap",
             "rincianDataBangunans.lantai",
             "rincianDataBangunans.langit",
-            ])->where("nop", $nop)->first();
+            ])->where("uuid", $uuid)->first();
 
         $statuses                   = Status::get();
         $pekerjaans                 = Pekerjaan::get();
@@ -555,7 +598,6 @@ class PemutakhiranController extends Controller
 
             "statuses",
             "pekerjaans",
-            "nop",
             "jenisPenggunaanBangunans",
             "kondisis",
             "konstruksis",
@@ -567,7 +609,7 @@ class PemutakhiranController extends Controller
         ]));
     }
 
-    public function edit($nop)
+    public function edit($uuid)
     {
         $spop = Spop::with([
             "dataLetakObjek",
@@ -582,14 +624,13 @@ class PemutakhiranController extends Controller
             "rincianDataBangunans.atap",
             "rincianDataBangunans.lantai",
             "rincianDataBangunans.langit",
-            ])->where("nop", $nop)->first();
+            ])->where("uuid", $uuid)->first();
 
         if(empty($spop)){
             abort(404);
         }
 
         $desas                      = Desa::get()->pluck("nama");
-
         $statuses                   = Status::get();
         $pekerjaans                 = Pekerjaan::get();
         $jenisPenggunaanBangunans   = JenisPenggunaanBangunan::get();
@@ -607,7 +648,6 @@ class PemutakhiranController extends Controller
 
             "statuses",
             "pekerjaans",
-            "nop",
             "jenisPenggunaanBangunans",
             "kondisis",
             "konstruksis",
@@ -619,31 +659,31 @@ class PemutakhiranController extends Controller
         ]));
     }
 
-    public function update(Request $request, $nop)
+    public function update(Request $request, $uuid)
     {
         /**
          * VALIDASI FORM
          */
         $this->validate($request, [
             "dlop_nama_jalan"       => "required",
-            "dlop_blok"             => "required",
+            // "dlop_blok"             => "required",
             "dlop_desa"             => "required",
-            "dlop_rw"               => "required",
-            "dlop_rt"               => "required",
+            "dlop_rw"               => "required|numeric|digits:2",
+            "dlop_rt"               => "required|numeric|digits:3",
             "status"                => "required",
             "pekerjaan"             => "required",
             "dsp_nama_subjek_pajak" => "required",
             "dsp_nama_jalan"        => "required",
             "dsp_kabupaten"         => "required",
             "dsp_desa"              => "required",
-            "dsp_rw"                => "required",
-            "dsp_rt"                => "required",
-            "dsp_no_ktp"            => "required",
-            "dsp_luas_tanah"        => "required",
-            "jenis_tanah"           => "required", //  masih kurang validasi 2,3
+            "dsp_rw"                => "required|numeric|digits:2",
+            "dsp_rt"                => "required|numeric|digits:3",
+            "dsp_no_ktp"            => "required|numeric|digits:16",
+            "dsp_luas_tanah"        => "required|numeric",
+            "jenis_tanah"           => "required",
         ]);
 
-        $spop = Spop::where("nop", $nop)->first(); #mencari rujukan di table
+        $spop = Spop::where("uuid", $uuid)->first(); #mencari rujukan di table
         if (empty($spop))
             die("Nop tidak ada");
 
@@ -686,16 +726,16 @@ class PemutakhiranController extends Controller
             ]);
 
                 // jika nop ngga kosong
-                return redirect("/pemutakhiran/" . $spop->nop)->with("msg", "data pemilik telah berhasil diubah");
+                return redirect("/pemutakhiran/" . $spop->uuid)->with("msg", "data pemilik telah berhasil diubah");
             // redirect to add new
         }else{
             die("jenis tanah yang di pilih tidak ada");
         }
     }
 
-    public function editBangunan($nop, $id)
+    public function editBangunan($uuid, $uuid_bangunan)
     {
-        $spop = Spop::where("nop", $nop)->first();
+        $spop = Spop::where("uuid", $uuid)->first();
         $rincianDataBangunan    = RincianDataBangunan::with([
             "spop",
             "jenisPenggunaanBangunan",
@@ -706,7 +746,7 @@ class PemutakhiranController extends Controller
             "lantai",
             "langit"
         ])->where([
-            ["id"       ,$id],
+            ["uuid"       ,$uuid_bangunan],
             ["spop_id"  ,$spop->id]
             ])->first();
 
@@ -737,17 +777,17 @@ class PemutakhiranController extends Controller
             ]));
     }
 
-    public function updateBangunan(Request $request, $nop, $id)
+    public function updateBangunan(Request $request, $uuid, $uuid_bangunan)
     {
         $this->validate($request, [
             // BANGUNAN
             "penggunaan"            => "required",
-            "luas_bangunan"         => "required",
-            "jumlah_lantai"         => "required",
-            "tahun_dibangun"        => "required",
-            "tahun_renovasi"        => "required",
-            // "jumlah_bangunan"       => "required",
-            "daya"                  => "required",
+            "luas_bangunan"         => "required|numeric|min:0",
+            "jumlah_lantai"         => "required|numeric|min:0",
+            "tahun_dibangun"        => "required|numeric|digits:4",
+            "tahun_renovasi"        => "required|numeric|digits:4",
+            "jumlah_bangunan"       => "required|numeric|min:0",
+            "daya"                  => "required|numeric|min:0",
             "kondisi"               => "required",
             "konstruksi"            => "required",
             "atap"                  => "required",
@@ -756,10 +796,10 @@ class PemutakhiranController extends Controller
             "langit"                => "required",
         ]);
 
-        $idSpop  = Spop::where("nop", $nop)->pluck("id")->first();
+        $spop  = Spop::where("uuid", $uuid)->first();
         $rincianDataBangunan    = RincianDataBangunan::where([
-            ["id"       ,$id],
-            ["spop_id"  ,$idSpop]
+            ["uuid"     ,$uuid_bangunan],
+            ["spop_id"  ,$spop->id]
         ])->first();
 
         $kondisi                    = Kondisi::where("id", $request->kondisi)->pluck("id")->first();
@@ -777,7 +817,7 @@ class PemutakhiranController extends Controller
             "tahun_dibangun"                => $request->tahun_dibangun,
             "tahun_renovasi"                => $request->tahun_renovasi,
             "daya_listrik"                  => $request->daya,
-            // "jumlah_bangunan"               => $request->jumlah_bangunan,
+            "jumlah_bangunan"               => $request->jumlah_bangunan,
             "kondisi_id"                    => $kondisi,
             "konstruksi_id"                 => $konstruksi,
             "atap_id"                       => $atap,
@@ -786,12 +826,12 @@ class PemutakhiranController extends Controller
             "langit_id"                     => $langit,
         ]);
 
-        return redirect("/pemutakhiran/$nop/bangunan/$rincianDataBangunan->id");
+        return redirect("/pemutakhiran/$spop->uuid/bangunan/$rincianDataBangunan->uuid");
     }
 
-    public function showBangunan($nop, $id)
+    public function showBangunan($uuid, $uuid_bangunan)
     {
-        $spop = Spop::where("nop", $nop)->first();
+        $spop = Spop::where("uuid", $uuid)->first();
         $rincianDataBangunan    = RincianDataBangunan::with([
             "spop",
             "jenisPenggunaanBangunan",
@@ -802,7 +842,7 @@ class PemutakhiranController extends Controller
             "lantai",
             "langit"
         ])->where([
-            ["id"       ,$id],
+            ["uuid"       ,$uuid_bangunan],
             ["spop_id"  ,$spop->id]
             ])->first();
 
@@ -835,11 +875,11 @@ class PemutakhiranController extends Controller
 
     }
 
-    public function destroyBangunan($nop, $id)
+    public function destroyBangunan($uuid, $uuid_bangunan)
     {
-        $spop = Spop::where("nop", $nop)->first();
+        $spop = Spop::where("uuid", $uuid)->first();
         $rincianDataBangunan = RincianDataBangunan::where([
-            ["id", $id],
+            ["uuid", $uuid_bangunan],
             ["spop_id", $spop->id]
         ])->first();
 
@@ -848,7 +888,7 @@ class PemutakhiranController extends Controller
         }
         $rincianDataBangunan->delete();
         
-        return redirect("/pemutakhiran/".$spop->nop)->with("msg", "data bangunan berhasil di hapus");
+        return redirect("/pemutakhiran/".$spop->uuid)->with("msg", "data bangunan berhasil di hapus");
     }
 
     public function cari(Request $request)
@@ -893,7 +933,7 @@ class PemutakhiranController extends Controller
                 );
 
             }elseif(empty($spop) && !empty($rujukan)){
-                return view("pemutakhiran.cari", compact("rujukan"));
+                return view("pemutakhiran.cari", compact("rujukan"))->withInput($request->all());
             }else{
                 return view("pemutakhiran.cari")->with("msg", "nomor nop tidak ada");
             }

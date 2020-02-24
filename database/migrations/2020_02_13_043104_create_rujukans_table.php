@@ -15,6 +15,7 @@ class CreateRujukansTable extends Migration
     {
         Schema::create('rujukans', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('uuid')->unique()->nullable();
             $table->string('tahun');
             $table->string('nop');
             $table->string('nama_subjek_pajak');

@@ -12,7 +12,7 @@ class RujukanController extends Controller
     {
         return DataTables::of(Rujukan::all())
         ->addColumn('action', function($row) {
-            return '<a href="/pemutakhiran/create/'. $row->nop .'" class="btn btn-primary">Edit</a>';
+            return '<a href="/pemutakhiran/create/'. $row->uuid .'" class="btn btn-primary">Edit</a>';
         })->make(true);
     }
 

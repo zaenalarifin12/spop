@@ -21,9 +21,8 @@
             </div>
           </div>
 
-          {{-- {{ dd(session("urutan_bangunan")) }} --}}
           <div class="section-body" >
-        <form action="{{ url("/pemutakhiran/$spop->nop/bangunan/$rincianDataBangunan->id") }}" method="post">  
+        <form action="{{ url("/pemutakhiran/".$rincianDataBangunan->spop->uuid."/bangunan/".$rincianDataBangunan->uuid) }}" method="post">  
             <h2 class="section-title">Surat Pemberitahuan Objek Pajak</h2>
             <p class="section-lead">Jenis Transaksi <b>edit bangunan<b></p>
 
@@ -33,7 +32,7 @@
                 <div class="col-12 col-md-12 col-lg-12">
                   <div class="card card-danger">
                     <div class="card-header">
-                      <h4>Bangunan Ke - </h4>
+                      <h4>Bangunan</h4>
                     </div>
   
                     <div class="card-body">
@@ -117,7 +116,7 @@
                         <div class="col">
                             <div class="form-group">
                                 <label>Jumlah Bangunan</label>
-                                <input type="number" min="1" class="form-control @error('jumlah_bangunan') is-invalid @enderror" name="jumlah_bangunan" value="{{ old("jumlah_bangunan")}}">
+                                <input type="number" min="1" class="form-control @error('jumlah_bangunan') is-invalid @enderror" name="jumlah_bangunan" value="{{ old("jumlah_bangunan") ? old("jumlah_bangunan") : $rincianDataBangunan->jumlah_bangunan}}">
                                 @error("jumlah_bangunan")
                                     <div class="invalid-feedback"> 
                                         Jumlah bangunan harus di isi

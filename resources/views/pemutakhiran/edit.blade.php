@@ -17,14 +17,14 @@
           <div class="section-header">
             <h1 class="text-info text-uppercase">Edit Data Pemutakhiran</h1>
             <div class="section-header-breadcrumb">
-              <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
-              <div class="breadcrumb-item"><a href="#">Forms</a></div>
-              <div class="breadcrumb-item">Advanced Forms</div>
+              <div class="breadcrumb-item active"><a href="#">Home</a></div>
+              <div class="breadcrumb-item"><a href="#">Pemutakhiran</a></div>
+              <div class="breadcrumb-item">Edit</div>
             </div>
           </div>
 
           <div class="section-body" >
-        <form action="{{ url("/pemutakhiran/". $spop->nop) }}" method="post">  
+        <form action="{{ url("/pemutakhiran/". $spop->uuid) }}" method="post">  
             <div class="container-fluid" id="parent">
               <div class="row">
                 <div class="col-12 col-md-12 col-lg-12">
@@ -47,16 +47,16 @@
                     <div class="card-body">
                       <div class="form-group">
                         <label>NOP</label>
-                        <div class="input-group">
+                        <div class="input-group">                            
                             <input type="text" disabled name="pr"        required class="form-control" value="{{ substr($spop->nop, 0,2) }}">
-                            <input type="text" disabled name="dt"        required class="form-control" value="{{ substr($spop->nop, 2,4) }}">
-                            <input type="text" disabled name="kec"       required class="form-control" value="{{ substr($spop->nop, 5,7) }}">
-                            <input type="text" disabled name="des"       required class="form-control" value="{{ substr($spop->nop, 8,10) }}">
-                            <input type="text" disabled name="blok"      required class="form-control" value="{{ substr($spop->nop, 0,2) }}">
-                            <input type="text" disabled name="no_urut"   required class="form-control" value="{{ substr($spop->nop, 0,2) }}">
-                            <input type="text" disabled name="kode"      required class="form-control" value="{{ substr($spop->nop, 0,2) }}">
+                            <input type="text" disabled name="dt"        required class="form-control" value="{{ substr($spop->nop, 2,2) }}">
+                            <input type="text" disabled name="kec"       required class="form-control" value="{{ substr($spop->nop, 4,3) }}">
+                            <input type="text" disabled name="des"       required class="form-control" value="{{ substr($spop->nop, 7,3) }}">
+                            <input type="text" disabled name="blok"      required class="form-control" value="{{ substr($spop->nop, 10,3) }}">
+                            <input type="text" disabled name="no_urut"   required class="form-control" value="{{ substr($spop->nop, 13,4) }}">
+                            <input type="text" disabled name="kode"      required class="form-control" value="{{ substr($spop->nop, 17,18) }}">
                         </div>
-                      </div>
+                    </div>
   
                       <div class="alert alert-info">
                           <p class="text-lg-center">Data Letak Objek Pajak</p> 
@@ -95,7 +95,7 @@
                                   <input type="number" class="form-control @error("dlop_rw") is-invalid @enderror" name="dlop_rw" id="" value="{{ old('dlop_rw') ? old('dlop_rw') : $spop->dataLetakObjek->rw}}">
                                     @error("dlop_rw")
                                         <div class="invalid-feedback"> 
-                                            RW harus di isi
+                                            RW harus di isi, harus 2 angka
                                         </div>
                                     @enderror
                               </div>
@@ -106,7 +106,7 @@
                                   <input type="number" class="form-control @error("dlop_rt") is-invalid @enderror" name="dlop_rt" id="" value="{{ old('dlop_rt') ? old('dlop_rt') : $spop->dataLetakObjek->rt}}">
                                     @error("dlop_rt")
                                         <div class="invalid-feedback"> 
-                                            RW harus di isi
+                                            RW harus di isi, harus 3 angka
                                         </div>
                                     @enderror
                               </div>
@@ -211,7 +211,7 @@
                                     <input type="number" class="form-control @error('dsp_rw') is-invalid @enderror" name="dsp_rw" value="{{ old("dsp_rw") ? old("dsp_rw") : $spop->dataSubjekPajak->rw }}">
                                     @error("dsp_rw")
                                         <div class="invalid-feedback"> 
-                                            RW harus di isi
+                                            RW harus di isi, harus 2 angka
                                         </div>
                                     @enderror
                               </div>
@@ -222,7 +222,7 @@
                                     <input type="number" class="form-control @error('dsp_rt') is-invalid @enderror" name="dsp_rt" value="{{ old("dsp_rt") ? old("dsp_rt") : $spop->dataSubjekPajak->rt }}">
                                     @error("dsp_rt")
                                         <div class="invalid-feedback"> 
-                                            RT harus di isi
+                                            RT harus di isi, harus 3 angka
                                         </div>
                                     @enderror
                               </div>
@@ -234,7 +234,7 @@
                             <input type="number" class="form-control @error('dsp_no_ktp') is-invalid @enderror" name="dsp_no_ktp" value="{{ old("dsp_no_ktp") ? old("dsp_no_ktp") : $spop->dataSubjekPajak->nomor_ktp }}">
                             @error("dsp_no_ktp")
                                 <div class="invalid-feedback"> 
-                                    No KTP harus di isi
+                                    No KTP harus di isi, harus 16 karakter , dan berupa nomor
                                 </div>
                             @enderror
                       </div>
@@ -248,7 +248,7 @@
                             <input type="number" class="form-control @error('dsp_luas_tanah') is-invalid @enderror" name="dsp_luas_tanah" value="{{ old("dsp_luas_tanah") ? old("dsp_luas_tanah") : $spop->dataTanah->luas_tanah }}">
                             @error("dsp_luas_tanah")
                                 <div class="invalid-feedback"> 
-                                    Luas Tanah harus di isi
+                                    Luas Tanah harus di isi, dan erupa nomor
                                 </div>
                             @enderror
                       </div>
@@ -310,8 +310,6 @@
 @endsection
 
 @section('script')
-    
-    {{-- import --}}
 
     <!-- Page Specific JS File -->
     <script src="{{ asset("assets/js/page/forms-advanced-forms.js")}}"></script>

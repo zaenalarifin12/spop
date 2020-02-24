@@ -17,14 +17,14 @@
           <div class="section-header">
             <h1 class="text-info text-uppercase">Pemutakhiran Data</h1>
             <div class="section-header-breadcrumb">
-              <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
-              <div class="breadcrumb-item"><a href="#">Forms</a></div>
-              <div class="breadcrumb-item">Advanced Forms</div>
+              <div class="breadcrumb-item active"><a href="#">Home</a></div>
+              <div class="breadcrumb-item"><a href="#">Pemutakhiran</a></div>
+              <div class="breadcrumb-item">Buat</div>
             </div>
           </div>
 
           <div class="section-body" >
-        <form action="{{ url("/pemutakhiran/create/". $rujukan->nop) }}" method="post">  
+        <form action="{{ url("/pemutakhiran/create/". $rujukan->uuid) }}" method="post">  
             <div class="container-fluid" id="parent">
               <div class="row">
                 <div class="col-12 col-md-12 col-lg-12">
@@ -100,7 +100,7 @@
                                   <input type="number" class="form-control @error("dlop_rw") is-invalid @enderror" name="dlop_rw" id="" value="{{ old('dlop_rw') ? old('dlop_rw') : $op_rw}}">
                                     @error("dlop_rw")
                                         <div class="invalid-feedback"> 
-                                            RW harus di isi
+                                            RW harus di isi, harus 2 angka
                                         </div>
                                     @enderror
                               </div>
@@ -111,7 +111,7 @@
                                   <input type="number" class="form-control @error("dlop_rt") is-invalid @enderror" name="dlop_rt" id="" value="{{ old('dlop_rt') ? old('dlop_rt') : $op_rt}}">
                                     @error("dlop_rt")
                                         <div class="invalid-feedback"> 
-                                            RW harus di isi
+                                            RW harus di isi , harus 3 angka
                                         </div>
                                     @enderror
                               </div>
@@ -205,7 +205,7 @@
                                     <input type="number" class="form-control @error('dsp_rw') is-invalid @enderror" name="dsp_rw" value="{{ old("dsp_rw") ? old("dsp_rw") : $wp_rw }}">
                                     @error("dsp_rw")
                                         <div class="invalid-feedback"> 
-                                            RW harus di isi
+                                            RW harus di isi, harus 2 angka
                                         </div>
                                     @enderror
                               </div>
@@ -216,7 +216,7 @@
                                     <input type="number" class="form-control @error('dsp_rt') is-invalid @enderror" name="dsp_rt" value="{{ old("dsp_rt") ? old("dsp_rt") : $wp_rt }}">
                                     @error("dsp_rt")
                                         <div class="invalid-feedback"> 
-                                            RT harus di isi
+                                            RT harus di isi, harus 3 angka
                                         </div>
                                     @enderror
                               </div>
@@ -225,10 +225,10 @@
                       
                       <div class="form-group">
                             <label>Nomor KTP</label>
-                            <input type="number" class="form-control @error('dsp_no_ktp') is-invalid @enderror" name="dsp_no_ktp" value="{{ old("dsp_no_ktp") }}">
+                            <input type="text" minlength="16" maxlength="16" class="form-control @error('dsp_no_ktp') is-invalid @enderror" name="dsp_no_ktp" value="{{ old("dsp_no_ktp") }}">
                             @error("dsp_no_ktp")
                                 <div class="invalid-feedback"> 
-                                    No KTP harus di isi
+                                    No KTP harus di isi, harus 16 karakter , dan berupa nomor
                                 </div>
                             @enderror
                       </div>
@@ -242,7 +242,7 @@
                             <input type="number" class="form-control @error('dsp_luas_tanah') is-invalid @enderror" name="dsp_luas_tanah" value="{{ old("dsp_luas_tanah") ? old("dsp_luas_tanah") : $rujukan->luas_bumi_sppt }}">
                             @error("dsp_luas_tanah")
                                 <div class="invalid-feedback"> 
-                                    Luas Tanah harus di isi
+                                    Luas Tanah harus di isi, dan berupa nomor
                                 </div>
                             @enderror
                       </div>
@@ -251,7 +251,8 @@
                             <label class="form-label">
                               Jenis Tanah
                             @error("jenis_tanah")
-                                    <span class="text-danger">Jenis tanah yang di pilih harus {{$jenisTanah[0]["nama"]}}</span>
+                                    <span class="text-danger">Jenis tanah yang di pilih harus</span>
+                                    {{-- {{$jenisTanah[0]["nama"] --}}
                             @enderror
                             </label>
                           <div class="selectgroup selectgroup-pills">
@@ -708,15 +709,5 @@
             `)
             */
         });
-    </script>
-
-    <script type="text/javascript">
-        $( function() {
-            var DesaTags = {!! strtoupper($desas) !!}
-            
-            $( "#desa" ).autocomplete({
-                source: DesaTags
-            });
-        } );
     </script>
 @endsection

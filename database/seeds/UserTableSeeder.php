@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UserTableSeeder extends Seeder
 {
@@ -15,6 +16,7 @@ class UserTableSeeder extends Seeder
     {
         DB::table("users")->insert([
             "name"       => "zainal",
+            "uuid"       => Str::random(40).time(),
             "nip"        => "22222222",
             "instansi"   => "xd",
             "role"       => 1,   

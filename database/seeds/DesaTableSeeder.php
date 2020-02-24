@@ -13,16 +13,6 @@ class DesaTableSeeder extends Seeder
     public function run()
     {
         DB::table("desas")->insert([
-            [
-                "id"        => 1,
-                "nama"      => "desa satu",
-                "kecamatan_id" => 1
-            ],
-            [
-                "id"        => 2,
-                "nama"      => "desa 2",
-                "kecamatan_id" => 2
-            ]
         ]);
     }
 }
