@@ -46,33 +46,9 @@ class PerekamanController extends Controller
     public function json()
     {
         if(Auth::user()->role == 1){
-            $spops = Spop::with([
-                "dataLetakObjek",
-                "dataSubjekPajak",
-                "dataSubjekPajak.status",
-                "dataSubjekPajak.pekerjaan",
-                "dataTanah",
-                "rincianDataBangunans",
-                "rincianDataBangunans.kondisi",
-                "rincianDataBangunans.konstruksi",
-                "rincianDataBangunans.atap",
-                "rincianDataBangunans.lantai",
-                "rincianDataBangunans.langit"
-            ])->where("nop_asal", "!=", null)->get();
+            $spops = Spop::with("user")->where("kategori", 1)->get();
         }else{
-            $spops = Spop::with([
-                "dataLetakObjek",
-                "dataSubjekPajak",
-                "dataSubjekPajak.status",
-                "dataSubjekPajak.pekerjaan",
-                "dataTanah",
-                "rincianDataBangunans",
-                "rincianDataBangunans.kondisi",
-                "rincianDataBangunans.konstruksi",
-                "rincianDataBangunans.atap",
-                "rincianDataBangunans.lantai",
-                "rincianDataBangunans.langit"
-            ])->where("nop_asal", "!=", null)->where("user_id",Auth::user()->id)->get();
+            $spops = Spop::with("user")->where("kategori", 1)->where("user_id",Auth::user()->id)->get();
         }
 
         return DataTables::of($spops)
@@ -149,15 +125,17 @@ class PerekamanController extends Controller
                 $spop_asal  = Spop::where("nop", $nop_replace)->first(); #mencari nop di table
                 $rujukan    = Rujukan::where("nop", $nop)->first();
 
-                if (empty($spop_asal) && empty($rujukan))
-                    return redirect()->back()->withInput()->with("msg", "nop tidak ada");
+                // if (empty($spop_asal) && empty($rujukan))
+                //     return redirect()->back()->withInput()->with("msg", "nop tidak ada");
                 // die("nop belum ada");
                     
                 $status     = Status::where("id", $request->status)->pluck("id")->first();
                 $pekerjaan  = Pekerjaan::where("id", $request->pekerjaan)->pluck("id")->first();
-                if (empty($status)) abort(404);
+                if (empty($status)) 
+                    return redirect()->back()->withInput()->with("msg", "status tidak ada");
                     // die("status tidak ada");
-                elseif(empty($pekerjaan)) abort(404);
+                elseif(empty($pekerjaan))
+                    return redirect()->back()->withInput()->with("msg", "pekerjaan tidak ada");
                     // die("pekerjaan tidak ada");
                 
                 
@@ -172,6 +150,7 @@ class PerekamanController extends Controller
                 $spop                   = new Spop();
                 $spop->uuid             = $uu;
                 $spop->nop_asal         = $nop_replace;
+                $spop->kategori         = 1;
                 $spop->user_id          = Auth::user()->id;
                 $spop->save();
 
@@ -337,9 +316,11 @@ class PerekamanController extends Controller
                 $status     = Status::where("id", $request->status)->pluck("id")->first();
                 $pekerjaan  = Pekerjaan::where("id", $request->pekerjaan)->pluck("id")->first();
 
-                if (empty($status)) abort(404);
+                if (empty($status))
+                    return redirect()->back()->withInput()->with("msg", "nop tidak ada");
                     // die("status tidak ada");
-                elseif(empty($pekerjaan)) abort(404);
+                elseif(empty($pekerjaan)) 
+                    return redirect()->back()->withInput()->with("msg", "pekerjaan tidak ada");
                     // die("pekerjaan tidak ada");
                 
                 $uu = Str::random(40);
@@ -353,6 +334,7 @@ class PerekamanController extends Controller
                 $spop           = new Spop();
                 $spop->uuid     = $uu;
                 $spop->nop_asal = $nop_replace;
+                $spop->kategori = 1;
                 $spop->user_id  = Auth::user()->id;
                 $spop->save();
                 

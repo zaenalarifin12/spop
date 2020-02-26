@@ -15,7 +15,7 @@
      <div class="main-content">
         <section class="section">
           <div class="section-header">
-            <h1 class="text-info text-uppercase">Perekaman Data</h1>
+            <h1 class="text-info text-uppercase">Daftar Perekaman Data</h1>
             <div class="section-header-breadcrumb">
               <div class="breadcrumb-item active"><a href="#">Home</a></div>
               <div class="breadcrumb-item"><a href="#">Perekaman</a></div>
@@ -24,7 +24,7 @@
           </div>
 
           <div class="section-body" >
-        <form action="{{ url("/perekaman/create/") }}" method="post">  
+        <form action="{{ url("/perekaman/create") }}" method="post">  
             <div class="container-fluid" id="parent">
               <div class="row">
                 <div class="col-12 col-md-12 col-lg-12">
@@ -45,12 +45,6 @@
                       <h4>Perekaman Data </h4>
                     </div>
                     <div class="card-body">
-                      <div class="form-group">
-                        <label>NOP</label>
-                        <div class="input-group">
-                            <input type="text" disabled class="form-control" value="NOP DI ISI PEGAWAI BPKAD">
-                        </div>
-                      </div>
 
                       <label>NOP ASAL</label>
                       <div class="input-group mb-2">

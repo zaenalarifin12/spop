@@ -24,6 +24,13 @@
   <link rel="stylesheet" href="{{ asset("assets/css/style.css") }}">
   <link rel="stylesheet" href="{{ asset("assets/css/components.css") }}">
 
+  <style>
+    input{
+      text-transform: uppercase !important;
+    }
+  </style>
+  
+
   @yield('style')
 </head>
 
@@ -65,23 +72,30 @@
             <ul class="sidebar-menu">
               <li class="menu-header">Dashboard</li>
 
-              <li><a class="nav-link" href="{{ url("/pemutakhiran/cari") }}"><i class="fas fa-pencil-ruler"></i> Cari Data Rujukan</a></li>
+              <li><a class="nav-link" href="{{ url("/home") }}"><i class="fas fa-pencil-ruler"></i>Home</a></li>
+
+              <li><a class="nav-link" href="{{ url("/perekaman/create") }}"><i class="fas fa-pencil-ruler"></i> Daftar Objek baru</a></li>
+
+              <li><a class="nav-link" href="{{ url("/pemutakhiran/cari") }}"><i class="fas fa-pencil-ruler"></i> Daftar Perubahan Data</a></li>
 
               <li class="nav-item dropdown">
-                <a href="#" class="nav-link has-dropdown"><i class="fas fa-fire"></i><span>Pemutakhiran</span></a>
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-columns"></i> <span>Data Usulan</span></a>
                 <ul class="dropdown-menu">
-                  <li><a class="nav-link" href="{{ url("/pemutakhiran") }}">Daftar Pemutakhiran</a></li>
+                  <li><a class="nav-link" href="{{ url("/perekaman") }}">Objek baru</a></li>
+                  <li><a class="nav-link" href="{{ url("/pemutakhiran") }}"> Perubahan Data</a></li>
                 </ul>
               </li>
 
-              <li class="nav-item dropdown">
-                <a href="#" class="nav-link has-dropdown"><i class="fas fa-fire"></i><span>Perekaman</span></a>
-                <ul class="dropdown-menu">
-                  <li><a class="nav-link" href="{{ url("/perekaman") }}">Daftar Perekaman</a></li>
-                  <li><a class="nav-link" href="{{ url("/perekaman/create") }}">Perekaman Baru</a></li>
-                </ul>
-              </li>
+              @if (Auth::user()->role == 1)
+              <li><a class="nav-link" href="{{ url("/users") }}"><i class="fas fa-user"></i> Pengguna</a></li>
+              @endif
 
+              <li>
+                <form action="{{ ("/logout") }}" method="post" class="nav-link">
+                  @csrf
+                <input type="submit" value="Logout" class="btn btn-primary btn-block">
+                </form>
+              </li>
             </ul>
         </aside>
       </div>
@@ -124,5 +138,14 @@
     });
   </script>
   @yield('script')
+
+  <script>
+    $(document).ready(function () {  
+        $("input[type=text]").keyup(function () {  
+            $(this).val($(this).val().toUpperCase());  
+        });  
+    }); 
+  </script>
+  
 </body>
 </html>

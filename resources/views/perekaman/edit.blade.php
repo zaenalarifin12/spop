@@ -48,7 +48,7 @@
 
                     @if (Auth::user()->role == 1)
                         <div class="form-group">
-                            <label>NOP ASAL</label>
+                            <label>NOP</label>
                             <div class="input-group mb-2">
                                 <input type="text" name="pr"      class="form-control" disabled value="33"/>
                                 <input type="text" name="dtii"    class="form-control" disabled value="18"/>
@@ -61,7 +61,7 @@
                         </div>
                     @else
                     <div class="form-group">
-                        <label>NOP ASAL</label>
+                        <label>NOP</label>
                         <div class="input-group mb-2">
                             <input type="text" name="pr"          class="form-control" disabled value="33"/>
                             <input type="text" name="dtii"        class="form-control" disabled value="18"/>
@@ -75,7 +75,7 @@
                     @endif
 
                       <div class="form-group">
-                        <label>NOP</label>
+                        <label>NOP ASAL</label>
                         <div class="input-group">                            
                             <input type="text" disabled name="pr"               required class="form-control" value="{{ substr($spop->nop_asal, 0,2) }}">
                             <input type="text" disabled name="dt"               required class="form-control" value="{{ substr($spop->nop_asal, 2,2) }}">

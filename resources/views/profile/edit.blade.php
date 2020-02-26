@@ -15,9 +15,9 @@
           <div class="section-header">
             <h1 class="text-info text-uppercase">Profil Anda</h1>
             <div class="section-header-breadcrumb">
-              <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
-              <div class="breadcrumb-item"><a href="#">Forms</a></div>
-              <div class="breadcrumb-item">Advanced Forms</div>
+              <div class="breadcrumb-item active"><a href="#">Home</a></div>
+              <div class="breadcrumb-item"><a href="#">Profile</a></div>
+              <div class="breadcrumb-item">Edit</div>
             </div>
           </div>
           

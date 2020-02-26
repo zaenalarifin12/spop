@@ -1,7 +1,7 @@
 @extends('layouts.parent')
 
 @section('title')
-    Daftar Data Rujukan
+    Daftar Objek Baru
 @endsection
 
 @section('style')
@@ -14,9 +14,9 @@
      <div class="main-content">
         <section class="section">
           <div class="section-header">
-            <h1 class="text-info">Daftar Perekaman Data</h1>
+            <h1 class="text-info">Daftar Objek Baru</h1>
             <div class="section-header-breadcrumb">
-              <div class="breadcrumb-item active"><a href="#">Perekaman</a></div>
+              <div class="breadcrumb-item active"><a href="#">Daftar Objek Baru</a></div>
               <div class="breadcrumb-item">Daftar</div>
             </div>
           </div>
@@ -27,7 +27,7 @@
                   <div class="col-12">
                     <div class="card">
                       <div class="card-header">
-                        <h4>Daftar Spop</h4><a href="{{ url("/perekaman/create") }}" class="btn btn-primary">Buat Perekaman</a>
+                        <h4>Daftar Objek Baru</h4><a href="{{ url("/perekaman/create") }}" class="btn btn-primary">Buat Perekaman</a>
                       </div>
                       <div class="card-body">
                         <div class="table-responsive">
@@ -36,6 +36,7 @@
                               <tr>
                                 <th>Nop</th>
                                 <th>Nop Asal</th>
+                                <th>Pengisi</th>
                                 <th>Action</th>
                               </tr>
                             </thead>
@@ -70,6 +71,7 @@
           columns: [
         { data: 'nop',                  name: 'nop' },
         { data: 'nop_asal',             name: 'nop_asal'},
+        { data: 'user.name',                 name: 'user'},
         { data: 'action',               name: 'action'}
           ]
         } );

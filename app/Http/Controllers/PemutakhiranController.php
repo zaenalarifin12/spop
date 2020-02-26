@@ -36,9 +36,9 @@ class PemutakhiranController extends Controller
     public function json()
     {
         if (Auth::user()->role == 1){
-            $spops = Spop::where("nop_asal", null)->get();
+            $spops = Spop::with("user")->where("kategori", 0)->get();
         }else{
-            $spops = Spop::where("nop_asal", null)->where("user_id", Auth::user()->id)->get();
+            $spops = Spop::with("user")->where("kategori", 0)->where("user_id", Auth::user()->id)->get();
         }
 
         return DataTables::of($spops)
@@ -160,6 +160,7 @@ class PemutakhiranController extends Controller
                 $spop           = new Spop();
                 $spop->uuid     = $uu;
                 $spop->nop      = (str_replace(".", "", $rujukan));
+                $spop->kategori = 0;
                 $spop->user_id  = Auth::user()->id;
                 $spop->save();
 
@@ -273,6 +274,7 @@ class PemutakhiranController extends Controller
                 $spop           = new Spop();
                 $spop->uuid     = $uu;
                 $spop->nop      = str_replace(".", "", $rujukan->nop);
+                $spop->kategori = 0;
                 $spop->user_id  = Auth::user()->id;
                 $spop->save();
 

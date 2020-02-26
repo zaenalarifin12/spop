@@ -1,7 +1,7 @@
 @extends('layouts.parent')
 
 @section('title')
-    Daftar Pemutakhiran Anda
+    Daftar Perubahan Data
 @endsection
 
 @section('style')
@@ -14,7 +14,7 @@
      <div class="main-content">
         <section class="section">
           <div class="section-header">
-            <h1 class="text-info text-uppercase">Pemutakhiran</h1>
+            <h1 class="text-info text-uppercase">Perubahan Data</h1>
             <div class="section-header-breadcrumb">
               <div class="breadcrumb-item active"><a href="#">Pemutakhiran</a></div>
               <div class="breadcrumb-item">Daftar</div>
@@ -27,7 +27,7 @@
                   <div class="col-12">
                     <div class="card">
                       <div class="card-header">
-                        <h4>Daftar Pemutakhiran</h4>
+                        <h4>Perubahan Data</h4>
                       </div>
                       <div class="card-body">
                         <div class="table-responsive">
@@ -35,6 +35,7 @@
                             <thead>
                               <tr>
                                 <th>NOP</th>
+                                <th>user</th>
                                 <th>Action</th>
                               </tr>
                             </thead>
@@ -70,6 +71,7 @@
             ajax: 'pemutakhiran/json',
             columns: [
           { data: 'nop',                  name: 'nop' },
+          { data: 'user.name',                 name: 'user'},
           { data: 'action',               name: 'action'}
             ]
           } );

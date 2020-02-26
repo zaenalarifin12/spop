@@ -67,7 +67,7 @@
                                         </div>
 
                                           <div class="form-group">
-                                            <label>NOP</label>
+                                            <label>NOP ASAL</label>
                                                 <div class="input-group">                            
                                                     <input type="text" disabled name="pr"        required class="form-control" value="{{ substr($spop->nop_asal, 0,2) }}">
                                                     <input type="text" disabled name="dt"        required class="form-control" value="{{ substr($spop->nop_asal, 2,2) }}">

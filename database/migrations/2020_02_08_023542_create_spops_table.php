@@ -18,6 +18,11 @@ class CreateSpopsTable extends Migration
             $table->string('uuid')->unique();
             $table->string('nop')->nullable();
             $table->string('nop_asal')->nullable();
+            $table->integer('kategori')->nullable();
+            /**
+             * perekaman 1
+             * pemutakhiran 0
+             */
             $table->unsignedBigInteger('data_letak_objek_id')->nullable();
             $table->unsignedBigInteger('data_subjek_pajak_id')->nullable();
             $table->unsignedBigInteger('data_tanah_id')->nullable();

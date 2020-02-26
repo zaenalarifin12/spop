@@ -12,7 +12,8 @@ class Spop extends Model
         "nop_asal",
         "data_letak_objek_id",
         "data_subjek_pajak_id",
-        "data_tanah_id"
+        "data_tanah_id",
+        "user_id"
     ];
 
     public function rincianDataBangunans()
@@ -33,5 +34,10 @@ class Spop extends Model
     public function dataTanah()
     {
         return $this->hasOne("App\Models\DataTanah");
+    }
+
+    public function user()
+    {
+        return $this->belongsTo("App\User");
     }
 }
