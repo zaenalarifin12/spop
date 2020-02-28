@@ -32,9 +32,9 @@ class PemutakhiranController extends Controller
     public function index()
     {
         if (Auth::user()->role == 1){
-            $spops = Spop::with("user")->where("kategori", 0)->get();
+            $spops = Spop::with("user")->where("kategori", 0)->paginate(20);
         }else{
-            $spops = Spop::with("user")->where("kategori", 0)->where("user_id", Auth::user()->id)->get();
+            $spops = Spop::with("user")->where("kategori", 0)->where("user_id", Auth::user()->id)->paginate(20);
         }
 
         return response()->json([
