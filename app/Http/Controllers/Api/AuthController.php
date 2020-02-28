@@ -24,10 +24,10 @@ class AuthController extends Controller
         }
 
         $user = User::where("nip", $request->nip)->first();
-        return response()->json(compact([
-            'user', 
-            'token'
-            ]));
+        return response()->json([
+            "user"  => $request->user(),
+            "token" => $token
+        ]);
     }
 
 
