@@ -13,9 +13,9 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::post("login",    "Api\AuthController@login");
+
 Route::group(["middleware" => ['auth:api']], function(){
-    
-    Route::post("login",    "Api\AuthController@login");
 
     Route::group(["middleware" => ["jwt.verify"]], function(){
         Route::get('pemutakhiran', "Api\PemutakhiranController@index");
