@@ -13,11 +13,14 @@ use Illuminate\Http\Request;
 |
 */
 
+
 Route::post("login",    "Api\AuthController@login");
 
-    Route::group(["middleware" => ["jwt.auth"]], function(){
-        Route::get('pemutakhiran', "Api\PemutakhiranController@index");
-    });
+Route::group(["middleware" => ["jwt.verify"]], function(){
+    Route::get('pemutakhiran', "Api\PemutakhiranController@index");
+});
+    
+
 
 Route::get("/v1/getKabupaten",    "Api\GetApiLokasiController@getKabupaten");
 Route::get("/v1/getKecamatan",    "Api\GetApiLokasiController@getKecamatan");
