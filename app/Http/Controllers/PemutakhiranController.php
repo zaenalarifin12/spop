@@ -157,14 +157,16 @@ class PemutakhiranController extends Controller
                 if(Spop::where("uuid", $uu)->first() != null)
                     $uu = Str::random(40) .time();
                 
+                $desa = Desa::where("nama", "$request->dlop_desa")->first();
+                if(empty($desa))
+                    return redirect()->back()->withInput()->with("msg", "Desa tidak ditemukan didaerah pati");
+                    
                 $spop           = new Spop();
                 $spop->uuid     = $uu;
                 $spop->nop      = (str_replace(".", "", $rujukan));
                 $spop->kategori = 0;
                 $spop->user_id  = Auth::user()->id;
                 $spop->save();
-
-                $desa = Desa::where("nama", "$request->dlop_desa")->first();
 
                 $DataLetakObjekPajak = DataLetakObjek::create([
                     "nama_jalan"        => $request->dlop_nama_jalan,

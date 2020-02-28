@@ -19,10 +19,10 @@ class CreateDataLetakObjeksTable extends Migration
             $table->string('blok_kav');
             $table->string('rw');
             $table->string('rt');
-            $table->unsignedBigInteger('desa_id');
+            $table->unsignedBigInteger('desa_id')->nullable();
             $table->timestamps();
 
-            $table->foreign('desa_id')->references("id")->on("desas")->onDelete("cascade");
+            $table->foreign('desa_id')->references("id")->on("desas")->onDelete("set null");
         });
     }
 

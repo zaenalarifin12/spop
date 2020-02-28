@@ -16,10 +16,10 @@ class CreateDataTanahsTable extends Migration
         Schema::create('data_tanahs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('luas_tanah');
-            $table->unsignedbigInteger('jenis_tanah_id');
+            $table->unsignedbigInteger('jenis_tanah_id')->nullable();
             $table->timestamps();
 
-            $table->foreign('jenis_tanah_id')->references("id")->on("jenis_tanahs")->onDelete("cascade");
+            $table->foreign('jenis_tanah_id')->references("id")->on("jenis_tanahs")->onDelete("set null");
         });
     }
 

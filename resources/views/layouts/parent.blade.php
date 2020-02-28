@@ -77,7 +77,14 @@
               <li><a class="nav-link" href="{{ url("/perekaman/create") }}"><i class="fas fa-pencil-ruler"></i> Daftar Objek baru</a></li>
 
               <li><a class="nav-link" href="{{ url("/pemutakhiran/cari") }}"><i class="fas fa-pencil-ruler"></i> Daftar Perubahan Data</a></li>
+{{-- 
+  TODO 
+  NOMOR HP
 
+  UPLOAD FOTO
+    5 
+  
+  --}}
               <li class="nav-item dropdown">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-columns"></i> <span>Data Usulan</span></a>
                 <ul class="dropdown-menu">

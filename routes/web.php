@@ -12,8 +12,8 @@
 */
 
 
-Route::get('/', "GenerateUuidRujukanController@index");
-// Route::get('/', "HomeController@index");
+Route::get('/generate', "GenerateUuidRujukanController@index");
+Route::get('/', "HomeController@index");
 
 Route::group(["middleware" => ["auth"]], function(){
 

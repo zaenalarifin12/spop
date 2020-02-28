@@ -69,18 +69,13 @@ class GetApiLokasiController extends Controller
     {
         $client = new \GuzzleHttp\Client();
 
-        $idKab  = DB::table("kecamatans")->select("id")->get();
-
-        foreach($idKab as $key => $value)
-        {
-            $res = $client->request("GET", "http://dev.farizdotid.com/api/daerahindonesia/provinsi/kabupaten/kecamatan/". $value->id . "/desa", 
-            [
-                "headers" => [
-                    "Accept"        => "application/json",
-                    "Content-type"  => "application/json"
-                ]
+        $res = $client->request("GET", "http://dev.farizdotid.com/api/daerahindonesia/provinsi/kabupaten/kecamatan/3318210/desa", 
+        [
+            "headers" => [
+                "Accept"        => "application/json",
+                "Content-type"  => "application/json"
             ]
-        );
+        ]);
         
         $hasil = json_decode($res->getBody(), true);
         $hasil = $hasil["desas"];
@@ -89,11 +84,9 @@ class GetApiLokasiController extends Controller
                 DB::table("desas")->insert([
                     "id"            => $value["id"],
                     "nama"          => $value["nama"],
-                    "kecamatan_id"   => $value["id_kecamatan"]
                 ]);
-            }
-        // end foreach
         }
+        // end foreach
 
         dd("berhasil");
     }

@@ -14,21 +14,21 @@ class AddForeignSpopsTable extends Migration
     public function up()
     {
         Schema::table('data_letak_objeks', function (Blueprint $table) {
-            $table->unsignedBigInteger('spop_id')->after("desa_id");
+            $table->unsignedBigInteger('spop_id')->after("desa_id")->nullable();
 
-            $table->foreign('spop_id')->references("id")->on("spops")->onDelete("cascade");
+            $table->foreign('spop_id')->references("id")->on("spops")->onDelete("set null");
         });
         
-        Schema::table('data_subjek_pajak', function (Blueprint $table) {
-            $table->unsignedBigInteger('spop_id')->after("kabupaten");
+        Schema::table('data_subjek_pajaks', function (Blueprint $table) {
+            $table->unsignedBigInteger('spop_id')->after("kabupaten")->nullable();
 
-            $table->foreign('spop_id')->references("id")->on("spops")->onDelete("cascade");
+            $table->foreign('spop_id')->references("id")->on("spops")->onDelete("set null");
         });
 
         Schema::table('data_tanahs', function (Blueprint $table) {
-            $table->unsignedBigInteger('spop_id')->after("jenis_tanah_id");
+            $table->unsignedBigInteger('spop_id')->after("jenis_tanah_id")->nullable();
 
-            $table->foreign('spop_id')->references("id")->on("spops")->onDelete("cascade");
+            $table->foreign('spop_id')->references("id")->on("spops")->onDelete("set null");
         });
     }
 

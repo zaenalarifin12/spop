@@ -22,32 +22,32 @@ class CreateRincianDataBangunansTable extends Migration
             $table->integer('jumlah_lantai');
             $table->integer('daya_listrik');
             $table->integer('jumlah_bangunan');
-            $table->unsignedBigInteger('jenis_penggunaan_bangunan_id');
-            $table->unsignedBigInteger('kondisi_id');
-            $table->unsignedBigInteger('konstruksi_id');
-            $table->unsignedBigInteger('atap_id');
-            $table->unsignedBigInteger('dinding_id');
-            $table->unsignedBigInteger('lantai_id');
-            $table->unsignedBigInteger('langit_id');
-            $table->unsignedBigInteger('spop_id');
+            $table->unsignedBigInteger('jenis_penggunaan_bangunan_id')->nullable();
+            $table->unsignedBigInteger('kondisi_id')->nullable();
+            $table->unsignedBigInteger('konstruksi_id')->nullable();
+            $table->unsignedBigInteger('atap_id')->nullable();
+            $table->unsignedBigInteger('dinding_id')->nullable();
+            $table->unsignedBigInteger('lantai_id')->nullable();
+            $table->unsignedBigInteger('langit_id')->nullable();
+            $table->unsignedBigInteger('spop_id')->nullable();
             $table->timestamps();
 
             $table->foreign('jenis_penggunaan_bangunan_id')
-                    ->references("id")->on("jenis_penggunaan_bangunans")->onDelete("cascade");
+                    ->references("id")->on("jenis_penggunaan_bangunans")->onDelete("set null");
             $table->foreign('kondisi_id')
-                    ->references("id")->on("kondisis")->onDelete("cascade");
+                    ->references("id")->on("kondisis")->onDelete("set null");
             $table->foreign('konstruksi_id')
-                    ->references("id")->on("konstruksis")->onDelete("cascade");
+                    ->references("id")->on("konstruksis")->onDelete("set null");
             $table->foreign('atap_id')
-                    ->references("id")->on("ataps")->onDelete("cascade");
+                    ->references("id")->on("ataps")->onDelete("set null");
             $table->foreign('dinding_id')
-                    ->references("id")->on("dindings")->onDelete("cascade");
+                    ->references("id")->on("dindings")->onDelete("set null");
             $table->foreign('lantai_id')
-                    ->references("id")->on("lantais")->onDelete("cascade");
+                    ->references("id")->on("lantais")->onDelete("set null");
             $table->foreign('langit_id')
-                    ->references("id")->on("langits")->onDelete("cascade");
+                    ->references("id")->on("langits")->onDelete("set null");
             $table->foreign('spop_id')
-                    ->references("id")->on("spops")->onDelete("cascade");
+                    ->references("id")->on("spops")->onDelete("set null");
         });
     }
 
