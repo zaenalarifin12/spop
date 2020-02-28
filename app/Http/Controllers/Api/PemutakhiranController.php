@@ -31,6 +31,8 @@ class PemutakhiranController extends Controller
 {
     public function index()
     {
+        return Auth::user()->nip;
+        die();
         if (Auth::user()->role == 1){
             $spops = Spop::with("user")->where("kategori", 0)->get();
         }else{
