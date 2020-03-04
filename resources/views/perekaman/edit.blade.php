@@ -24,7 +24,7 @@
           </div>
 
           <div class="section-body" >
-        <form action="{{ url("/perekaman/". $spop->uuid) }}" method="post">  
+        <form action="{{ url("/perekaman/". $spop->uuid) }}" method="post" enctype="multipart/form-data">  
             <div class="container-fluid" id="parent">
               <div class="row">
                 <div class="col-12 col-md-12 col-lg-12">
@@ -74,16 +74,16 @@
                     </div>
                     @endif
 
-                      <div class="form-group">
+                    <div class="form-group">
                         <label>NOP ASAL</label>
                         <div class="input-group">                            
                             <input type="text" disabled name="pr"               required class="form-control" value="{{ substr($spop->nop_asal, 0,2) }}">
                             <input type="text" disabled name="dt"               required class="form-control" value="{{ substr($spop->nop_asal, 2,2) }}">
-                            <input type="text" disabled name="nop_asal_kec"     required class="form-control" value="{{ substr($spop->nop_asal, 4,3) }}">
-                            <input type="text" disabled name="nop_asal_des"     required class="form-control" value="{{ substr($spop->nop_asal, 7,3) }}">
-                            <input type="text" disabled name="nop_asal_blok"    required class="form-control" value="{{ substr($spop->nop_asal, 10,3) }}">
-                            <input type="text" disabled name="nop_asal_no_urut" required class="form-control" value="{{ substr($spop->nop_asal, 13,4) }}">
-                            <input type="text" disabled name="nop_asal_kode"    required class="form-control" value="{{ substr($spop->nop_asal, 17,18) }}">
+                            <input type="text" name="nop_asal_kec"              required class="form-control" value="{{ substr($spop->nop_asal, 4,3) }}">
+                            <input type="text" name="nop_asal_des"              required class="form-control" value="{{ substr($spop->nop_asal, 7,3) }}">
+                            <input type="text" name="nop_asal_blok"             required class="form-control" value="{{ substr($spop->nop_asal, 10,3) }}">
+                            <input type="text" name="nop_asal_no_urut"          required class="form-control" value="{{ substr($spop->nop_asal, 13,4) }}">
+                            <input type="text" name="nop_asal_kode"             required class="form-control" value="{{ substr($spop->nop_asal, 17,18) }}">
                         </div>
                     </div>
   
@@ -268,6 +268,73 @@
                             @enderror
                       </div>
   
+                    <div class="form-group">
+                        <label>Nomor HP</label>
+                        <input type="text" class="form-control @error('dsp_no_hp') is-invalid @enderror" name="dsp_no_hp" value="{{ old("dsp_no_hp") ? old("dsp_no_hp") : $spop->dataSubjekPajak->nomor_hp }}">
+                    </div>
+
+                    <div class="form-group">
+                        <h2 class="text-center"><u>Daftar Foto</u></h2>
+                    </div>
+                    @foreach ($spop->gambars as $item)
+                        <form action="{{ url("/perekaman/$spop->uuid/gambar/{$item->id}") }}" method="post">
+                            <div class="form-group">
+                                <label for="">{{ $item->kategori->nama }}</label>
+                                <img src="{{asset("storage/data_spop/$item->nama")}}" alt="" style="width:100%" />
+                                @csrf
+                                @method("DELETE")
+                                <input type="submit" value="Hapus" class="btn btn-danger mt-2 float-right">
+                            </div>
+                        </form>
+                    @endforeach
+
+                    <br>
+                    <div class="form-group">
+                        <h2 class="text-center"><u>Tambah Foto</u></h2>
+                    </div>
+
+                    @foreach ($kategori as $item)
+                        <div class="form-group">
+                            <label>{{ $item->nama }}</label>
+                            <input type="file" id="gallery-photo-add-{{ $item->id }}" multiple class="form-control @error("$item->id") is-invalid @enderror" name="gambar[{{ $item->id }}][]" value="{{ old("$item->id") }}" accept="image/*">
+                            <p  class="btn btn-danger mt-1" id="reset-file-{{ $item->id }}">Reset</p>
+                        </div>
+                        <div class="gallery-{{ $item->id }}"></div>
+                    <br>
+                        <script>
+                        $(function() {
+                            // Multiple images preview in browser
+                            var imagesPreview = function(input, placeToInsertImagePreview) {
+                                
+                                if (input.files) {
+                                    var filesAmount = input.files.length;
+                                    
+                                    for (i = 0; i < filesAmount; i++) {
+                                        var reader = new FileReader();
+                        
+                                        reader.onload = function(event) {
+                                            $($.parseHTML('<img>')).attr('src', event.target.result).attr('width', "100%").appendTo(placeToInsertImagePreview);
+                                        }
+                        
+                                        reader.readAsDataURL(input.files[i]);
+                                    }
+                                }
+                        
+                            };
+                        
+                            $("#gallery-photo-add-{{ $item->id }}").on('change', function() {
+                                imagesPreview(this, 'div.gallery-{{ $item->id }}');
+                            });
+
+                            $("#reset-file-{{ $item->id }}").on("click", function(){
+                                $("#gallery-photo-add-{{ $item->id }}").val("")
+                                $(".gallery-{{ $item->id }} img").remove()
+                            });
+                        });
+                        </script>
+                    @endforeach
+
+                    
                       <div class="alert alert-info">
                           <p class="text-center">Data Tanah</p> 
                       </div>
@@ -331,6 +398,13 @@
                         <input type="submit" name="action" class="btn btn-dark btn-block" value="save" >
                     </div>
                 </div>
+
+                <div class="row my-4">
+                    <div class="col-12 col-md-12 col-lg-12">
+                        <a href="{{url("/")}}" class="btn btn-danger btn-block"> Batal</a>
+                    </div>
+                </div>
+                
             </div>
         </form>
           </div>
@@ -441,12 +515,6 @@
                     </div>
   
                     <div class="row">
-                        <div class="col">
-                            <div class="form-group">
-                                <label>Jumlah Bangunan</label>
-                                <input type="text" class="form-control" name="jumlah_bangunan" id="" >
-                            </div>
-                        </div>
                         <div class="col">
                             <div class="form-group">
                                 <label>Daya Listrik Terpasang (WATT)</label>

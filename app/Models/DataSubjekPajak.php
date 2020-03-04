@@ -12,6 +12,7 @@ class DataSubjekPajak extends Model
         "rt",
         "rw",
         "nomor_ktp",
+        "nomor_hp",
         "status_id",
         "pekerjaan_id",
         "desa",

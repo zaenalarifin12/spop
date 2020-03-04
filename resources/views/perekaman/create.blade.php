@@ -24,7 +24,7 @@
           </div>
 
           <div class="section-body" >
-        <form action="{{ url("/perekaman/create") }}" method="post">  
+        <form action="{{ url("/perekaman/create") }}" method="post" enctype="multipart/form-data">  
             <div class="container-fluid" id="parent">
               <div class="row">
                 <div class="col-12 col-md-12 col-lg-12">
@@ -91,7 +91,7 @@
                           <div class="col">
                               <div class="form-group">
                                   <label>RW</label>
-                                  <input type="number" class="form-control @error("dlop_rw") is-invalid @enderror" name="dlop_rw" id="" value="{{ old('dlop_rw') }}">
+                                  <input type="text" minlength="2" maxlength="2" class="form-control @error("dlop_rw") is-invalid @enderror" name="dlop_rw" id="" value="{{ old('dlop_rw') }}">
                                     @error("dlop_rw")
                                         <div class="invalid-feedback"> 
                                             RW harus di isi, harus 2 angka
@@ -102,7 +102,7 @@
                           <div class="col">
                               <div class="form-group">
                                   <label>RT</label>
-                                  <input type="number" class="form-control @error("dlop_rt") is-invalid @enderror" name="dlop_rt" id="" value="{{ old('dlop_rt') }}">
+                                  <input type="text" minlength="3" maxlength="3" class="form-control @error("dlop_rt") is-invalid @enderror" name="dlop_rt" id="" value="{{ old('dlop_rt') }}">
                                     @error("dlop_rt")
                                         <div class="invalid-feedback"> 
                                             RW harus di isi , harus 3 angka
@@ -196,7 +196,7 @@
                           <div class="col">
                               <div class="form-group">
                                     <label>RW</label>
-                                    <input type="number" class="form-control @error('dsp_rw') is-invalid @enderror" name="dsp_rw" value="{{ old("dsp_rw") }}">
+                                    <input type="text" minlength="2" maxlength="2" class="form-control @error('dsp_rw') is-invalid @enderror" name="dsp_rw" value="{{ old("dsp_rw") }}">
                                     @error("dsp_rw")
                                         <div class="invalid-feedback"> 
                                             RW harus di isi, harus 2 angka
@@ -207,7 +207,7 @@
                           <div class="col">
                               <div class="form-group">
                                     <label>RT</label>
-                                    <input type="number" class="form-control @error('dsp_rt') is-invalid @enderror" name="dsp_rt" value="{{ old("dsp_rt")  }}">
+                                    <input type="number" minlength="3" maxlength="3" class="form-control @error('dsp_rt') is-invalid @enderror" name="dsp_rt" value="{{ old("dsp_rt")  }}">
                                     @error("dsp_rt")
                                         <div class="invalid-feedback"> 
                                             RT harus di isi, harus 3 angka
@@ -226,7 +226,53 @@
                                 </div>
                             @enderror
                       </div>
+
+                        <div class="form-group">
+                            <label>Nomor HP</label>
+                            <input type="text" class="form-control @error('dsp_no_hp') is-invalid @enderror" name="dsp_no_hp" value="{{ old("dsp_no_hp") }}">
+                        </div>
   
+                        @foreach ($kategori as $item)
+                            <div class="form-group">
+                                <label>{{ $item->nama }}</label>
+                                <input type="file" id="gallery-photo-add-{{ $item->id }}" multiple class="form-control @error("$item->id") is-invalid @enderror" name="gambar[{{ $item->id }}][]" value="{{ old("$item->id") }}" accept="image/*">
+                                <p  class="btn btn-danger mt-1" id="reset-file-{{ $item->id }}">Reset</p>
+                            </div>
+                            <div class="gallery-{{ $item->id }}"></div>
+                            <br>
+                            <script>
+                            $(function() {
+                                // Multiple images preview in browser
+                                var imagesPreview = function(input, placeToInsertImagePreview) {
+                                    
+                                    if (input.files) {
+                                        var filesAmount = input.files.length;
+                                        
+                                        for (i = 0; i < filesAmount; i++) {
+                                            var reader = new FileReader();
+                            
+                                            reader.onload = function(event) {
+                                                $($.parseHTML('<img>')).attr('src', event.target.result).attr('width', "100%").appendTo(placeToInsertImagePreview);
+                                            }
+                            
+                                            reader.readAsDataURL(input.files[i]);
+                                        }
+                                    }
+                            
+                                };
+                            
+                                $("#gallery-photo-add-{{ $item->id }}").on('change', function() {
+                                    imagesPreview(this, 'div.gallery-{{ $item->id }}');
+                                });
+
+                                $("#reset-file-{{ $item->id }}").on("click", function(){
+                                    $("#gallery-photo-add-{{ $item->id }}").val("")
+                                    $(".gallery-{{ $item->id }} img").remove()
+                                });
+                            });
+                            </script>
+                        @endforeach
+
                       <div class="alert alert-info">
                           <p class="text-center">Data Tanah</p> 
                       </div>
@@ -336,7 +382,7 @@
                         <div class="col">
                             <div class="form-group">
                                 <label>Tahun Dibangun</label>
-                                <input type="text" class="form-control @error('tahun_dibangun') is-invalid @enderror" name="tahun_dibangun" value="{{ old("tahun_dibangun") }}">
+                                <input type="text" minlength="4" maxlength="4" class="form-control @error('tahun_dibangun') is-invalid @enderror" name="tahun_dibangun" value="{{ old("tahun_dibangun") }}">
                                 @error("tahun_dibangun")
                                     <div class="invalid-feedback"> 
                                         Tahun dibangun harus di isi
@@ -347,7 +393,7 @@
                         <div class="col">
                             <div class="form-group">
                                 <label>Tahun Direnovasi</label>
-                                <input type="text" class="form-control @error('tahun_renovasi') is-invalid @enderror" name="tahun_renovasi" value="{{ old("tahun_renovasi") }}" >
+                                <input type="text" minlength="4" maxlength="4" class="form-control @error('tahun_renovasi') is-invalid @enderror" name="tahun_renovasi" value="{{ old("tahun_renovasi") }}" >
                                 @error("tahun_renovasi")
                                     <div class="invalid-feedback"> 
                                         tahun renovasi harus di isi
@@ -357,18 +403,7 @@
                         </div>
                     </div>
   
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-group">
-                                <label>Jumlah Bangunan</label>
-                                <input type="number" min="1" class="form-control @error('jumlah_bangunan') is-invalid @enderror" name="jumlah_bangunan" value="{{ old("jumlah_bangunan")}}">
-                                @error("jumlah_bangunan")
-                                    <div class="invalid-feedback"> 
-                                        Jumlah bangunan harus di isi
-                                    </div>
-                                @enderror
-                            </div>
-                        </div>
+                    <div class="row" >
                         <div class="col">
                             <div class="form-group">
                                 <label>Daya Listrik Terpasang (WATT)</label>
@@ -499,6 +534,13 @@
                         <input type="submit" name="action" class="btn btn-dark btn-block" value="tambah" >
                     </div>
                 </div>
+
+                <div class="row my-4">
+                    <div class="col-12 col-md-12 col-lg-12">
+                        <a href="{{url("/")}}" class="btn btn-danger btn-block"> Batal</a>
+                    </div>
+                </div>
+
             </div>
         </form>
           </div>
@@ -611,12 +653,6 @@
                     </div>
   
                     <div class="row">
-                        <div class="col">
-                            <div class="form-group">
-                                <label>Jumlah Bangunan</label>
-                                <input type="text" class="form-control" name="jumlah_bangunan" id="" >
-                            </div>
-                        </div>
                         <div class="col">
                             <div class="form-group">
                                 <label>Daya Listrik Terpasang (WATT)</label>

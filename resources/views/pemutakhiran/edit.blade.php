@@ -302,6 +302,13 @@
                         <input type="submit" name="action" class="btn btn-dark btn-block" value="save" >
                     </div>
                 </div>
+
+                <div class="row my-4">
+                    <div class="col-12 col-md-12 col-lg-12">
+                        <a href="{{url("/")}}" class="btn btn-danger btn-block"> Batal</a>
+                    </div>
+                </div>
+                
             </div>
         </form>
           </div>
@@ -412,12 +419,6 @@
                     </div>
   
                     <div class="row">
-                        <div class="col">
-                            <div class="form-group">
-                                <label>Jumlah Bangunan</label>
-                                <input type="text" class="form-control" name="jumlah_bangunan" id="" >
-                            </div>
-                        </div>
                         <div class="col">
                             <div class="form-group">
                                 <label>Daya Listrik Terpasang (WATT)</label>

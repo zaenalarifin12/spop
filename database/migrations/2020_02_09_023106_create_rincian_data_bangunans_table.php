@@ -21,7 +21,6 @@ class CreateRincianDataBangunansTable extends Migration
             $table->integer('tahun_renovasi');
             $table->integer('jumlah_lantai');
             $table->integer('daya_listrik');
-            $table->integer('jumlah_bangunan');
             $table->unsignedBigInteger('jenis_penggunaan_bangunan_id')->nullable();
             $table->unsignedBigInteger('kondisi_id')->nullable();
             $table->unsignedBigInteger('konstruksi_id')->nullable();

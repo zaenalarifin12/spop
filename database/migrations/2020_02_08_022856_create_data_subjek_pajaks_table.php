@@ -20,6 +20,7 @@ class CreateDataSubjekPajaksTable extends Migration
             $table->string('rt');
             $table->string('rw');
             $table->string('nomor_ktp');
+            $table->string('nomor_hp')->nullable();
             $table->unsignedBigInteger('status_id')->nullable();
             $table->unsignedBigInteger('pekerjaan_id')->nullable();
             $table->string('desa');

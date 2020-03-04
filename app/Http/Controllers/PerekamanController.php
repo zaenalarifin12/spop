@@ -22,6 +22,11 @@ use App\Models\Langit;
 use App\Models\Rujukan;
 use App\Models\Spop;
 use App\Models\Desa;
+use App\Models\Kategori;
+use App\Models\Gambar;
+
+use Illuminate\Http\File;
+use Illuminate\Support\Facades\Storage;
 
 use DataTables;
 
@@ -29,13 +34,10 @@ use Auth;
 
 class PerekamanController extends Controller
 {
+    
     /**
      * TODO 
-     * Validasi nop berasal dari nop Spop atau nop rujukan
-     * ada halaman admin untuk mengedit nop -> ada halaman untuk mengedit nop sendiri
-     * dan alert message
      * edit admin dan pegawai beda , bagian input nop
-     * jika bukan admin maka harus disable 
      */
 
     public function index()
@@ -71,6 +73,7 @@ class PerekamanController extends Controller
         $lantais                    = Lantai::get();
         $langits                    = Langit::get();
         $desas                      = Desa::get()->pluck("nama");
+        $kategori                   = Kategori::get();
 
         return view("perekaman.create", compact([
             "jenisTanah",
@@ -83,7 +86,8 @@ class PerekamanController extends Controller
             "dindings",
             "lantais",
             "langits",
-            "desas"
+            "desas",
+            "kategori"
         ]));
     }
 
@@ -121,7 +125,6 @@ class PerekamanController extends Controller
                     "jenis_tanah"           => "required", //  masih kurang validasi 2,3
                 ]);
 
-                // masih kurang nop
                 $spop_asal  = Spop::where("nop", $nop_replace)->first(); #mencari nop di table
                 $rujukan    = Rujukan::where("nop", $nop)->first();
 
@@ -138,7 +141,6 @@ class PerekamanController extends Controller
                     return redirect()->back()->withInput()->with("msg", "pekerjaan tidak ada");
                     // die("pekerjaan tidak ada");
                 
-                
                 $uu = Str::random(40) .time();
                 if(Spop::where("uuid", $uu)->first() != null)
                     $uu = Str::random(40) .time();
@@ -146,40 +148,6 @@ class PerekamanController extends Controller
                 $desa = Desa::where("nama", "$request->dlop_desa")->first();
                 if(empty($desa))
                     return redirect()->back()->withInput()->with("msg", "Desa tidak ditemukan didaerah pati");
-
-                $spop                   = new Spop();
-                $spop->uuid             = $uu;
-                $spop->nop_asal         = $nop_replace;
-                $spop->kategori         = 1;
-                $spop->user_id          = Auth::user()->id;
-                $spop->save();
-
-                $DataLetakObjekPajak = DataLetakObjek::create([
-                    "nama_jalan"        => $request->dlop_nama_jalan,
-                    "desa_id"           => $desa->id,
-                    "blok_kav"          => $request->dlop_blok,
-                    "rw"                => $request->dlop_rw,
-                    "rt"                => $request->dlop_rt,
-                    "spop_id"           => $spop->id,
-                ]);
-                
-                $DataSubjekPajak = DataSubjekPajak::create([
-                    "nama_subjek_pajak" => $request->dsp_nama_subjek_pajak,
-                    "nama_jalan"        => $request->dsp_nama_jalan,
-                    "rt"                => $request->dsp_rt,
-                    "rw"                => $request->dsp_rw,
-                    "nomor_ktp"         => $request->dsp_no_ktp,
-                    "status_id"         => $status,
-                    "pekerjaan_id"      => $pekerjaan,
-                    "desa"              => $request->dsp_desa,
-                    "kabupaten"         => $request->dsp_kabupaten,
-                    "spop_id"           => $spop->id
-                ]);
-                
-                $spop->update([
-                    "data_letak_objek_id" => $DataLetakObjekPajak->id,
-                    "data_subjek_pajak_id" => $DataSubjekPajak->id
-                ]);
 
                 if($request->jenis_tanah == 1){
 
@@ -190,7 +158,6 @@ class PerekamanController extends Controller
                         "jumlah_lantai"         => "required|numeric|min:0",
                         "tahun_dibangun"        => "required|numeric|digits:4",
                         "tahun_renovasi"        => "required|numeric|digits:4",
-                        "jumlah_bangunan"       => "required|numeric|min:0",
                         "daya"                  => "required|numeric|min:0",
                         "kondisi"               => "required",
                         "konstruksi"            => "required",
@@ -207,6 +174,72 @@ class PerekamanController extends Controller
                     $dinding                    = Dinding::where("id", $request->dinding)->pluck("id")->first();
                     $lantai                     = Lantai::where("id", $request->lantai)->pluck("id")->first();
                     $langit                     = Langit::where("id", $request->langit)->pluck("id")->first();
+
+                    $spop                   = new Spop();
+                    $spop->uuid             = $uu;
+                    $spop->nop_asal         = $nop_replace;
+                    $spop->kategori         = 1;
+                    $spop->user_id          = Auth::user()->id;
+                    $spop->save();
+
+                    $DataLetakObjekPajak = DataLetakObjek::create([
+                        "nama_jalan"        => $request->dlop_nama_jalan,
+                        "desa_id"           => $desa->id,
+                        "blok_kav"          => $request->dlop_blok,
+                        "rw"                => $request->dlop_rw,
+                        "rt"                => $request->dlop_rt,
+                        "spop_id"           => $spop->id,
+                    ]);
+                    
+                    $DataSubjekPajak = DataSubjekPajak::create([
+                        "nama_subjek_pajak" => $request->dsp_nama_subjek_pajak,
+                        "nama_jalan"        => $request->dsp_nama_jalan,
+                        "rt"                => $request->dsp_rt,
+                        "rw"                => $request->dsp_rw,
+                        "nomor_ktp"         => $request->dsp_no_ktp,
+                        "nomor_hp"          => $request->dsp_no_hp,
+                        "status_id"         => $status,
+                        "pekerjaan_id"      => $pekerjaan,
+                        "desa"              => $request->dsp_desa,
+                        "kabupaten"         => $request->dsp_kabupaten,
+                        "spop_id"           => $spop->id
+                    ]);
+
+                    $spop->update([
+                        "data_letak_objek_id" => $DataLetakObjekPajak->id,
+                        "data_subjek_pajak_id" => $DataSubjekPajak->id
+                    ]);
+
+                    if($request->has("gambar")){
+                        /**
+                         * untuk pengujian keberadaan kategori
+                         */
+                        foreach($request->gambar as $key => $value){
+                            $kategori = Kategori::where("id", $key)->first();
+                            if($kategori->id == null){
+                                return redirect()->back()->withInput()->with("msg", "Kategori gambar tidak ada");
+                            }
+                        }
+                        /**
+                         * insert @image
+                         */
+                        foreach($request->gambar as $image => $valueImage){
+                            foreach($valueImage as $key => $gambar){
+
+                                $name = Str::random(20).time(). "." .$gambar->getClientOriginalExtension();
+
+                                $gambar->storeAs(
+                                    'public/data_spop', $name
+                                );
+
+                                Gambar::create([
+                                    "nama"          => $name,
+                                    "spop_id"       => $spop->id,
+                                    "kategori_id"   => $image
+                                ]);
+                            }
+                        }
+                    }
 
                     $dataTanah = DataTanah::create([
                         "luas_tanah"        => $request->dsp_luas_tanah,
@@ -227,7 +260,6 @@ class PerekamanController extends Controller
                         "tahun_dibangun"                => $request->tahun_dibangun,
                         "tahun_renovasi"                => $request->tahun_renovasi,
                         "daya_listrik"                  => $request->daya,
-                        "jumlah_bangunan"               => $request->jumlah_bangunan,
                         "kondisi_id"                    => $kondisi,
                         "konstruksi_id"                 => $konstruksi,
                         "atap_id"                       => $atap,
@@ -249,6 +281,72 @@ class PerekamanController extends Controller
                     return redirect("/perekaman/" . $spop->uuid)->with("msg", "data perekaman berhasil di tambahkan");
 
                 }elseif($request->jenis_tanah == 2 || $request->jenis_tanah == 3){
+
+                    $spop                   = new Spop();
+                    $spop->uuid             = $uu;
+                    $spop->nop_asal         = $nop_replace;
+                    $spop->kategori         = 1;
+                    $spop->user_id          = Auth::user()->id;
+                    $spop->save();
+
+                    $DataLetakObjekPajak = DataLetakObjek::create([
+                        "nama_jalan"        => $request->dlop_nama_jalan,
+                        "desa_id"           => $desa->id,
+                        "blok_kav"          => $request->dlop_blok,
+                        "rw"                => $request->dlop_rw,
+                        "rt"                => $request->dlop_rt,
+                        "spop_id"           => $spop->id,
+                    ]);
+                    
+                    $DataSubjekPajak = DataSubjekPajak::create([
+                        "nama_subjek_pajak" => $request->dsp_nama_subjek_pajak,
+                        "nama_jalan"        => $request->dsp_nama_jalan,
+                        "rt"                => $request->dsp_rt,
+                        "rw"                => $request->dsp_rw,
+                        "nomor_ktp"         => $request->dsp_no_ktp,
+                        "nomor_hp"          => $request->dsp_no_hp,
+                        "status_id"         => $status,
+                        "pekerjaan_id"      => $pekerjaan,
+                        "desa"              => $request->dsp_desa,
+                        "kabupaten"         => $request->dsp_kabupaten,
+                        "spop_id"           => $spop->id
+                    ]);
+
+                    $spop->update([
+                        "data_letak_objek_id" => $DataLetakObjekPajak->id,
+                        "data_subjek_pajak_id" => $DataSubjekPajak->id
+                    ]);
+
+                    if($request->has("gambar")){
+                        /**
+                         * untuk pengujian keberadaan kategori
+                         */
+                        foreach($request->gambar as $key => $value){
+                            $kategori = Kategori::where("id", $key)->first();
+                            if($kategori->id == null){
+                                return redirect()->back()->withInput()->with("msg", "Kategori gambar tidak ada");
+                            }
+                        }
+                        /**
+                         * insert @image
+                         */
+                        foreach($request->gambar as $image => $valueImage){
+                            foreach($valueImage as $key => $gambar){
+
+                                $name = Str::random(20).time(). "." .$gambar->getClientOriginalExtension();
+
+                                $gambar->storeAs(
+                                    'public/data_spop', $name
+                                );
+
+                                Gambar::create([
+                                    "nama"          => $name,
+                                    "spop_id"       => $spop->id,
+                                    "kategori_id"   => $image
+                                ]);
+                            }
+                        }
+                    }
 
                     $dataTanah = DataTanah::create([
                         "luas_tanah"        => $request->dsp_luas_tanah,
@@ -297,7 +395,6 @@ class PerekamanController extends Controller
                     "jumlah_lantai"         => "required|numeric|min:0",
                     "tahun_dibangun"        => "required|numeric|digits:4",
                     "tahun_renovasi"        => "required|numeric|digits:4",
-                    "jumlah_bangunan"       => "required|numeric|min:0",
                     "daya"                  => "required|numeric|min:0",
                     "kondisi"               => "required",
                     "konstruksi"            => "required",
@@ -414,7 +511,6 @@ class PerekamanController extends Controller
                         "tahun_dibangun"                => $request->tahun_dibangun,
                         "tahun_renovasi"                => $request->tahun_renovasi,
                         "daya_listrik"                  => $request->daya,
-                        "jumlah_bangunan"               => $request->jumlah_bangunan,
                         "kondisi_id"                    => $kondisi,
                         "konstruksi_id"                 => $konstruksi,
                         "atap_id"                       => $atap,
@@ -437,8 +533,8 @@ class PerekamanController extends Controller
                      return redirect("/perekaman/" . $spop->uuid . "/bangunan/create");
                      // redirect to bangunan new
 
-                }else abort(404);
-                    // die("jenis tanah tidak ada");        
+                }else 
+                    return redirect()->back()->withInput()->with("msg","jenis tanah tidak ada");        
                 break;
             default:
                 die("tidak ada action");
@@ -493,7 +589,6 @@ class PerekamanController extends Controller
                     "jumlah_lantai"         => "required|numeric|min:0",
                     "tahun_dibangun"        => "required|numeric|digits:4",
                     "tahun_renovasi"        => "required|numeric|digits:4",
-                    "jumlah_bangunan"       => "required|numeric|min:0",
                     "daya"                  => "required|numeric|min:0",
                     "kondisi"               => "required",
                     "konstruksi"            => "required",
@@ -513,23 +608,23 @@ class PerekamanController extends Controller
                 $lantai                     = Lantai::where("id", $request->lantai)->pluck("id")->first();
                 $langit                     = Langit::where("id", $request->langit)->pluck("id")->first();
 
-                if (empty($spop)) abort(404);
-                    // die("nop belum ada");
+                if (empty($spop))
+                    return redirect()->back()->withInput()->with("err","nop belum ada");
 
-                if (empty($kondisi)) abort(404);
-                    // die("Kondisi tidak ada");
+                if (empty($kondisi))
+                    return redirect()->back()->withInput()->with("err","Kondisi tidak ada");
 
-                if (empty($jenisPenggunaanBangunan)) abort(404);
-                    // die("jenisPenggunaanBangunan tidak ada");
+                if (empty($jenisPenggunaanBangunan))
+                    return redirect()->back()->withInput()->with("err","jenisPenggunaanBangunan tidak ada");
                 
                 if (empty($dinding)) abort(404);
-                    // die("dinding tidak ada");
+                return redirect()->back()->withInput()->with("err","dinding tidak ada");
                 
-                if (empty($lantai)) abort(404);
-                    // die("lantai tidak ada");
+                if (empty($lantai))
+                    return redirect()->back()->withInput()->with("err","lantai tidak ada");
                 
-                if (empty($langit)) abort(404);
-                    // die("langit tidak ada");
+                if (empty($langit))
+                    return redirect()->back()->withInput()->with("err","langit tidak ada");
                         
                 $random = Str::random(40);
                 if(RincianDataBangunan::where("uuid", $random)->first() != null){
@@ -544,7 +639,6 @@ class PerekamanController extends Controller
                     "tahun_dibangun"                => $request->tahun_dibangun,
                     "tahun_renovasi"                => $request->tahun_renovasi,
                     "daya_listrik"                  => $request->daya,
-                    "jumlah_bangunan"               => $request->jumlah_bangunan,
                     "kondisi_id"                    => $kondisi,
                     "konstruksi_id"                 => $konstruksi,
                     "atap_id"                       => $atap,
@@ -570,7 +664,6 @@ class PerekamanController extends Controller
                     "jumlah_lantai"         => "required|numeric|min:0",
                     "tahun_dibangun"        => "required|numeric|digits:4",
                     "tahun_renovasi"        => "required|numeric|digits:4",
-                    "jumlah_bangunan"       => "required|numeric|min:0",
                     "daya"                  => "required|numeric|min:0",
                     "kondisi"               => "required",
                     "konstruksi"            => "required",
@@ -590,23 +683,24 @@ class PerekamanController extends Controller
                 $lantai                     = Lantai::where("id", $request->lantai)->pluck("id")->first();
                 $langit                     = Langit::where("id", $request->langit)->pluck("id")->first();
 
-                if (empty($spop)) abort(404);
-                    // die("nop belum ada");
+                if (empty($spop))
+                return redirect()->back()->withInput()->with("err","nop belum ada");
 
-                if (empty($kondisi)) abort(404);
-                    // die("Kondisi tidak ada");
+                if (empty($kondisi))
+                    return redirect()->back()->withInput()->with("err","Kondisi tidak ada");
 
-                if (empty($jenisPenggunaanBangunan)) abort(404);
-                    // die("jenisPenggunaanBangunan tidak ada");
+                if (empty($jenisPenggunaanBangunan))
+                    return redirect()->back()->withInput()->with("err","jenisPenggunaanBangunan tidak ada");
                 
                 if (empty($dinding)) abort(404);
-                    // die("dinding tidak ada");
+                return redirect()->back()->withInput()->with("err","dinding tidak ada");
                 
-                if (empty($lantai)) abort(404);
-                    // die("lantai tidak ada");
+                if (empty($lantai))
+                    return redirect()->back()->withInput()->with("err","lantai tidak ada");
                 
-                if (empty($langit)) abort(404);
-                    // die("langit tidak ada");
+                if (empty($langit))
+                    return redirect()->back()->withInput()->with("err","langit tidak ada");
+                        
                         
                 $random = Str::random(40);
                 if(RincianDataBangunan::where("uuid", $random)->first() != null){
@@ -621,7 +715,6 @@ class PerekamanController extends Controller
                     "tahun_dibangun"                => $request->tahun_dibangun,
                     "tahun_renovasi"                => $request->tahun_renovasi,
                     "daya_listrik"                  => $request->daya,
-                    "jumlah_bangunan"               => $request->jumlah_bangunan,
                     "kondisi_id"                    => $kondisi,
                     "konstruksi_id"                 => $konstruksi,
                     "atap_id"                       => $atap,
@@ -639,7 +732,7 @@ class PerekamanController extends Controller
                 
                 break;
             default:
-                die("tidak ada action");
+                return redirect()->back()->withInput()->with("err","tidak ada action");
         }
     }
 
@@ -658,6 +751,8 @@ class PerekamanController extends Controller
             "rincianDataBangunans.atap",
             "rincianDataBangunans.lantai",
             "rincianDataBangunans.langit",
+            "gambars",
+            "gambars.kategori"
             ])->where("uuid", $uuid)->first();
 
         $statuses                   = Status::get();
@@ -702,6 +797,8 @@ class PerekamanController extends Controller
             "rincianDataBangunans.atap",
             "rincianDataBangunans.lantai",
             "rincianDataBangunans.langit",
+            "gambars",
+            "gambars.kategori"
             ])->where("uuid", $uuid)->first();
 
         if(empty($spop)){
@@ -719,6 +816,7 @@ class PerekamanController extends Controller
         $lantais                    = Lantai::get();
         $langits                    = Langit::get();
         $jenisTanah                 = JenisTanah::get();
+        $kategori                   = Kategori::get();
 
         return view("perekaman.edit", compact([
             "spop",
@@ -733,7 +831,8 @@ class PerekamanController extends Controller
             "dindings",
             "lantais",
             "langits",
-            "jenisTanah"
+            "jenisTanah",
+            "kategori"
         ]));
     }
 
@@ -762,8 +861,8 @@ class PerekamanController extends Controller
         ]);
 
         $spop = Spop::where("uuid", $uuid)->first(); #mencari rujukan di table
-        if (empty($spop))
-            die("Nop tidak ada");
+        if (empty($spop)) abort(404);
+            // die("Nop tidak ada");
 
         $status     = Status::where("id", $request->status)->pluck("id")->first();
         $pekerjaan  = Pekerjaan::where("id", $request->pekerjaan)->pluck("id")->first();
@@ -775,52 +874,115 @@ class PerekamanController extends Controller
             // die("pekerjaan tidak ada");
         elseif(empty($desa))
             return redirect()->back()->withInput()->with("msg", "desa tidak ditemukan");
-        
-        if(Auth::user()->role == 1){
-            $this->validate($request, [
-                "nop_kec"      => "required",
-                "nop_des"      => "required",
-                "nop_blok"     => "required",
-                "nop_no_urut"  => "required",
-                "nop_kode"     => "required",
-            ]);
-            $kec    = $request->nop_kec;
-            $des    = $request->nop_des;
-            $blok   = $request->nop_blok;
-            $no_urut= $request->nop_no_urut;
-            $kode   = $request->nop_kode;
-
-            $nop            = "33.18.$kec.$des.$blok.$no_urut.$kode";
-            $nop_replace    = str_replace(".", "", $nop);
-
-            $spop->update([
-                "nop" => $nop_replace
-                ]);
-        }
-
-        $DataLetakObjekPajak = DataLetakObjek::where("spop_id", $spop->id)
-            ->update([
-                "nama_jalan"        => $request->dlop_nama_jalan,
-                "desa_id"           => $desa->id,
-                "blok_kav"          => $request->dlop_blok,
-                "rw"                => $request->dlop_rw,
-                "rt"                => $request->dlop_rt,
-            ]);
-        
-        $DataSubjekPajak = DataSubjekPajak::where("spop_id", $spop->id)
-            ->update([
-                "nama_subjek_pajak" => $request->dsp_nama_subjek_pajak,
-                "nama_jalan"        => $request->dsp_nama_jalan,
-                "rt"                => $request->dsp_rt,
-                "rw"                => $request->dsp_rw,
-                "nomor_ktp"         => $request->dsp_no_ktp,
-                "status_id"         => $status,
-                "pekerjaan_id"      => $pekerjaan,
-                "desa"              => $request->dsp_desa,
-                "kabupaten"         => $request->dsp_kabupaten,
-            ]);
 
         if($request->jenis_tanah == 2 || $request->jenis_tanah == 3 || $request->jenis_tanah == 1){
+
+            if(Auth::user()->role == 1){
+                $this->validate($request, [
+                    "nop_kec"      => "required",
+                    "nop_des"      => "required",
+                    "nop_blok"     => "required",
+                    "nop_no_urut"  => "required",
+                    "nop_kode"     => "required",
+                ]);
+
+                $kec    = $request->nop_kec;
+                $des    = $request->nop_des;
+                $blok   = $request->nop_blok;
+                $no_urut= $request->nop_no_urut;
+                $kode   = $request->nop_kode;
+
+                $nop_asal_kec       = $request->nop_asal_kec;
+                $nop_asal_des       = $request->nop_asal_des;
+                $nop_asal_blok      = $request->nop_asal_blok;
+                $nop_asal_no_urut   = $request->nop_asal_no_urut;
+                $nop_asal_kode      = $request->nop_asal_kode;
+
+                if(empty($nop_asal_kec) || empty($nop_asal_des) || empty($nop_asal_blok) || empty($nop_asal_no_urut) || empty($nop_asal_kode))
+                    return redirect()->back()->withInput()->with("msg", "nop asal ada yang kosong");
+
+                $nop            = "33.18.$kec.$des.$blok.$no_urut.$kode";
+                $nop_replace    = str_replace(".", "", $nop);
+
+                $nop_asal       = "33.18. $nop_asal_kec . $nop_asal_des . $nop_asal_blok . $nop_asal_no_urut . $nop_asal_kode";
+                $nop_asal_replace    = str_replace(".", "", $nop_asal);
+
+                $spop->update([
+                    "nop"       => $nop_replace,
+                    "nop_asal"  => $nop_asal
+                    ]);
+            }
+
+            $nop_asal_kec       = $request->nop_asal_kec;
+            $nop_asal_des       = $request->nop_asal_des;
+            $nop_asal_blok      = $request->nop_asal_blok;
+            $nop_asal_no_urut   = $request->nop_asal_no_urut;
+            $nop_asal_kode      = $request->nop_asal_kode;
+
+            if(empty($nop_asal_kec) || empty($nop_asal_des) || empty($nop_asal_blok) || empty($nop_asal_no_urut) || empty($nop_asal_kode))
+                    return redirect()->back()->withInput()->with("msg", "nop asal ada yang kosong");
+
+            $nop_asal       = "33.18. $nop_asal_kec . $nop_asal_des . $nop_asal_blok . $nop_asal_no_urut . $nop_asal_kode";
+            $nop_asal_replace    = str_replace(".", "", $nop_asal);
+
+            $spop->update([
+                "nop_asal"  => $nop_asal
+                ]);
+        
+
+            $DataLetakObjekPajak = DataLetakObjek::where("spop_id", $spop->id)
+                ->update([
+                    "nama_jalan"        => $request->dlop_nama_jalan,
+                    "desa_id"           => $desa->id,
+                    "blok_kav"          => $request->dlop_blok,
+                    "rw"                => $request->dlop_rw,
+                    "rt"                => $request->dlop_rt,
+                ]);
+            
+            $DataSubjekPajak = DataSubjekPajak::where("spop_id", $spop->id)
+                ->update([
+                    "nama_subjek_pajak" => $request->dsp_nama_subjek_pajak,
+                    "nama_jalan"        => $request->dsp_nama_jalan,
+                    "rt"                => $request->dsp_rt,
+                    "rw"                => $request->dsp_rw,
+                    "nomor_ktp"         => $request->dsp_no_ktp,
+                    "status_id"         => $status,
+                    "pekerjaan_id"      => $pekerjaan,
+                    "desa"              => $request->dsp_desa,
+                    "kabupaten"         => $request->dsp_kabupaten,
+                ]);
+
+                if($request->has("gambar")){
+                    /**
+                     * untuk pengujian keberadaan kategori
+                     */
+                    foreach($request->gambar as $key => $value){
+                        $kategori = Kategori::where("id", $key)->first();
+                        if($kategori->id == null){
+                            return redirect()->back()->withInput()->with("msg", "Kategori gambar tidak ada");
+                        }
+                    }
+
+                    /**
+                     * insert @image
+                     */
+                    foreach($request->gambar as $image => $valueImage){
+                        foreach($valueImage as $key => $gambar){
+
+                            $name = Str::random(20).time(). "." .$gambar->getClientOriginalExtension();
+
+                            $gambar->storeAs(
+                                'public/data_spop', $name
+                            );
+
+                            Gambar::create([
+                                "nama"          => $name,
+                                "spop_id"       => $spop->id,
+                                "kategori_id"   => $image
+                            ]);
+                        }
+                    }
+                }
 
             $dataTanah = DataTanah::where("spop_id", $spop->id)->update([
                 "luas_tanah"        => $request->dsp_luas_tanah,
@@ -886,7 +1048,6 @@ class PerekamanController extends Controller
             "jumlah_lantai"         => "required|numeric|min:0",
             "tahun_dibangun"        => "required|numeric|digits:4",
             "tahun_renovasi"        => "required|numeric|digits:4",
-            "jumlah_bangunan"       => "required|numeric|min:0",
             "daya"                  => "required|numeric|min:0",
             "kondisi"               => "required",
             "konstruksi"            => "required",
@@ -917,7 +1078,6 @@ class PerekamanController extends Controller
             "tahun_dibangun"                => $request->tahun_dibangun,
             "tahun_renovasi"                => $request->tahun_renovasi,
             "daya_listrik"                  => $request->daya,
-            "jumlah_bangunan"               => $request->jumlah_bangunan,
             "kondisi_id"                    => $kondisi,
             "konstruksi_id"                 => $konstruksi,
             "atap_id"                       => $atap,

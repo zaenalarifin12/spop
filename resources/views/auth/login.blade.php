@@ -32,7 +32,7 @@
                   <div class="row">
                     <div class="form-group col-12">
                       <label for="nip">NIP</label>
-                      <input id="nip" type="text" class="form-control @error("nip") is-invalid @enderror" name="nip" autocomplete="off">
+                      <input id="nip" type="text" class="form-control @error("nip") is-invalid @enderror" name="nip" minlength="16" maxlength="16" autocomplete="off">
                       @error('nip')
                           <span class="invalid-feedback">
                               <strong>{{ $message }}</strong>

@@ -267,12 +267,6 @@
                                         <div class="row">
                                             <div class="col">
                                                 <div class="form-group">
-                                                    <label>Jumlah Bangunan</label>
-                                                    <input type="text" disabled class="form-control" name="jumlah_bangunan" value="{{ $rincianDataBangunan->jumlah_bangunan }}" >
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <div class="form-group">
                                                     <label>Daya Listrik Terpasang (WATT)</label>
                                                     <input type="text" disabled  class="form-control" name="daya" value="{{$rincianDataBangunan->daya_listrik}}">
                                                 </div>

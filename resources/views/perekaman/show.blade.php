@@ -190,7 +190,18 @@
                                               <input type="text" disabled class="form-control" name="dsp_luas_tanah"  value="{{ $spop->dataTanah->luas_tanah }}">
                                           </div>
 
-                                          {{-- relasi data tanah masih belum --}}
+                                          @foreach ($spop->gambars as $item)
+                                            <form action="{{ url("/perekaman/$spop->uuid/gambar/{$item->id}") }}" method="post">
+                                                <div class="form-group">
+                                                    <label for="">{{ $item->kategori->nama }}</label>
+                                                    <img src="{{asset("storage/data_spop/$item->nama")}}" alt="" style="width:100%" />
+                                                    @csrf
+                                                    @method("DELETE")
+                                                    <input type="submit" value="Hapus" class="btn btn-danger mt-2 float-right">
+                                                </div>
+                                            </form>
+                                          @endforeach
+                                          
                                           <div class="form-group">
                                               <label class="form-label">Jenis Tanah</label>
                                               <div class="selectgroup selectgroup-pills">
@@ -279,12 +290,6 @@
                                         </div>
                         
                                         <div class="row">
-                                            <div class="col">
-                                                <div class="form-group">
-                                                    <label>Jumlah Bangunan</label>
-                                                    <input type="text" disabled class="form-control" name="jumlah_bangunan" value="{{ $rincianDataBangunan->jumlah_bangunan }}" >
-                                                </div>
-                                            </div>
                                             <div class="col">
                                                 <div class="form-group">
                                                     <label>Daya Listrik Terpasang (WATT)</label>
@@ -416,9 +421,6 @@
 @endsection
 
 @section('script')
-    
-    {{-- import --}}
-
     <!-- Page Specific JS File -->
     <script src="{{ asset("assets/js/page/forms-advanced-forms.js")}}"></script>
 

@@ -35,7 +35,7 @@
                       <input id="nip" type="text" class="form-control @error("nip") is-invalid @enderror" name="nip"  minlength="16" maxlength="16" autocomplete="off">
                       @error('nip')
                           <span class="invalid-feedback">
-                              <strong>NIP harus 16 karakter</strong>
+                              <strong>NIP harus 16 karakter dan tidak boleh sama</strong>
                           </span>
                       @enderror
                     </div>

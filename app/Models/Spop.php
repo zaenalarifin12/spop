@@ -40,4 +40,9 @@ class Spop extends Model
     {
         return $this->belongsTo("App\User");
     }
+
+    public function gambars()
+    {
+        return $this->hasMany("App\Models\Gambar");
+    }
 }

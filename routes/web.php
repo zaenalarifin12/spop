@@ -54,6 +54,8 @@ Route::group(["middleware" => ["auth"]], function(){
     Route::put('/perekaman/{uuid}/bangunan/{uuid_bangunan}',      'PerekamanController@updateBangunan');
     Route::delete('/perekaman/{uuid}/bangunan/{uuid_bangunan}',   'PerekamanController@destroyBangunan');
 
+    Route::delete('/perekaman/{uuid}/gambar/{id}',                 'PerekamanGambarController@destroy');
+
 
     Route::get('/profile/{nip}',            'ProfileController@show');
     Route::get('/profile/{nip}/edit',       'ProfileController@edit');

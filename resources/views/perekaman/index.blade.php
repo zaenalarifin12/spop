@@ -64,12 +64,12 @@
         $('#example').DataTable( {
           processing: true,
           serverSide: true,
-          ajax: 'perekaman/json',
+          ajax: 'perekaman/json', 
           columns: [
-        { data: 'nop',                  name: 'nop' },
-        { data: 'nop_asal',             name: 'nop_asal'},
-        { data: 'user.name',                 name: 'user'},
-        { data: 'action',               name: 'action'}
+        { data: 'nop',           name: 'nop' },
+        { data: 'nop_asal',      name: 'nop_asal'},
+        { data: 'user.name',     name: 'user'},
+        { data: 'action',        name: 'action'}
           ]
         } );
     } );
