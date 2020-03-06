@@ -166,6 +166,11 @@
                                               <label>Nomor KTP</label>
                                               <input type="text" disabled class="form-control" name="dsp_no_ktp"  value="{{ $spop->dataSubjekPajak->nomor_ktp }}">
                                           </div>
+
+                                          <div class="form-group">
+                                            <label>Nomor HP</label>
+                                            <input type="text" disabled class="form-control" name="dsp_no_ktp"  value="{{ $spop->dataSubjekPajak->nomor_hp }}">
+                                        </div>
                                           
                                           <div class="alert alert-info">
                                               <p class="text-center">Data Tanah</p> 

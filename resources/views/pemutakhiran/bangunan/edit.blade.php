@@ -23,8 +23,6 @@
 
           <div class="section-body" >
         <form action="{{ url("/pemutakhiran/".$rincianDataBangunan->spop->uuid."/bangunan/".$rincianDataBangunan->uuid) }}" method="post">  
-            <h2 class="section-title">Surat Pemberitahuan Objek Pajak</h2>
-            <p class="section-lead">Jenis Transaksi <b>edit bangunan<b></p>
 
             <div class="container-fluid">
   
@@ -91,7 +89,7 @@
                         <div class="col">
                             <div class="form-group">
                                 <label>Tahun Dibangun</label>
-                                <input type="text" class="form-control @error('tahun_dibangun') is-invalid @enderror" name="tahun_dibangun" value="{{ old("tahun_dibangun") ? old("tahun_dibangun") : $rincianDataBangunan->tahun_dibangun}}">
+                                <input type="text" minlength="4" maxlength="4" class="form-control @error('tahun_dibangun') is-invalid @enderror" name="tahun_dibangun" value="{{ old("tahun_dibangun") ? old("tahun_dibangun") : $rincianDataBangunan->tahun_dibangun}}">
                                 @error("tahun_dibangun")
                                     <div class="invalid-feedback"> 
                                         Tahun dibangun harus di isi
@@ -102,7 +100,7 @@
                         <div class="col">
                             <div class="form-group">
                                 <label>Tahun Direnovasi</label>
-                                <input type="text" class="form-control @error('tahun_renovasi') is-invalid @enderror" name="tahun_renovasi" value="{{ old("tahun_renovasi") ? old("tahun_renovasi") : $rincianDataBangunan->tahun_renovasi }}" >
+                                <input type="text" minlength="4" maxlength="4" class="form-control @error('tahun_renovasi') is-invalid @enderror" name="tahun_renovasi" value="{{ old("tahun_renovasi") ? old("tahun_renovasi") : $rincianDataBangunan->tahun_renovasi }}" >
                                 @error("tahun_renovasi")
                                     <div class="invalid-feedback"> 
                                         tahun renovasi harus di isi

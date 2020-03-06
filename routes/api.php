@@ -16,15 +16,6 @@ use Illuminate\Http\Request;
 
 Route::post("login",    "Api\AuthController@login");
 
-Route::group(["middleware" => ["jwt.auth"]], function(){
-    Route::get('pemutakhiran', "Api\PemutakhiranController@index");
-
-    Route::get('perekaman',             "Api\PerekamanController@index");
-    Route::get('/perekaman/create',     'Api\PerekamanController@create');
-    Route::post('/perekaman/create',    'Api\PerekamanController@store');
-});
-    
-
 
 Route::get("/v1/getKabupaten",    "Api\GetApiLokasiController@getKabupaten");
 Route::get("/v1/getKecamatan",    "Api\GetApiLokasiController@getKecamatan");

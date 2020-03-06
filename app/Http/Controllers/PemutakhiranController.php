@@ -30,6 +30,13 @@ use DataTables;
 
 class PemutakhiranController extends Controller
 {
+    /**
+     * TODO 
+     * menmabhkan edit nomor hp di form edit
+     * tambah gambar di semua pemutahiran
+     * edit password user
+     * 
+     */
     public function index()
     {
         return view("pemutakhiran.index");
@@ -51,6 +58,7 @@ class PemutakhiranController extends Controller
 
     public function create($uuid)
     {
+
         $rujukan = Rujukan::where("uuid", $uuid)->first();
 
         if (empty($rujukan)) abort(404);
@@ -140,6 +148,7 @@ class PemutakhiranController extends Controller
                     "dsp_rw"                => "required|numeric|digits:2",
                     "dsp_rt"                => "required|numeric|digits:3",
                     "dsp_no_ktp"            => "required|numeric|digits:16",
+                    // dsp_no_hp
                     "dsp_luas_tanah"        => "required|numeric",
                     "jenis_tanah"           => "required", //  masih kurang validasi 2,3
                 ]);
@@ -151,22 +160,21 @@ class PemutakhiranController extends Controller
                     
                 $status     = Status::where("id", $request->status)->pluck("id")->first();
                 $pekerjaan  = Pekerjaan::where("id", $request->pekerjaan)->pluck("id")->first();
+                $desa       = Desa::where("nama", "$request->dlop_desa")->first();
+
                 if (empty($status)) 
                     return redirect()->back()->withInput()->with("msg", "Status tidak ada");
                 elseif(empty($pekerjaan))
                     return redirect()->back()->withInput()->with("msg", "Pekerjaan tidak ada");
-                
+                if(empty($desa))
+                    return redirect()->back()->withInput()->with("msg", "Desa tidak ditemukan didaerah pati");
+
                 $uu = Str::random(40) .time();
                 if(Spop::where("uuid", $uu)->first() != null)
                     $uu = Str::random(40) .time();
                 
-                $desa = Desa::where("nama", "$request->dlop_desa")->first();
-                if(empty($desa))
-                    return redirect()->back()->withInput()->with("msg", "Desa tidak ditemukan didaerah pati");
-
                 if($request->jenis_tanah == 1){
-
-                    die("jenis tanah yang di pilih harus 1");
+                    return redirect()->back()->withInput()->with("err", "jenis tanah yang di pilih harus 1");
 
                 }elseif($request->jenis_tanah == 2 || $request->jenis_tanah == 3){
 
@@ -192,6 +200,7 @@ class PemutakhiranController extends Controller
                         "rt"                => $request->dsp_rt,
                         "rw"                => $request->dsp_rw,
                         "nomor_ktp"         => $request->dsp_no_ktp,
+                        "nomor_hp"          => $request->dsp_no_hp,
                         "status_id"         => $status,
                         "pekerjaan_id"      => $pekerjaan,
                         "desa"              => $request->dsp_desa,
@@ -276,6 +285,7 @@ class PemutakhiranController extends Controller
                     "dsp_rw"                => "required|numeric|digits:2",
                     "dsp_rt"                => "required|numeric|digits:3",
                     "dsp_no_ktp"            => "required|numeric|digits:16",
+                    // "dsp_no_hp"
                     "dsp_luas_tanah"        => "required|numeric",
                     "jenis_tanah"           => "required|in:1", //  masih kurang validasi 1,2,3
                     // BANGUNAN
@@ -300,6 +310,7 @@ class PemutakhiranController extends Controller
                 $status     = Status::where("id", $request->status)->pluck("id")->first();
                 $pekerjaan  = Pekerjaan::where("id", $request->pekerjaan)->pluck("id")->first();
                 $desa       = Desa::where("nama", "$request->dlop_desa")->first();
+
                 if (empty($status))
                     return redirect()->back()->withInput()->with("msg", "Status tidak ada");
                 elseif(empty($pekerjaan))
@@ -344,6 +355,7 @@ class PemutakhiranController extends Controller
                         "rt"                => $request->dsp_rt,
                         "rw"                => $request->dsp_rw,
                         "nomor_ktp"         => $request->dsp_no_ktp,
+                        "nomor_hp"          => $request->dsp_no_hp,
                         "status_id"         => $status,
                         "pekerjaan_id"      => $pekerjaan,
                         "desa"              => $request->dsp_desa,
@@ -482,7 +494,7 @@ class PemutakhiranController extends Controller
                 if (empty($jenisPenggunaanBangunan))
                     return redirect()->back()->withInput()->with("err","jenisPenggunaanBangunan tidak ada");
                 
-                if (empty($dinding)) abort(404);
+                if (empty($dinding)) 
                 return redirect()->back()->withInput()->with("err","dinding tidak ada");
                 
                 if (empty($lantai))
@@ -557,7 +569,7 @@ class PemutakhiranController extends Controller
                 if (empty($jenisPenggunaanBangunan))
                     return redirect()->back()->withInput()->with("err","jenisPenggunaanBangunan tidak ada");
                 
-                if (empty($dinding)) abort(404);
+                if (empty($dinding)) 
                 return redirect()->back()->withInput()->with("err","dinding tidak ada");
                 
                 if (empty($lantai))
@@ -698,7 +710,8 @@ class PemutakhiranController extends Controller
             "dindings",
             "lantais",
             "langits",
-            "jenisTanah"
+            "jenisTanah",
+            "kategori"
         ]));
     }
 
@@ -759,6 +772,7 @@ class PemutakhiranController extends Controller
                     "rt"                => $request->dsp_rt,
                     "rw"                => $request->dsp_rw,
                     "nomor_ktp"         => $request->dsp_no_ktp,
+                    "nomor_hp"         => $request->dsp_no_hp,
                     "status_id"         => $status,
                     "pekerjaan_id"      => $pekerjaan,
                     "desa"              => $request->dsp_desa,
@@ -766,11 +780,13 @@ class PemutakhiranController extends Controller
                 ]);
 
             if($request->has("gambar")){
+                
                 /**
                  * untuk pengujian keberadaan kategori
                  */
                 foreach($request->gambar as $key => $value){
                     $kategori = Kategori::where("id", $key)->first();
+                    
                     if($kategori->id == null){
                         return redirect()->back()->withInput()->with("msg", "Kategori gambar tidak ada");
                     }
@@ -778,9 +794,10 @@ class PemutakhiranController extends Controller
                 /**
                  * insert @image
                  */
+                
                 foreach($request->gambar as $image => $valueImage){
                     foreach($valueImage as $key => $gambar){
-
+                        dd($valueImage);
                         $name = Str::random(20).time(). "." .$gambar->getClientOriginalExtension();
 
                         $gambar->storeAs(
@@ -983,6 +1000,9 @@ class PemutakhiranController extends Controller
             $nop_replace    = str_replace(".", "", $nop);
             
             $rujukan    = Rujukan::where("nop", $nop)->first();
+            if(empty($rujukan)){
+                return redirect()->back()->withInput()->with("err", "nop tidak ada");
+            }
             $spop = Spop::with([
                 "dataLetakObjek",
                 "dataSubjekPajak",

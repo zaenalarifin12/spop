@@ -23,6 +23,16 @@
         </div>
       </div>
 
+      @if (session("err"))
+        <div class="alert alert-danger alert-dismissible show fade">
+            <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>×</span>
+            </button>
+            {{ session("err") }}
+            </div>
+        </div>
+    @endif
 
       <div class="section-body" >
         <div class="container">
@@ -48,55 +58,57 @@
                           </div>
                       </div>
                       @if (isset($rujukan))
+
+                            
                                 <p>Data Rujukan</p>
-                                <div class="form-group">
-                                  <label>Tahun</label>
-                                  <input type="text" disabled class="form-control" value="{{ $rujukan->tahun }}">
-                                </div>
+                            <div class="form-group">
+                              <label>Tahun</label>
+                              <input type="text" disabled class="form-control" value="{{ $rujukan->tahun }}">
+                            </div>
 
-                                <div class="form-group">
-                                  <label>NOP</label>
-                                  <input type="text" disabled class="form-control" value="{{ $rujukan->nop }}">
-                                </div>
+                            <div class="form-group">
+                              <label>NOP</label>
+                              <input type="text" disabled class="form-control" value="{{ $rujukan->nop }}">
+                            </div>
 
-                                <div class="form-group">
-                                    <label>Nama Subjek Pajak</label>
-                                    <textarea disabled class="form-control" cols="30" rows="10">{{ $rujukan->nama_subjek_pajak }}</textarea>
-                                </div>
-              
-                                <div class="form-group">
-                                  <label>Alamat wajib pajak</label>
-                                  <textarea disabled class="form-control" cols="30" rows="10">{{ $rujukan->alamat_wp }}</textarea>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label>Alamat Objek Pajak</label>
-                                    <input type="text" disabled class="form-control" value="{{ $rujukan->alamat_op }}">
-                                </div>
-            
-                                <div class="form-group">
-                                    <label>Luas Bumi SPPT</label>
-                                    <input type="text" disabled class="form-control" value="{{ $rujukan->luas_bumi_sppt }}">
-                                </div>
-            
-                                <div class="form-group">
-                                  <label>Luas Bangunan SPPT</label>
-                                  <input type="text" disabled class="form-control" value="{{ $rujukan->luas_bng_sppt }}">
-                                </div>
-                              
-                                <div class="form-group">
-                                    <label>NJOP Bumi SPPT</label>
-                                    <input type="text" disabled class="form-control" value="{{ $rujukan->njop_bumi_sppt}}">
-                                </div>
+                            <div class="form-group">
+                                <label>Nama Subjek Pajak</label>
+                                <textarea disabled class="form-control" cols="30" rows="10">{{ $rujukan->nama_subjek_pajak }}</textarea>
+                            </div>
+          
+                            <div class="form-group">
+                              <label>Alamat wajib pajak</label>
+                              <textarea disabled class="form-control" cols="30" rows="10">{{ $rujukan->alamat_wp }}</textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Alamat Objek Pajak</label>
+                                <input type="text" disabled class="form-control" value="{{ $rujukan->alamat_op }}">
+                            </div>
+        
+                            <div class="form-group">
+                                <label>Luas Bumi SPPT</label>
+                                <input type="text" disabled class="form-control" value="{{ $rujukan->luas_bumi_sppt }}">
+                            </div>
+        
+                            <div class="form-group">
+                              <label>Luas Bangunan SPPT</label>
+                              <input type="text" disabled class="form-control" value="{{ $rujukan->luas_bng_sppt }}">
+                            </div>
+                          
+                            <div class="form-group">
+                                <label>NJOP Bumi SPPT</label>
+                                <input type="text" disabled class="form-control" value="{{ $rujukan->njop_bumi_sppt}}">
+                            </div>
 
-                                <div class="form-group">
-                                  <label>PBB</label>
-                                  <input type="text" disabled class="form-control" value="{{ $rujukan->pbb }}">
-                                </div>
+                            <div class="form-group">
+                              <label>PBB</label>
+                              <input type="text" disabled class="form-control" value="{{ $rujukan->pbb }}">
+                            </div>
 
-                                <div class="form-group">
-                                  <a href="{{ url("/pemutakhiran/create/$rujukan->uuid") }}" class="btn btn-primary btn-block">Usulan perubahan</a>
-                                </div>
+                            <div class="form-group">
+                              <a href="{{ url("/pemutakhiran/create/$rujukan->uuid") }}" class="btn btn-primary btn-block">Usulan perubahan</a>
+                            </div>
                       @endif
                     </div>
                   </div>

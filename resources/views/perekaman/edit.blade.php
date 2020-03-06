@@ -65,11 +65,11 @@
                         <div class="input-group mb-2">
                             <input type="text" name="pr"          class="form-control" disabled value="33"/>
                             <input type="text" name="dtii"        class="form-control" disabled value="18"/>
-                            <input type="text" name="nop_kec"     class="form-control" disabled value="{{ old("kec") }}" />
-                            <input type="text" name="nop_des"     class="form-control" disabled value="{{ old("des") }}" />
-                            <input type="text" name="nop_blok"    class="form-control" disabled value="{{ old("blok") }}" />
-                            <input type="text" name="nop_no_urut" class="form-control" disabled value="{{ old("no_urut") }}" />
-                            <input type="text" name="nop_kode"    class="form-control" disabled value="{{ old("kode") }}" />
+                            <input type="text" name="nop_kec"     pattern=".{3,3}" minlength="3" maxlength="3" class="form-control" disabled value="{{ old("kec") }}" />
+                            <input type="text" name="nop_des"     pattern=".{3,3}" minlength="3" maxlength="3" class="form-control" disabled value="{{ old("des") }}" />
+                            <input type="text" name="nop_blok"    pattern=".{3,3}" minlength="3" maxlength="3" class="form-control" disabled value="{{ old("blok") }}" />
+                            <input type="text" name="nop_no_urut" pattern=".{4,4}" minlength="4" maxlength="4" class="form-control" disabled value="{{ old("no_urut") }}" />
+                            <input type="text" name="nop_kode"    pattern=".{1,1}" minlength="1" maxlength="1" class="form-control" disabled value="{{ old("kode") }}" />
                         </div>
                     </div>
                     @endif
@@ -79,11 +79,11 @@
                         <div class="input-group">                            
                             <input type="text" disabled name="pr"               required class="form-control" value="{{ substr($spop->nop_asal, 0,2) }}">
                             <input type="text" disabled name="dt"               required class="form-control" value="{{ substr($spop->nop_asal, 2,2) }}">
-                            <input type="text" name="nop_asal_kec"              required class="form-control" value="{{ substr($spop->nop_asal, 4,3) }}">
-                            <input type="text" name="nop_asal_des"              required class="form-control" value="{{ substr($spop->nop_asal, 7,3) }}">
-                            <input type="text" name="nop_asal_blok"             required class="form-control" value="{{ substr($spop->nop_asal, 10,3) }}">
-                            <input type="text" name="nop_asal_no_urut"          required class="form-control" value="{{ substr($spop->nop_asal, 13,4) }}">
-                            <input type="text" name="nop_asal_kode"             required class="form-control" value="{{ substr($spop->nop_asal, 17,18) }}">
+                            <input type="text" name="nop_asal_kec"              pattern=".{3,3}" minlength="3" maxlength="3" class="form-control" value="{{ substr($spop->nop_asal, 4,3) }}">
+                            <input type="text" name="nop_asal_des"              pattern=".{3,3}" minlength="3" maxlength="3" class="form-control" value="{{ substr($spop->nop_asal, 7,3) }}">
+                            <input type="text" name="nop_asal_blok"             pattern=".{3,3}" minlength="3" maxlength="3" class="form-control" value="{{ substr($spop->nop_asal, 10,3) }}">
+                            <input type="text" name="nop_asal_no_urut"          pattern=".{4,4}" minlength="4" maxlength="4" class="form-control" value="{{ substr($spop->nop_asal, 13,4) }}">
+                            <input type="text" name="nop_asal_kode"             pattern=".{1,1}" minlength="1" maxlength="1" class="form-control" value="{{ substr($spop->nop_asal, 17,18) }}">
                         </div>
                     </div>
   
@@ -121,7 +121,7 @@
                           <div class="col">
                               <div class="form-group">
                                   <label>RW</label>
-                                  <input type="number" class="form-control @error("dlop_rw") is-invalid @enderror" name="dlop_rw" id="" value="{{ old('dlop_rw') ? old('dlop_rw') : $spop->dataLetakObjek->rw}}">
+                                  <input type="text" minlength="2" maxlength="2" class="form-control @error("dlop_rw") is-invalid @enderror" name="dlop_rw" id="" value="{{ old('dlop_rw') ? old('dlop_rw') : $spop->dataLetakObjek->rw}}">
                                     @error("dlop_rw")
                                         <div class="invalid-feedback"> 
                                             RW harus di isi, harus 2 angka
@@ -132,7 +132,7 @@
                           <div class="col">
                               <div class="form-group">
                                   <label>RT</label>
-                                  <input type="number" class="form-control @error("dlop_rt") is-invalid @enderror" name="dlop_rt" id="" value="{{ old('dlop_rt') ? old('dlop_rt') : $spop->dataLetakObjek->rt}}">
+                                  <input type="text" minlength="3" maxlength="3" class="form-control @error("dlop_rt") is-invalid @enderror" name="dlop_rt" id="" value="{{ old('dlop_rt') ? old('dlop_rt') : $spop->dataLetakObjek->rt}}">
                                     @error("dlop_rt")
                                         <div class="invalid-feedback"> 
                                             RW harus di isi, harus 3 angka
@@ -277,15 +277,10 @@
                         <h2 class="text-center"><u>Daftar Foto</u></h2>
                     </div>
                     @foreach ($spop->gambars as $item)
-                        <form action="{{ url("/perekaman/$spop->uuid/gambar/{$item->id}") }}" method="post">
                             <div class="form-group">
                                 <label for="">{{ $item->kategori->nama }}</label>
                                 <img src="{{asset("storage/data_spop/$item->nama")}}" alt="" style="width:100%" />
-                                @csrf
-                                @method("DELETE")
-                                <input type="submit" value="Hapus" class="btn btn-danger mt-2 float-right">
                             </div>
-                        </form>
                     @endforeach
 
                     <br>
@@ -333,7 +328,6 @@
                         });
                         </script>
                     @endforeach
-
                     
                       <div class="alert alert-info">
                           <p class="text-center">Data Tanah</p> 

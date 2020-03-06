@@ -24,7 +24,7 @@
           </div>
 
           <div class="section-body" >
-        <form action="{{ url("/pemutakhiran/". $spop->uuid) }}" method="post">  
+        <form action="{{ url("/pemutakhiran/". $spop->uuid) }}" method="post" enctype="multipart/form-data">
             <div class="container-fluid" id="parent">
               <div class="row">
                 <div class="col-12 col-md-12 col-lg-12">
@@ -229,16 +229,77 @@
                           </div>
                       </div>
                       
-                      <div class="form-group">
-                            <label>Nomor KTP</label>
-                            <input type="number" class="form-control @error('dsp_no_ktp') is-invalid @enderror" name="dsp_no_ktp" value="{{ old("dsp_no_ktp") ? old("dsp_no_ktp") : $spop->dataSubjekPajak->nomor_ktp }}">
-                            @error("dsp_no_ktp")
-                                <div class="invalid-feedback"> 
-                                    No KTP harus di isi, harus 16 karakter , dan berupa nomor
-                                </div>
-                            @enderror
-                      </div>
+                    <div class="form-group">
+                        <label>Nomor KTP</label>
+                        <input type="number" class="form-control @error('dsp_no_ktp') is-invalid @enderror" name="dsp_no_ktp" value="{{ old("dsp_no_ktp") ? old("dsp_no_ktp") : $spop->dataSubjekPajak->nomor_ktp }}">
+                        @error("dsp_no_ktp")
+                            <div class="invalid-feedback"> 
+                                No KTP harus di isi, harus 16 karakter , dan berupa nomor
+                            </div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nomor HP</label>
+                        <input type="text" class="form-control @error('dsp_no_hp') is-invalid @enderror" name="dsp_no_hp" value="{{ old("dsp_no_hp") ? old("dsp_no_hp") : $spop->dataSubjekPajak->nomor_hp }}">
+                    </div>
   
+                    <div class="form-group">
+                        <h2 class="text-center"><u>Daftar Foto</u></h2>
+                    </div>
+                    @foreach ($spop->gambars as $item)
+                            <div class="form-group">
+                                <label for="">{{ $item->kategori->nama }}</label>
+                                <img src="{{asset("storage/data_spop/$item->nama")}}" alt="" style="width:100%" />
+                            </div>
+                    @endforeach
+
+                    <br>
+                    <div class="form-group">
+                        <h2 class="text-center"><u>Tambah Foto</u></h2>
+                    </div>
+
+                    @foreach ($kategori as $item)
+                        <div class="form-group">
+                            <label>{{ $item->nama }}</label>
+                            <input type="file" id="gallery-photo-add-{{ $item->id }}" multiple class="form-control @error("$item->id") is-invalid @enderror" name="gambar[{{ $item->id }}][]" value="{{ old("$item->id") }}" accept="image/*">
+                            <p  class="btn btn-danger mt-1" id="reset-file-{{ $item->id }}">Reset</p>
+                        </div>
+                        <div class="gallery-{{ $item->id }}"></div>
+                    <br>
+                        <script>
+                        $(function() {
+                            // Multiple images preview in browser
+                            var imagesPreview = function(input, placeToInsertImagePreview) {
+                                
+                                if (input.files) {
+                                    var filesAmount = input.files.length;
+                                    
+                                    for (i = 0; i < filesAmount; i++) {
+                                        var reader = new FileReader();
+                        
+                                        reader.onload = function(event) {
+                                            $($.parseHTML('<img>')).attr('src', event.target.result).attr('width', "100%").appendTo(placeToInsertImagePreview);
+                                        }
+                        
+                                        reader.readAsDataURL(input.files[i]);
+                                    }
+                                }
+                        
+                            };
+                        
+                            $("#gallery-photo-add-{{ $item->id }}").on('change', function() {
+                                imagesPreview(this, 'div.gallery-{{ $item->id }}');
+                            });
+
+                            $("#reset-file-{{ $item->id }}").on("click", function(){
+                                $("#gallery-photo-add-{{ $item->id }}").val("")
+                                $(".gallery-{{ $item->id }} img").remove()
+                            });
+                        });
+                        </script>
+                    @endforeach
+
                       <div class="alert alert-info">
                           <p class="text-center">Data Tanah</p> 
                       </div>

@@ -41,12 +41,22 @@
                               <input id="last_name" type="text" class="form-control" name="name" value="{{ old("name") ? old("name") : $user->name }}">
                             </div>
                           </div>
+
                           <div class="form-group">
                             <label for="email">Instansi</label>
                             <input id="email" type="text" class="form-control" name="instansi" value="{{ old("instansi") ? old("instansi") : $user->instansi }}">
                             <div class="invalid-feedback">
                             </div>
                           </div>
+
+                          @if (Auth::user()->role == 1)
+                            <div class="form-group">
+                              <label for="password" class="text-danger" >Ganti Password</label>
+                              <input id="password" type="text" class="form-control" name="password" value="">
+                              <div class="invalid-feedback">
+                              </div>
+                            </div>
+                          @endif
           
                           <div class="form-group">
                             @csrf

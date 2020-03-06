@@ -25,51 +25,20 @@
           <div class="col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-8 offset-lg-2 col-xl-8 offset-xl-2">
 
             <div class="card card-primary">
-              <div class="card-header"><h4>Login</h4></div>
+              <div class="card-header"><h4>Hubungi nomor dibawah ini</h4></div>
 
               <div class="card-body">
-                <form method="POST" action=" {{ url("/login") }}" >
                   <div class="row">
                     <div class="form-group col-12">
-                      <label for="nip">NIP</label>
-                      <input id="nip" type="text" class="form-control @error("nip") is-invalid @enderror" name="nip" minlength="16" maxlength="16" autocomplete="off">
-                      @error('nip')
-                          <span class="invalid-feedback">
-                              <strong>{{ $message }}</strong>
-                          </span>
-                      @enderror
+                      <a href="https://wa.me/085226370746" class="text-success">085226370746</a>
                     </div>
                   </div>
 
-                  <div class="row">
-                    <div class="form-group col-12">
-                      <label for="password" class="d-block">Password</label>
-                      <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required>
-                      @error('password')
-                          <span class="invalid-feedback">
-                              <strong>{{ $message }}</strong>
-                          </span>
-                      @enderror
-                    </div>
-                  </div>
                   @csrf
                   <div class="form-group">
-                    <div class="row">
-                        <div class="col-12 pull-left">
-                          <button type="submit" class="btn btn-primary btn-lg btn-block">
-                            Login
-                          </button>
-                        </div>               
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-6">
-                          <span>belum punya akun ?</span>
-                          <a href="{{ url("/register") }}" class="">Register</a>
-                        </div>     
-                    </div>
                     <div class="row mt-3">
                       <div class="col-6">
-                        <a href="{{ url("/lupa_password") }}" class="">Lupa Password</a>
+                        <a href="{{ url("/login") }}" class="">Kembali Ke halaman Login</a>
                       </div>     
                     </div>
                   </div>

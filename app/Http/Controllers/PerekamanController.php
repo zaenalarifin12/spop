@@ -617,7 +617,7 @@ class PerekamanController extends Controller
                 if (empty($jenisPenggunaanBangunan))
                     return redirect()->back()->withInput()->with("err","jenisPenggunaanBangunan tidak ada");
                 
-                if (empty($dinding)) abort(404);
+                if (empty($dinding))
                 return redirect()->back()->withInput()->with("err","dinding tidak ada");
                 
                 if (empty($lantai))
@@ -692,7 +692,7 @@ class PerekamanController extends Controller
                 if (empty($jenisPenggunaanBangunan))
                     return redirect()->back()->withInput()->with("err","jenisPenggunaanBangunan tidak ada");
                 
-                if (empty($dinding)) abort(404);
+                if (empty($dinding))
                 return redirect()->back()->withInput()->with("err","dinding tidak ada");
                 
                 if (empty($lantai))
@@ -922,11 +922,11 @@ class PerekamanController extends Controller
             if(empty($nop_asal_kec) || empty($nop_asal_des) || empty($nop_asal_blok) || empty($nop_asal_no_urut) || empty($nop_asal_kode))
                     return redirect()->back()->withInput()->with("msg", "nop asal ada yang kosong");
 
-            $nop_asal       = "33.18. $nop_asal_kec . $nop_asal_des . $nop_asal_blok . $nop_asal_no_urut . $nop_asal_kode";
+            $nop_asal       = "33.18.$nop_asal_kec.$nop_asal_des.$nop_asal_blok.$nop_asal_no_urut.$nop_asal_kode";
             $nop_asal_replace    = str_replace(".", "", $nop_asal);
 
             $spop->update([
-                "nop_asal"  => $nop_asal
+                "nop_asal"  => $nop_asal_replace
                 ]);
         
 
@@ -998,6 +998,7 @@ class PerekamanController extends Controller
     public function editBangunan($uuid, $uuid_bangunan)
     {
         $spop = Spop::where("uuid", $uuid)->first();
+
         $rincianDataBangunan    = RincianDataBangunan::with([
             "spop",
             "jenisPenggunaanBangunan",
@@ -1041,6 +1042,7 @@ class PerekamanController extends Controller
 
     public function updateBangunan(Request $request, $uuid, $uuid_bangunan)
     {
+        
         $this->validate($request, [
             // BANGUNAN
             "penggunaan"            => "required",
@@ -1071,6 +1073,28 @@ class PerekamanController extends Controller
         $lantai                     = Lantai::where("id", $request->lantai)->pluck("id")->first();
         $langit                     = Langit::where("id", $request->langit)->pluck("id")->first();
 
+        if (empty($spop))
+            return redirect()->back()->withInput()->with("err","nop belum ada");
+
+        if (empty($rincianDataBangunan))
+            return redirect()->back()->withInput()->with("err","nop belum ada");
+
+        if (empty($kondisi))
+            return redirect()->back()->withInput()->with("err","Kondisi tidak ada");
+
+        if (empty($jenisPenggunaanBangunan))
+            return redirect()->back()->withInput()->with("err","jenisPenggunaanBangunan tidak ada");
+        
+        if (empty($dinding))
+        return redirect()->back()->withInput()->with("err","dinding tidak ada");
+        
+        if (empty($lantai))
+            return redirect()->back()->withInput()->with("err","lantai tidak ada");
+        
+        if (empty($langit))
+            return redirect()->back()->withInput()->with("err","langit tidak ada");
+                
+
         $rincianDataBangunan->update([
             "jenis_penggunaan_bangunan_id"  => $jenisPenggunaanBangunan,
             "luas_bangunan"                 => $request->luas_bangunan,
@@ -1086,7 +1110,7 @@ class PerekamanController extends Controller
             "langit_id"                     => $langit,
         ]);
 
-        return redirect("/perekaman/$spop->uuid/bangunan/$rincianDataBangunan->uuid");
+        return redirect("/perekaman/$spop->uuid/bangunan/$rincianDataBangunan->uuid")->with("msg","bangunan berhasil di edit");
     }
 
     public function showBangunan($uuid, $uuid_bangunan)

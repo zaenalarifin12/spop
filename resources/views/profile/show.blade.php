@@ -46,7 +46,7 @@
                             <div class="invalid-feedback">
                             </div>
                           </div>
-        
+
                           <div class="form-group">
                             <a href="{{ url("profile/$user->nip/edit") }}" class="btn btn-outline-primary btn-lg btn-block">Edit</a>
                           </div>

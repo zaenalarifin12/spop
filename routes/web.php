@@ -71,5 +71,9 @@ Route::group(["middleware" => ["auth"]], function(){
 Auth::routes();
 
 Route::get('/register', function() {
-    return view("auth.register");
+    return view("auth.register"); 
+});
+
+Route::get('/lupa_password', function() {
+    return view("auth.lupaPassword"); 
 });

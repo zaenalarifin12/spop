@@ -23,13 +23,13 @@
             </div>
           </div>
 
-          <div class="section-body" >
+        <div class="section-body" >
         <form action="{{ url("/pemutakhiran/create/". $rujukan->uuid) }}" method="post" enctype="multipart/form-data">  
             <div class="container-fluid" id="parent">
               <div class="row">
                 <div class="col-12 col-md-12 col-lg-12">
 
-                    @if (session("msg"))
+                    @if(session("msg"))
                         <div class="alert alert-danger alert-dismissible show fade">
                             <div class="alert-body">
                             <button class="close" data-dismiss="alert">
@@ -195,7 +195,7 @@
                             <div class="invalid-feedback"> 
                                 Kabupaten harus di isi
                             </div>
-                        @enderrorn
+                        @enderror
                     </div>
 
                       <div class="row">
@@ -554,14 +554,11 @@
 @endsection
 
 @section('script')
-    
-    {{-- import --}}
 
     <!-- Page Specific JS File -->
     <script src="{{ asset("assets/js/page/forms-advanced-forms.js")}}"></script>
     <script src="{{ asset("assets/node/select2.full.min.js")}}"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    {{-- custom --}}
 
     <script>
 
@@ -570,179 +567,39 @@
         $('#tanah').on('click', function () {
             if($("#collapseExample").hasClass("show") == false){
                 $("#collapseExample").addClass("show").show("slow")
+
                 if(value_bangunan == 1){
                     $(`#bangunan_${value_bangunan}`).removeClass("d-none")
                     $(`#bangunan_${value_bangunan}`).addClass("d-block")
                 }
-                $(`.parent_bangunan`).removeClass("d-none")
-                $(`.parent_bangunan`).addClass("d-block")
+
+                $(".parent_bangunan").removeClass("d-none")
+                $(".parent_bangunan").addClass("d-block")
             }
         })
 
         $('.tanah').on('click', function () {
             $("#collapseExample").removeClass("show").hide("slow")
-            $(`.parent_bangunan`).removeClass("d-block")
-            $(`.parent_bangunan`).addClass("d-none")
+            $(".parent_bangunan").removeClass("d-block")
+            $(".parent_bangunan").addClass("d-none")
         })
 
         // untuk mengurangi elemen js
         $("#minus").on("click", function(e) {
-        if(value_bangunan > 1){
-            $(`#bangunan_${value_bangunan}`).remove()
-            value_bangunan--;
-            $("#value_bangunan").val(value_bangunan)
-            
-        }else{
-            alert("nilai minimal 1")
-        }
+            if(value_bangunan > 1){
+                $(`#bangunan_${value_bangunan}`).remove()
+                value_bangunan--;
+                $("#value_bangunan").val(value_bangunan)
+                
+            }else{
+                alert("nilai minimal 1");
+            }
         });
 
         // untuk menambah element js
         $("#plus").on("click", function() {
-
             value_bangunan++;
-            $("#value_bangunan").val(value_bangunan)
-            /*
-            $("#parent").append(`
-            <div class="row parent_bangunan" id="bangunan_${value_bangunan}">
-                <div class="col-12 col-md-12 col-lg-12">
-                  <div class="card card-danger">
-                    <div class="card-header">
-                      <h4>Bangunan Ke - ${value_bangunan}</h4>
-                    </div>
-                    <div class="card-body">
-                      
-                      <div class="alert alert-info">
-                        <p class="text-center">Rincian Data Bangunan</p> 
-                    </div>
-  
-                    <div class="form-group">
-                        <label class="form-label">Jenis Penggunaan Bangunan</label>
-                        <div class="selectgroup selectgroup-pills">
-                            @foreach ($jenisPenggunaanBangunans as $item)
-                                <label class="selectgroup-item">
-                                    <input type="radio" name="penggunaan" value="{{ $item->id }}" class="selectgroup-input">
-                                    <span class="selectgroup-button">{{ $item->nama }}</span>
-                                </label>
-                            @endforeach
-                        </div>
-                    </div>
-  
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-group">
-                                <label>Luas Bangunan</label>
-                                <input type="text" class="form-control" name="luas_bangunan" id="">
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-group">
-                                <label>Jumlah Lantai</label>
-                                <input type="text" class="form-control" name="jumlah_lantai" id="">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-group">
-                                <label>Tahun Dibangun</label>
-                                <input type="text" class="form-control" name="tahun_dibangun" id="">
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-group">
-                                <label>Tahun Direnovasi</label>
-                                <input type="text" class="form-control" name="tahun_renovasi" id="" >
-                            </div>
-                        </div>
-                    </div>
-  
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-group">
-                                <label>Daya Listrik Terpasang (WATT)</label>
-                                <input type="text" class="form-control" name="daya" id="" >
-                            </div>
-                        </div>
-                    </div>
-  
-                    <div class="form-group">
-                        <label class="form-label">Kondisi Pada Umumnya</label>
-                        <div class="selectgroup selectgroup-pills">
-                            @foreach ($kondisis as $kondisi)
-                                <label class="selectgroup-item">
-                                    <input type="radio" name="kondisi" value="{{ $kondisi->id }}" class="selectgroup-input" >
-                                    <span class="selectgroup-button">{{ $kondisi->nama }}</span>
-                                </label>
-                            @endforeach
-                        </div>
-                    </div>
-  
-                    <div class="form-group">
-                        <label class="form-label">Konstruksi</label>
-                        <div class="selectgroup selectgroup-pills">
-                            @foreach ($konstruksis as $item)
-                                <label class="selectgroup-item">
-                                    <input type="radio" name="konstruksi" value="{{ $item->id }}" class="selectgroup-input">
-                                    <span class="selectgroup-button">{{ $item->nama }}</span>
-                                </label>
-                            @endforeach
-                        </div>
-                    </div>
-  
-                    <div class="form-group">
-                        <label class="form-label">Atap</label>
-                        <div class="selectgroup selectgroup-pills">
-                            @foreach ($ataps as $item)
-                                <label class="selectgroup-item">
-                                    <input type="radio" name="atap" value="{{ $item->id }}" class="selectgroup-input">
-                                    <span class="selectgroup-button">{{ $item->nama }}</span>
-                                </label>
-                            @endforeach 
-                        </div>
-                    </div>
-  
-                    <div class="form-group">
-                        <label class="form-label">Dinding</label>
-                        <div class="selectgroup selectgroup-pills">
-                            @foreach ($dindings as $item)
-                                <label class="selectgroup-item">
-                                    <input type="radio" name="dinding" value="{{$item->id}}" class="selectgroup-input">
-                                    <span class="selectgroup-button">{{$item->nama}}</span>
-                                </label>
-                            @endforeach
-                        </div>
-                    </div>
-  
-                    <div class="form-group">
-                        <label class="form-label">LANTAI</label>
-                        <div class="selectgroup selectgroup-pills">
-                            @foreach ($lantais as $item)
-                                <label class="selectgroup-item">
-                                    <input type="radio" name="dinding" value="{{$item->id}}" class="selectgroup-input">
-                                    <span class="selectgroup-button">{{$item->nama}}</span>
-                                </label>
-                            @endforeach
-                        </div>
-                    </div>
-  
-                    <div class="form-group">
-                        <label class="form-label">LANGIT-LANGIT</label>
-                        <div class="selectgroup selectgroup-pills">
-                            @foreach ($langits as $item)
-                                <label class="selectgroup-item">
-                                    <input type="radio" name="dinding" value="{{$item->id}}" class="selectgroup-input">
-                                    <span class="selectgroup-button">{{$item->nama}}</span>
-                                </label>
-                            @endforeach
-                        </div>
-                    </div>
-                    </div>
-                  </div>
-                </div>
-                </div>
-            `)
-            */
+            $("#value_bangunan").val(value_bangunan);
         });
     </script>
 @endsection

@@ -21,12 +21,19 @@
             </div>
           </div>
 
+            @if (session("msg"))
+                <div class="alert alert-success alert-dismissible show fade">
+                    <div class="alert-body">
+                    <button class="close" data-dismiss="alert">
+                        <span>×</span>
+                    </button>
+                    {{ session("msg") }}
+                    </div>
+                </div>
+            @endif
+            
           <div class="section-body" >
-            <h2 class="section-title">Surat Pemberitahuan Objek Pajak</h2>
-            <p class="section-lead">Jenis Transaksi <b>Data bangunan<b></p>
-
             <div class="container-fluid">
-  
               <div class="row parent_bangunan">
                 <div class="col-12 col-md-12 col-lg-12">
                   <div class="card card-danger">

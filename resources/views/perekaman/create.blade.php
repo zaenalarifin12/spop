@@ -207,7 +207,7 @@
                           <div class="col">
                               <div class="form-group">
                                     <label>RT</label>
-                                    <input type="number" minlength="3" maxlength="3" class="form-control @error('dsp_rt') is-invalid @enderror" name="dsp_rt" value="{{ old("dsp_rt")  }}">
+                                    <input type="text" minlength="3" maxlength="3" class="form-control @error('dsp_rt') is-invalid @enderror" name="dsp_rt" value="{{ old("dsp_rt")  }}">
                                     @error("dsp_rt")
                                         <div class="invalid-feedback"> 
                                             RT harus di isi, harus 3 angka
