@@ -60,18 +60,18 @@
     <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
 
     <script>
-    $(document).ready(function() {
-        $('#example').DataTable( {
-          processing: true,
-          serverSide: true,
-          ajax: 'perekaman/json', 
-          columns: [
-        { data: 'nop',           name: 'nop' },
-        { data: 'nop_asal',      name: 'nop_asal'},
-        { data: 'user.name',     name: 'user'},
-        { data: 'action',        name: 'action'}
-          ]
-        } );
-    } );
+      $(document).ready(function() {
+          $('#example').DataTable( {
+            processing: true,
+            serverSide: true,
+            ajax: 'perekaman/json', 
+            columns: [
+              { data: 'nop',           name: 'nop' },
+              { data: 'nop_asal',      name: 'nop_asal'},
+              { data: 'user.name',     name: 'user'},
+              { data: 'action',        name: 'action'}
+            ]
+          } );
+      } );
     </script>
 @endsection

@@ -1,7 +1,3 @@
 TODO 
 
 MENAMBAHKAN PROFIL PENGGUNA DAN ADA SPOP YANG DI 
-
-validasi front end
-
-

@@ -194,7 +194,7 @@
                                             <form action="{{ url("/perekaman/$spop->uuid/gambar/{$item->id}") }}" method="post">
                                                 <div class="form-group">
                                                     <label for="">{{ $item->kategori->nama }}</label>
-                                                    <img src="{{asset("storage/data_spop/$item->nama")}}" alt="" style="width:100%" />
+                                                    <img src="{{ asset("storage/data_spop/$item->nama") }}" alt="" style="width:100%" />
                                                     @csrf
                                                     @method("DELETE")
                                                     <input type="submit" value="Hapus" class="btn btn-danger mt-2 float-right">

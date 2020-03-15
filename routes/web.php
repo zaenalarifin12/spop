@@ -24,7 +24,9 @@ Route::group(["middleware" => ["auth"]], function(){
 
         Route::get('/users',                                'UserController@index');
         Route::get('/users/json',                           'UserController@json');
+
     });
+    
     Route::get('/pemutakhiran',                                      "PemutakhiranController@index");
     Route::get('/pemutakhiran/json',                                 "PemutakhiranController@json");
     Route::get('/pemutakhiran/cari',                                 'PemutakhiranController@cari');
@@ -39,6 +41,7 @@ Route::group(["middleware" => ["auth"]], function(){
     Route::get('/pemutakhiran/{uuid}/bangunan/{uuid_bangunan}/edit', 'PemutakhiranController@editBangunan');
     Route::put('/pemutakhiran/{uuid}/bangunan/{uuid_bangunan}',      'PemutakhiranController@updateBangunan');
     Route::delete('/pemutakhiran/{uuid}/bangunan/{uuid_bangunan}',   'PemutakhiranController@destroyBangunan');
+    Route::delete('/pemutakhiran/{uuid}/gambar/{id}',                 'GambarController@destroy');
 
     Route::get('/perekaman',                                      'PerekamanController@index');
     Route::get('/perekaman/json',                                 'PerekamanController@json');
@@ -53,9 +56,7 @@ Route::group(["middleware" => ["auth"]], function(){
     Route::get('/perekaman/{uuid}/bangunan/{uuid_bangunan}/edit', 'PerekamanController@editBangunan');
     Route::put('/perekaman/{uuid}/bangunan/{uuid_bangunan}',      'PerekamanController@updateBangunan');
     Route::delete('/perekaman/{uuid}/bangunan/{uuid_bangunan}',   'PerekamanController@destroyBangunan');
-
-    Route::delete('/perekaman/{uuid}/gambar/{id}',                 'PerekamanGambarController@destroy');
-
+    Route::delete('/perekaman/{uuid}/gambar/{id}',                'GambarController@destroy');
 
     Route::get('/profile/{nip}',            'ProfileController@show');
     Route::get('/profile/{nip}/edit',       'ProfileController@edit');

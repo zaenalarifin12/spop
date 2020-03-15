@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -31,29 +33,25 @@ use DataTables;
 class PemutakhiranController extends Controller
 {
     /**
-     * TODO 
-     * menmabhkan edit nomor hp di form edit
-     * tambah gambar di semua pemutahiran
-     * edit password user
-     * 
+     * pemutakhiran 0
+     * perekaman 1
      */
     public function index()
     {
-        return view("pemutakhiran.index");
-    }
+        $spops = Spop::with("user")->where("kategori", 0)->where("user_id", Auth::user()->id)->get();
 
-    public function json()
-    {
-        if (Auth::user()->role == 1){
-            $spops = Spop::with("user")->where("kategori", 0)->get();
-        }else{
-            $spops = Spop::with("user")->where("kategori", 0)->where("user_id", Auth::user()->id)->get();
+        if(empty($spops)){
+            return response()->json([
+                "value"     => 1,
+                "message"   => "data pemutakhiran kosong",
+            ]);    
         }
 
-        return DataTables::of($spops)
-        ->addColumn('action', function($row) {
-            return '<a href="/pemutakhiran/'. $row->uuid .'" class="btn btn-primary">Lihat</a>';
-        })->make(true);
+        return response()->json([
+            "value"     => 1,
+            "message"   => "data pemutakhiran",
+            "data"      => $spops
+        ]);
     }
 
     public function create($uuid)
@@ -64,9 +62,14 @@ class PemutakhiranController extends Controller
             // die("nop rujukan tidak ditemukan");
 
         $spop = Spop::where("nop", str_replace(".", "", $rujukan->nop))->first();
+
         if(!empty($spop)){
             // jika sudah ada maka langsung ke detail
-            return redirect("/pemutakhiran/$spop->uuid");
+            return response()->json([
+                "value" => 2,
+                "message" => "data untuk pembuatan pemutakhiran berhasil ditampilkan",
+                "data"  => $spop
+            ]);
         }
             
         $jenisTanah                 = JenisTanah::get();
@@ -79,7 +82,7 @@ class PemutakhiranController extends Controller
         $dindings                   = Dinding::get();
         $lantais                    = Lantai::get();
         $langits                    = Langit::get();
-        $desas                      = Desa::get()->pluck("nama");
+        $desas                      = Desa::orderBy("nama", "ASC")->get()->pluck("nama");
         $kategori                   = Kategori::get();
 
         $my_nop = explode(".", $rujukan->nop);
@@ -97,32 +100,36 @@ class PemutakhiranController extends Controller
         $op_rt         = $objek_pajak[4];
         $op_rw         = $objek_pajak[6];
 
-        return view("pemutakhiran.create", compact([
-            "rujukan",
-            "my_nop",
+        return response()->json([
+            "value" => 1,
+            "message" => "data untuk pembuatan pemutakhiran berhasil ditampilkan",
+            "data" => [
+                $rujukan,
+                $my_nop,
 
-            "wp_desa",
-            "wp_rt",
-            "wp_rw",
-            "wp_kecamatan",
+                $wp_desa,
+                $wp_rt,
+                $wp_rw,
+                $wp_kecamatan,
 
-            "op_desa",
-            "op_rt",
-            "op_rw",
+                $op_desa,
+                $op_rt,
+                $op_rw,
 
-            "jenisTanah",
-            "statuses",
-            "pekerjaans",
-            "jenisPenggunaanBangunans",
-            "kondisis",
-            "konstruksis",
-            "ataps",
-            "dindings",
-            "lantais",
-            "langits",
-            "desas",
-            "kategori"
-        ]));
+                $jenisTanah,
+                $statuses,
+                $pekerjaans,
+                $jenisPenggunaanBangunans,
+                $kondisis,
+                $konstruksis,
+                $ataps,
+                $dindings,
+                $lantais,
+                $langits,
+                $desas,
+                $kategori
+            ]
+        ]); 
     }
 
     public function store(Request $request, $uuid)
@@ -161,20 +168,34 @@ class PemutakhiranController extends Controller
                 $pekerjaan  = Pekerjaan::where("id", $request->pekerjaan)->pluck("id")->first();
                 $desa       = Desa::where("nama", "$request->dlop_desa")->first();
 
-                if (empty($status)) 
-                    return redirect()->back()->withInput()->with("msg", "Status tidak ada");
-                elseif(empty($pekerjaan))
-                    return redirect()->back()->withInput()->with("msg", "Pekerjaan tidak ada");
-                if(empty($desa))
-                    return redirect()->back()->withInput()->with("msg", "Desa tidak ditemukan didaerah pati");
+                if (empty($status)) {
+                    return response()->json([
+                        "value"     => 0,
+                        "message"   => "Status tidak ada"
+                    ]);
+                }
+                elseif(empty($pekerjaan)){
+                    return response()->json([
+                        "value"     => 0,
+                        "message"   => "Pekerjaan tidak ada"
+                    ]);
+                }
+                elseif(empty($desa)){
+                    return response()->json([
+                        "value"     => 0,
+                        "message"   => "Desa tidak ditemukan didaerah pati"
+                    ]);
+                }
 
                 $uu = Str::random(40) .time();
                 if(Spop::where("uuid", $uu)->first() != null)
                     $uu = Str::random(40) .time();
                 
                 if($request->jenis_tanah == 1){
-                    return redirect()->back()->withInput()->with("err", "jenis tanah yang di pilih harus 1");
-
+                    return response()->json([
+                        "value"     => 0,
+                        "message"   => "jenis tanah yang di pilih harus tanah dan bangunan"
+                    ]);
                 }elseif($request->jenis_tanah == 2 || $request->jenis_tanah == 3){
 
                     $spop           = new Spop();
@@ -219,7 +240,10 @@ class PemutakhiranController extends Controller
                         foreach($request->gambar as $key => $value){
                             $kategori = Kategori::where("id", $key)->first();
                             if($kategori->id == null){
-                                return redirect()->back()->withInput()->with("msg", "Kategori gambar tidak ada");
+                                return response()->json([
+                                    "value"     => 0,
+                                    "message"   => "Kategori gambar tidak ada"
+                                ]);
                             }
                         }
                         /**
@@ -259,7 +283,10 @@ class PemutakhiranController extends Controller
                     ]);
 
                      // jika nop ngga kosong
-                     return redirect("/pemutakhiran/" . $spop->uuid);
+                     return response()->json([
+                        "value"    => 0,
+                        "data"      => $spop->uuid
+                     ]);
                     // redirect to add new
                 }else{
                     die("jenis tanah yang di pilih tidak ada");
@@ -310,15 +337,29 @@ class PemutakhiranController extends Controller
                 $pekerjaan  = Pekerjaan::where("id", $request->pekerjaan)->pluck("id")->first();
                 $desa       = Desa::where("nama", "$request->dlop_desa")->first();
 
-                if (empty($status))
-                    return redirect()->back()->withInput()->with("msg", "Status tidak ada");
-                elseif(empty($pekerjaan))
-                    return redirect()->back()->withInput()->with("msg", "Pekerjaan tidak ada");
-                elseif(empty($desa))
-                    return redirect()->back()->withInput()->with("msg", "Desa tidak ditemukan didaerah pati");
+                if (empty($status)) {
+                    return response()->json([
+                        "value"     => 0,
+                        "message"   => "Status tidak ada"
+                    ]);
+                }
+                elseif(empty($pekerjaan)){
+                    return response()->json([
+                        "value"     => 0,
+                        "message"   => "Pekerjaan tidak ada"
+                    ]);
+                }
+                elseif(empty($desa)){
+                    return response()->json([
+                        "value"     => 0,
+                        "message"   => "Desa tidak ditemukan didaerah pati"
+                    ]);
+                }
 
                 if($request->jenis_tanah != 1){
-                    die("jenis tanah yang di pilih harus 1");
+                    return response()->json([
+                        "message" => "jenis tanah yang di pilih harus tanah dan bangunan"
+                    ]);
                 }elseif($request->jenis_tanah == 1){
                     $kondisi                    = Kondisi::where("id", $request->kondisi)->pluck("id")->first();
                     $jenisPenggunaanBangunan    = JenisPenggunaanBangunan::where("id", $request->penggunaan)->pluck("id")->first();
@@ -405,11 +446,20 @@ class PemutakhiranController extends Controller
                     ]);
 
                      // jika nop ngga kosong
-                     return redirect("/pemutakhiran/" . $spop->uuid . "/bangunan/create");
+
+                    //  return redirect("/pemutakhiran/" . $spop->uuid . "/bangunan/create");
+                     return response()->json([
+                         "value"    => 1,
+                         "data"     => $spop // ke route create bangunan pemutakhiran
+                     ]);
                      // redirect to bangunan new
 
-                }else
-                    return redirect()->back()->withInput()->with("msg", "jenis tanah tidak ada");        
+                }else{
+                    return response()->json([
+                        "value"     => 0,
+                        "message"   => "jenis tanah tidak ada"
+                    ]);
+                }
 
                 break;
             default:
@@ -437,16 +487,21 @@ class PemutakhiranController extends Controller
         $lantais                    = Lantai::get();
         $langits                    = Langit::get();
 
-        return view("pemutakhiran.createBangunan", compact([
-            "jenisPenggunaanBangunans",
-            "kondisis",
-            "konstruksis",
-            "ataps",
-            "dindings",
-            "lantais",
-            "langits",
-            "uuid"
-        ]))->with("urutan_bangunan", $value);
+        return response()->json([
+            "value"     => 1,
+            "message"   => "data untuk pembuatan bangunan berhasil",
+            "data"      => [
+                "urutan bangunan" => $value,
+                $jenisPenggunaanBangunans,
+                $kondisis,
+                $konstruksis,
+                $ataps,
+                $dindings,
+                $lantais,
+                $langits,
+                $uui,
+            ]
+        ]); 
     }
 
     public function storeBangunan(Request $request, $uuid)
@@ -484,23 +539,47 @@ class PemutakhiranController extends Controller
                 $lantai                     = Lantai::where("id", $request->lantai)->pluck("id")->first();
                 $langit                     = Langit::where("id", $request->langit)->pluck("id")->first();
 
-                if (empty($spop))
-                return redirect()->back()->withInput()->with("err","nop belum ada");
+                if (empty($spop)){
+                    return response()->json([
+                        "value" => 0,
+                        "err"   => "nop belum ada"
+                    ]);
+                }
 
-                if (empty($kondisi))
-                    return redirect()->back()->withInput()->with("err","Kondisi tidak ada");
+                elseif (empty($kondisi)){
+                    return response()->json([
+                        "value" => 0,
+                        "err"   => "Kondisi tidak ada"
+                    ]);
+                }
 
-                if (empty($jenisPenggunaanBangunan))
-                    return redirect()->back()->withInput()->with("err","jenisPenggunaanBangunan tidak ada");
+                elseif (empty($jenisPenggunaanBangunan)){
+                    return response()->json([
+                        "value" => 0,
+                        "err"   => "jenisPenggunaanBangunan tidak ada"
+                    ]);
+                }
                 
-                if (empty($dinding)) 
-                return redirect()->back()->withInput()->with("err","dinding tidak ada");
+                elseif (empty($dinding)){
+                    return response()->json([
+                        "value" => 0,
+                        "err"   => "dinding tidak ada"
+                    ]);
+                }
                 
-                if (empty($lantai))
-                    return redirect()->back()->withInput()->with("err","lantai tidak ada");
+                elseif (empty($lantai)){
+                    return response()->json([
+                        "value" => 0,
+                        "err"   => "lantai tidak ada"
+                    ]);
+                }
                 
-                if (empty($langit))
-                    return redirect()->back()->withInput()->with("err","langit tidak ada");
+                elseif (empty($langit)){
+                    return response()->json([
+                        "value" => 0,
+                        "err"   => "langit tidak ada"
+                    ]);
+                }
                       
                 $random = Str::random(40);
                 if(RincianDataBangunan::where("uuid", $random)->first() != null){
@@ -526,7 +605,12 @@ class PemutakhiranController extends Controller
 
                 // redirect to add new
                 session()->forget('urutan_bangunan'); // menghapus session
-                return redirect("/pemutakhiran/" . $spop->uuid)->with("msg", "bangunan berhasil ditambahkan");
+                // return redirect("/pemutakhiran/" . $spop->uuid)->with("msg", "bangunan berhasil ditambahkan");
+                return response()->json([
+                    "value"     => 1,
+                    "message"   => "bangunan berhasil ditambahkan",
+                    "data"      => $spop
+                ]);
 
                 break;
             case "tambah":     
@@ -559,24 +643,47 @@ class PemutakhiranController extends Controller
                 $lantai                     = Lantai::where("id", $request->lantai)->pluck("id")->first();
                 $langit                     = Langit::where("id", $request->langit)->pluck("id")->first();
 
-                if (empty($spop))
-                return redirect()->back()->withInput()->with("err","nop belum ada");
+                if (empty($spop)){
+                    return response()->json([
+                        "value" => 0,
+                        "err"   => "nop belum ada"
+                    ]);
+                }
 
-                if (empty($kondisi))
-                    return redirect()->back()->withInput()->with("err","Kondisi tidak ada");
+                elseif (empty($kondisi)){
+                    return response()->json([
+                        "value" => 0,
+                        "err"   => "Kondisi tidak ada"
+                    ]);
+                }
 
-                if (empty($jenisPenggunaanBangunan))
-                    return redirect()->back()->withInput()->with("err","jenisPenggunaanBangunan tidak ada");
+                elseif (empty($jenisPenggunaanBangunan)){
+                    return response()->json([
+                        "value" => 0,
+                        "err"   => "jenisPenggunaanBangunan tidak ada"
+                    ]);
+                }
                 
-                if (empty($dinding)) 
-                return redirect()->back()->withInput()->with("err","dinding tidak ada");
+                elseif (empty($dinding)){
+                    return response()->json([
+                        "value" => 0,
+                        "err"   => "dinding tidak ada"
+                    ]);
+                }
                 
-                if (empty($lantai))
-                    return redirect()->back()->withInput()->with("err","lantai tidak ada");
+                elseif (empty($lantai)){
+                    return response()->json([
+                        "value" => 0,
+                        "err"   => "lantai tidak ada"
+                    ]);
+                }
                 
-                if (empty($langit))
-                    return redirect()->back()->withInput()->with("err","langit tidak ada");
-                        
+                elseif (empty($langit)){
+                    return response()->json([
+                        "value" => 0,
+                        "err"   => "langit tidak ada"
+                    ]);
+                }
                         
                 $random = Str::random(40);
                 if(RincianDataBangunan::where("uuid", $random)->first() != null){
@@ -600,11 +707,14 @@ class PemutakhiranController extends Controller
                     "spop_id"                       => $spop->id
                 ]);
                 
-                $value = session('urutan_bangunan');
-                $value++;
-                session(["urutan_bangunan" => $value]);
+                // $value = session('urutan_bangunan');
+                // $value++;
+                // session(["urutan_bangunan" => $value]);
                 // jika nop ngga kosong
                 return redirect("/pemutakhiran/" . $spop->uuid . "/bangunan/create");
+                return response()->json([
+                    "data" => $spop
+                ]);
                 // redirect to bangunan new
                 break;
             default:
@@ -983,25 +1093,47 @@ class PemutakhiranController extends Controller
 
     public function cari(Request $request)
     {
-        // $pt     = urlencode($request->pt);
-        // $dtii   = urlencode($request->dtii);
-        $kec    = urlencode($request->kec);
-        $des    = urlencode($request->des);
-        $blok   = urlencode($request->blok);
-        $no_urut= urlencode($request->no_urut);
-        $kode   = urlencode($request->kode);
+        $rujukan    = urlencode($request->rujukan);
+        
+        if( empty(trim($rujukan))){
 
-        if( empty(trim($kec))  && empty(trim($des))  && empty(trim($blok)) && empty(trim($no_urut)) && empty(trim($kode)) ){
-            return view("pemutakhiran.cari");
+            return response()->json([
+                "value"     => 0,
+                "message"   => "nomor nop kosong"
+            ]);
+
         }else{
-            // 33 18
+
+            $this->validate($request, [
+                "rujukan" => "min:14"
+            ]);
+
+            $kec        = substr($rujukan, 4,3);
+            $des        = substr($rujukan, 7,3);
+            $blok       = substr($rujukan, 10,3);
+            $no_urut    = substr($rujukan, 13,4);
+            $kode       = substr($rujukan, 17,18);
+
             $nop            = "33.18.$kec.$des.$blok.$no_urut.$kode";
-            $nop_replace    = str_replace(".", "", $nop);
             
-            $rujukan    = Rujukan::where("nop", $nop)->first();
-            if(empty($rujukan)){
-                return redirect()->back()->withInput()->with("err", "nop tidak ada");
+            $nop_replace    = str_replace(".", "", $nop);
+
+            $resultRujukan    = Rujukan::where("nop", $nop)->first();
+
+            if(empty($resultRujukan)){
+                /**
+                 * response rujukan empty
+                 */
+                return response()->json([
+                    "value"     => 0,
+                    "message"   => "data rujukan kosong/tidak ada"
+                ]);
+                
             }
+            
+            /**
+             * response rujukan ada
+             */
             $spop = Spop::with([
                 "dataLetakObjek",
                 "dataSubjekPajak",
@@ -1021,14 +1153,40 @@ class PemutakhiranController extends Controller
             // jika gak ada maka berikan pesan tidak ada
 
             if (!empty($spop)) {
-                return redirect()->action(
-                    "PemutakhiranController@show", ["nop" => $nop_replace]
+
+                /**
+                 * response jika sudah ada data di spop , langsung lempar ke halaman pemutakhiran
+                 */
+                return response()->json(
+                    [
+                        "value"     => 1,
+                        "message"   => "data spop ada",
+                        "data"      => $spop
+                    ], 
+                    200
                 );
 
-            }elseif(empty($spop) && !empty($rujukan)){
-                return view("pemutakhiran.cari", compact("rujukan"))->withInput($request->all());
+            }elseif(empty($spop) && !empty($resultRujukan)){
+
+                /**
+                 * response ke halaman rujukan jika ada data rujukan  
+                 */
+                return response()->json(
+                    [
+                        "value"     => 1,
+                        "message"   => "data rujukan ada",
+                        "data"      => $resultRujukan
+                    ], 
+                    200
+                );
             }else{
-                return view("pemutakhiran.cari")->with("msg", "nomor nop tidak ada");
+                return response()->json(
+                    [
+                        "value"     => 0,
+                        "message"   => "nomor nop tidak ada",
+                    ],
+                    404
+                );
             }
         }
     }

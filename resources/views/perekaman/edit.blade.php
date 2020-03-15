@@ -276,6 +276,7 @@
                     <div class="form-group">
                         <h2 class="text-center"><u>Daftar Foto</u></h2>
                     </div>
+                    
                     @foreach ($spop->gambars as $item)
                             <div class="form-group">
                                 <label for="">{{ $item->kategori->nama }}</label>

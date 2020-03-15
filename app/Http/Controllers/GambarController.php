@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Spop;
 use App\Models\Gambar;
 
-class PerekamanGambarController extends Controller
+class GambarController extends Controller
 {
     public function destroy($uuid, $id)
     {

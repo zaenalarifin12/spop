@@ -181,6 +181,18 @@
                                               <input type="text" disabled class="form-control" name="dsp_luas_tanah"  value="{{ $spop->dataTanah->luas_tanah }}">
                                           </div>
 
+                                          @foreach ($spop->gambars as $item)
+                                            <form action="{{ url("/pemutakhiran/$spop->uuid/gambar/{$item->id}") }}" method="post">
+                                                <div class="form-group">
+                                                    <label for="">{{ $item->kategori->nama }}</label>
+                                                    <img src="{{ asset("storage/data_spop/$item->nama") }}" alt="" style="width:100%" />
+                                                    @csrf
+                                                    @method("DELETE")
+                                                    <input type="submit" value="Hapus" class="btn btn-danger mt-2 float-right">
+                                                </div>
+                                            </form>
+                                          @endforeach
+
                                           {{-- relasi data tanah masih belum --}}
                                           <div class="form-group">
                                               <label class="form-label">Jenis Tanah</label>
