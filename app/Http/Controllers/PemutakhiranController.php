@@ -1022,7 +1022,7 @@ class PemutakhiranController extends Controller
 
             if (!empty($spop)) {
                 return redirect()->action(
-                    "PemutakhiranController@show", ["nop" => $nop_replace]
+                    "PemutakhiranController@show", ["uuid" => $spop->uuid]
                 );
 
             }elseif(empty($spop) && !empty($rujukan)){

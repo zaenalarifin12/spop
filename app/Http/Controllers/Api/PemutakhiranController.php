@@ -753,21 +753,24 @@ class PemutakhiranController extends Controller
         $jenisTanah                 = JenisTanah::get();
         $kategori                   = Kategori::get();
 
-        return view("pemutakhiran.show", compact([
-            "spop",
-
-            "statuses",
-            "pekerjaans",
-            "jenisPenggunaanBangunans",
-            "kondisis",
-            "konstruksis",
-            "ataps",
-            "dindings",
-            "lantais",
-            "langits",
-            "jenisTanah",
-            "kategori"
-        ]));
+        return response()->json([
+            "value" => 1,
+            "message" => "data pemutakhiran per id berhasil di tampilkan",
+            "data"  => [
+                $spop,
+                $statuses,
+                $pekerjaans,
+                $jenisPenggunaanBangunans,
+                $kondisis,
+                $konstruksis,
+                $ataps,
+                $dindings,
+                $lantais,
+                $langits,
+                $jenisTanah,
+                $kategori
+            ]
+        ]);
     }
 
     public function edit($uuid)
@@ -806,22 +809,26 @@ class PemutakhiranController extends Controller
         $jenisTanah                 = JenisTanah::get();
         $kategori                   = Kategori::get();
 
-        return view("pemutakhiran.edit", compact([
-            "spop",
-            "desas",
-
-            "statuses",
-            "pekerjaans",
-            "jenisPenggunaanBangunans",
-            "kondisis",
-            "konstruksis",
-            "ataps",
-            "dindings",
-            "lantais",
-            "langits",
-            "jenisTanah",
-            "kategori"
-        ]));
+        return response()->json([
+            "value" => 1,
+            "message" => "berhasil",
+            "data"  => [
+                $spop,
+                $desas,
+                $statuses,
+                $pekerjaans,
+                $jenisPenggunaanBangunans,
+                $kondisis,
+                $konstruksis,
+                $ataps,
+                $dindings,
+                $lantais,
+                $langits,
+                $jenisTanah,
+                $kategori,
+            ]
+        ]);
+    
     }
 
     public function update(Request $request, $uuid)
@@ -860,8 +867,8 @@ class PemutakhiranController extends Controller
         // die("status tidak ada");
         elseif(empty($pekerjaan)) abort(404);
             // die("pekerjaan tidak ada");
-        elseif(empty($desa))
-            return redirect()->back()->withInput()->with("msg", "desa tidak ditemukan");
+        elseif(empty($desa)) abort(404);
+            // return redirect()->back()->withInput()->with("msg", "desa tidak ditemukan");
 
         if($request->jenis_tanah == 2 || $request->jenis_tanah == 3 || $request->jenis_tanah == 1){
 
@@ -897,7 +904,11 @@ class PemutakhiranController extends Controller
                     $kategori = Kategori::where("id", $key)->first();
                     
                     if($kategori->id == null){
-                        return redirect()->back()->withInput()->with("msg", "Kategori gambar tidak ada");
+                        // return redirect()->back()->withInput()->with("msg", "Kategori gambar tidak ada");
+                        return response()->json([
+                            "value"     => 0,
+                            "message"   => "Kategori gambar tidak ada"
+                        ]);
                     }
                 }
                 /**
@@ -928,7 +939,13 @@ class PemutakhiranController extends Controller
             ]);
 
                 // jika nop ngga kosong
-                return redirect("/pemutakhiran/" . $spop->uuid)->with("msg", "data pemilik telah berhasil diubah");
+                // return redirect("/pemutakhiran/" . $spop->uuid)->with("msg", "data pemilik telah berhasil diubah");
+                return response()->json([
+                    "value" => 1,
+                    "data"  => $spop,
+                    "uuid"  => $spop->uuid,
+                    "message"   => "data pemilik telah berhasil diubah"
+                ]);
             // redirect to add new
         }else{
             die("jenis tanah yang di pilih tidak ada");
@@ -963,20 +980,23 @@ class PemutakhiranController extends Controller
         $lantais                    = Lantai::get();
         $langits                    = Langit::get();
 
-        return view("pemutakhiran.bangunan.edit", compact([
-            "rincianDataBangunan",
-            "jenisTanah",
-            "statuses",
-            "pekerjaans",
-            "jenisPenggunaanBangunans",
-            "kondisis",
-            "konstruksis",
-            "ataps",
-            "dindings",
-            "lantais",
-            "langits",
-            "spop"
-        ]));
+        return response()->json([
+            "value" => 1,            
+            "data"  => [
+                $rincianDataBangunan,
+                $jenisTanah,
+                $statuses,
+                $pekerjaans,
+                $jenisPenggunaanBangunans,
+                $kondisis,
+                $konstruksis,
+                $ataps,
+                $dindings,
+                $lantais,
+                $langits,
+                $spop
+            ]
+        ]);
     }
 
     public function updateBangunan(Request $request, $uuid, $uuid_bangunan)
@@ -1026,7 +1046,16 @@ class PemutakhiranController extends Controller
             "langit_id"                     => $langit,
         ]);
 
-        return redirect("/pemutakhiran/$spop->uuid/bangunan/$rincianDataBangunan->uuid");
+        // return redirect("/pemutakhiran/$spop->uuid/bangunan/$rincianDataBangunan->uuid");
+        return response()->json([
+            "value"     => 1,
+            "spop_uuid" => $spop->uuid,
+            "bangunan_uuid" => $rincianDataBangunan->uuid,
+            "data"  => [
+                "spop"      => $spop,
+                "rincian"   => $rincianDataBangunan
+            ]
+        ]);
     }
 
     public function showBangunan($uuid, $uuid_bangunan)
@@ -1058,20 +1087,23 @@ class PemutakhiranController extends Controller
         $lantais                    = Lantai::get();
         $langits                    = Langit::get();
 
-        return view("pemutakhiran.bangunan.show", compact([
-            "rincianDataBangunan",
-            "jenisTanah",
-            "statuses",
-            "pekerjaans",
-            "jenisPenggunaanBangunans",
-            "kondisis",
-            "konstruksis",
-            "ataps",
-            "dindings",
-            "lantais",
-            "langits",
-            "spop"
-        ]));
+        return response()->json([
+            "value" => 1,
+            "data"  => [
+                $rincianDataBangunan,
+                $jenisTanah,
+                $statuses,
+                $pekerjaans,
+                $jenisPenggunaanBangunans,
+                $kondisis,
+                $konstruksis,
+                $ataps,
+                $dindings,
+                $lantais,
+                $langits,
+                $spop
+            ]
+        ]);
 
     }
 
