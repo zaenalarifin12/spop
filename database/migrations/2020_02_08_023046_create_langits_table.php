@@ -15,7 +15,7 @@ class CreateLangitsTable extends Migration
     {
         Schema::create('langits', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('nama');
+            $table->string('nama', 100);
             $table->timestamps();
         });
     }

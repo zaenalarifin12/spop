@@ -17,10 +17,10 @@ class CreateDataSubjekPajaksTable extends Migration
             $table->bigIncrements('id');
             $table->string('nama_jalan');
             $table->string('nama_subjek_pajak');
-            $table->string('rt');
-            $table->string('rw');
-            $table->string('nomor_ktp');
-            $table->string('nomor_hp')->nullable();
+            $table->string('rt', 3);
+            $table->string('rw', 2);
+            $table->string('nomor_ktp', 16);
+            $table->string('nomor_hp', 100)->nullable();
             $table->unsignedBigInteger('status_id')->nullable();
             $table->unsignedBigInteger('pekerjaan_id')->nullable();
             $table->string('desa');

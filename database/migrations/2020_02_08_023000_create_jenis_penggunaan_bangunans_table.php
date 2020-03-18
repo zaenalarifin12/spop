@@ -15,7 +15,7 @@ class CreateJenisPenggunaanBangunansTable extends Migration
     {
         Schema::create('jenis_penggunaan_bangunans', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('nama');
+            $table->string('nama', 100);
             $table->timestamps();
         });
     }

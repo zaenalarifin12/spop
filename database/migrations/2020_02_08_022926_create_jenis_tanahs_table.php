@@ -15,7 +15,7 @@ class CreateJenisTanahsTable extends Migration
     {
         Schema::create('jenis_tanahs', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('nama');
+            $table->string('nama', 100);
             $table->tinyInteger('role')->default(0);
             $table->timestamps();
         });

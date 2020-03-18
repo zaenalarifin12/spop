@@ -15,7 +15,7 @@ class CreateDesasTable extends Migration
     {
         Schema::create('desas', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('nama');
+            $table->string('nama', 100);
             $table->timestamps();
         });
     }

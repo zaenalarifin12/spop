@@ -16,8 +16,8 @@ class CreateSpopsTable extends Migration
         Schema::create('spops', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('uuid')->unique();
-            $table->string('nop')->nullable();
-            $table->string('nop_asal')->nullable();
+            $table->string('nop', 18)->nullable();
+            $table->string('nop_asal', 18)->nullable();
             $table->integer('kategori')->nullable();
             /**
              * perekaman 1

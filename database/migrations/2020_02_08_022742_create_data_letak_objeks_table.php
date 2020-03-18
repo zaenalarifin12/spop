@@ -17,8 +17,8 @@ class CreateDataLetakObjeksTable extends Migration
             $table->bigIncrements('id');
             $table->text('nama_jalan');
             $table->string('blok_kav');
-            $table->string('rw');
-            $table->string('rt');
+            $table->string('rw', 3);
+            $table->string('rt', 2);
             $table->unsignedBigInteger('desa_id')->nullable();
             $table->timestamps();
 

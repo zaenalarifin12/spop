@@ -15,7 +15,7 @@ class CreateDindingsTable extends Migration
     {
         Schema::create('dindings', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('nama');
+            $table->string('nama', 100);
             $table->timestamps();
         });
     }
