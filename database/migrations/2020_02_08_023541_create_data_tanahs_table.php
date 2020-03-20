@@ -17,9 +17,11 @@ class CreateDataTanahsTable extends Migration
             $table->bigIncrements('id');
             $table->integer('luas_tanah');
             $table->unsignedbigInteger('jenis_tanah_id')->nullable();
+            $table->unsignedBigInteger('spop_id')->nullable();
             $table->timestamps();
 
             $table->foreign('jenis_tanah_id')->references("id")->on("jenis_tanahs")->onDelete("set null");
+            $table->foreign('spop_id')->references("id")->on("spops")->onDelete("set null");
         });
     }
 

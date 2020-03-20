@@ -21,14 +21,16 @@ class CreateDataSubjekPajaksTable extends Migration
             $table->string('rw', 2);
             $table->string('nomor_ktp', 16);
             $table->string('nomor_hp', 100)->nullable();
-            $table->unsignedBigInteger('status_id')->nullable();
-            $table->unsignedBigInteger('pekerjaan_id')->nullable();
             $table->string('desa');
             $table->string('kabupaten');
+            $table->unsignedBigInteger('status_id')->nullable();
+            $table->unsignedBigInteger('pekerjaan_id')->nullable();
+            $table->unsignedBigInteger('spop_id')->nullable();
             $table->timestamps();
 
             $table->foreign('status_id')->references("id")->on("statuses")->onDelete("set null");
             $table->foreign('pekerjaan_id')->references("id")->on("pekerjaans")->onDelete("set null");
+            $table->foreign('spop_id')->references("id")->on("spops")->onDelete("set null");
         });
     }
 

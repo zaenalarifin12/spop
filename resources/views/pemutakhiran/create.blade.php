@@ -409,16 +409,15 @@
                         </div>
                     </div>
   
-                        <div class="col">
-                            <div class="form-group">
-                                <label>Daya Listrik Terpasang (WATT)</label>
-                                <input type="number" min="1" class="form-control @error('daya') is-invalid @enderror" name="daya" value="{{ old("daya") }}" >
-                                @error("daya")
-                                    <div class="invalid-feedback"> 
-                                        Daya harus di isi
-                                    </div>
-                                @enderror
-                            </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label>Daya Listrik Terpasang (WATT)</label>
+                            <input type="number" min="1" class="form-control @error('daya') is-invalid @enderror" name="daya" value="{{ old("daya") }}" >
+                            @error("daya")
+                                <div class="invalid-feedback"> 
+                                    Daya harus di isi
+                                </div>
+                            @enderror
                         </div>
                     </div>
   

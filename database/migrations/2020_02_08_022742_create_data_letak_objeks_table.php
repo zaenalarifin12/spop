@@ -20,9 +20,11 @@ class CreateDataLetakObjeksTable extends Migration
             $table->string('rw', 3);
             $table->string('rt', 2);
             $table->unsignedBigInteger('desa_id')->nullable();
+            $table->unsignedBigInteger('spop_id')->nullable();
             $table->timestamps();
 
             $table->foreign('desa_id')->references("id")->on("desas")->onDelete("set null");
+            $table->foreign('spop_id')->references("id")->on("spops")->onDelete("set null");
         });
     }
 

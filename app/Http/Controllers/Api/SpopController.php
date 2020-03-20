@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Http\Controllers\Controller;
+
 
 use App\Models\Status;
 use App\Models\Pekerjaan;
@@ -34,31 +36,24 @@ class SpopController extends Controller
     /**
      * SECTION
      * FOR DIFFERENT PEREKAMAN AND PEMUTAKHIRAN
-     */
+     * @param 0 pemutakhiran
+     * @param 1 perekaman
+     * 
+     * @param dlop  => data letak objek pajak
+     * @param dsp   => data subjek pajak
+    */
 
-    public function json_spop($kategori_spop)
+    public function index_spop($kategori_spop)
     {
-        if (Auth::user()->role == 1){
-            $spops = Spop::with("user")->where("kategori", $kategori_spop)->get();
-        }else{
-            $spops = Spop::with("user")->where("kategori", $kategori_spop)->where("user_id", Auth::user()->id)->get();
-        }
-
-
         /**
          * SECTION
          */
-        if($kategori_spop == 0){
-            return DataTables::of($spops)
-            ->addColumn('action', function($row) {
-                return '<a href="/pemutakhiran/'. $row->uuid .'" class="btn btn-primary">Lihat</a>';
-            })->make(true);
-        }elseif($kategori_spop == 1){
-            return DataTables::of($spops)
-            ->addColumn('action', function($row) {
-                return '<a href="/perekaman/'. $row->uuid .'" class="btn btn-primary">Lihat</a>';
-            })->make(true);
-        }
+        $spops = Spop::with("user")->where("kategori", $kategori_spop)->where("user_id", Auth::user()->id)->get(); 
+
+        return response()->json([
+            "value" => 1,
+            "data"  => $spops
+        ]);
     }
 
     public function create_spop($uuid = null, $kategori_spop)
@@ -72,7 +67,15 @@ class SpopController extends Controller
             if (empty($rujukan)) abort(404);
 
             $spop = Spop::where("nop", str_replace(".", "", $rujukan->nop))->first();
-            if(!empty($spop)) return redirect("/pemutakhiran/$spop->uuid");
+            /**
+             * jika ada return to @param pemutkhiran/UUID
+             */
+            if(!empty($spop)){
+                return response()->json([
+                    "value" => 1,
+                    "data"  => $spop
+                ]);
+            } 
         }
             
         $jenisTanah                 = JenisTanah::get();
@@ -102,30 +105,50 @@ class SpopController extends Controller
             $op_rt         = $objek_pajak[4];
             $op_rw         = $objek_pajak[6];
 
-            return view("pemutakhiran.create", compact([
-                "rujukan", "my_nop", "wp_desa", "wp_rt", "wp_rw", "wp_kecamatan",
-    
-                "op_desa", "op_rt", "op_rw",
-    
-                "jenisTanah", "statuses", "pekerjaans", "jenisPenggunaanBangunans",
-                "kondisis", "konstruksis", "ataps", "dindings", "lantais", "langits",
-                "desas", "kategori"
-            ]));
+            return response()->json([
+                "value" => 1,
+                "data" => [
+                    "rujukan"       => $rujukan, 
+                    "my_nop"        =>$my_nop, 
+                    "wp_desa"       =>$wp_desa, 
+                    "wp_rt"         =>$wp_rt, 
+                    "wp_rw"         =>$wp_rw, 
+                    "wp_kecamatan"  =>$wp_kecamatan,
+                    "op_desa"       =>$op_desa, 
+                    "op_rt"         =>$op_rt, 
+                    "op_rw"         =>$op_rw,
+                    "jenisTanah"    =>$jenisTanah, 
+                    "statuses"      =>$statuses, 
+                    "pekerjaans"    =>$pekerjaans, 
+                    "jenisPenggunaanBangunans"  =>$jenisPenggunaanBangunans,
+                    "kondisis"      =>$kondisis, 
+                    "konstruksis"   =>$konstruksis, 
+                    "ataps"         =>$ataps, 
+                    "dindings"      =>$dindings, 
+                    "lantais"       =>$lantais, 
+                    "langits"       =>$langits,
+                    "desas"         =>$desas, 
+                    "kategori"      =>$kategori
+                ]
+            ]);
         }else if($kategori_spop == 1){
-            return view("perekaman.create", compact([
-                "jenisTanah",
-                "statuses",
-                "pekerjaans",
-                "jenisPenggunaanBangunans",
-                "kondisis",
-                "konstruksis",
-                "ataps",
-                "dindings",
-                "lantais",
-                "langits",
-                "desas",
-                "kategori"
-            ]));
+            return response()->json([
+                "value" => 1,
+                "data"  => [
+                    "jenisTanah"        => $jenisTanah,
+                    "statuses"          => $statuses,
+                    "pekerjaans"        => $pekerjaans,
+                    "jenisPenggunaanBangunans"  => $jenisPenggunaanBangunans,
+                    "kondisis"          => $kondisis,
+                    "konstruksis"       => $konstruksis,
+                    "ataps"             => $ataps,
+                    "dindings"          => $dindings,
+                    "lantais"           => $lantais,
+                    "langits"           => $langits,
+                    "desas"             => $desas,
+                    "kategori"          => $kategori,
+                ]    
+            ]);
         }
         
 
@@ -192,11 +215,11 @@ class SpopController extends Controller
                 $desa       = Desa::where("nama", "$request->dlop_desa")->first();
                 
                 if (empty($status)) 
-                    return redirect()->back()->withInput()->with("msg", "Status tidak ada");
+                    return response()->json(["value" => 0, "message" => "Status tidak ada"], 404);
                 elseif(empty($pekerjaan))
-                    return redirect()->back()->withInput()->with("msg", "Pekerjaan tidak ada");
+                    return response()->json(["value" => 0, "message" => "Pekerjaan tidak ada"], 404);
                 if(empty($desa))
-                    return redirect()->back()->withInput()->with("msg", "Desa tidak ditemukan didaerah pati");
+                    return response()->json(["value" => 0, "message" => "Desa tidak ditemukan didaerah pati"], 404);
 
                 $uu = Str::random(40) .time();
                 if(Spop::where("uuid", $uu)->first() != null)
@@ -278,7 +301,7 @@ class SpopController extends Controller
                         foreach($request->gambar as $key => $value){
                             $kategori = Kategori::where("id", $key)->first();
                             if($kategori->id == null){
-                                return redirect()->back()->withInput()->with("msg", "Kategori gambar tidak ada");
+                                return response()->json(["value" => 0, "message" => "Kategori gambar tidak ada"]);
                             }
                         }
                         /**
@@ -331,9 +354,17 @@ class SpopController extends Controller
                      * SECTION
                      */
                     if ($kategori_spop == 0) {
-                        return redirect("/pemutakhiran/" . $spop->uuid)->with("msg", "data pemutakhiran berhasil di tambahkan");
+                        return response()->json([
+                            "value"     => 1, 
+                            "uuid"      => $spop->uuid,
+                            "data"      => $spop,
+                            "message"   => "data pemutakhiran berhasil di tambahkan"]);
                     } else if ($kategori_spop == 1){
-                        return redirect("/perekaman/" . $spop->uuid)->with("msg", "data perekaman berhasil di tambahkan");
+                        return response()->json([
+                            "value"     => 1, 
+                            "uuid"      => $spop->uuid,
+                            "data"      => $spop,
+                            "message"   => "data perekaman berhasil di tambahkan"]);
                     }
                     
                 }elseif($request->jenis_tanah == 2 || $request->jenis_tanah == 3){
@@ -383,7 +414,10 @@ class SpopController extends Controller
                         foreach($request->gambar as $key => $value){
                             $kategori = Kategori::where("id", $key)->first();
                             if($kategori->id == null){
-                                return redirect()->back()->withInput()->with("msg", "Kategori gambar tidak ada");
+                                return response()->json([
+                                    "value" => 0,
+                                    "message" => "Kategori gambar tidak ada"
+                                ], 404);
                             }
                         }
                         /**
@@ -413,13 +447,23 @@ class SpopController extends Controller
 
                      // jika nop ngga kosong
                      if ($kategori_spop == 0) {
-                        return redirect("/pemutakhiran/" . $spop->uuid);
+                        return response()->json([
+                            "value"     => 1,
+                            "uuid"      => $spop->uuid,
+                            "data"      => $spop,
+                            "message"   => "data pemutakhiran berhasil di simpan"
+                        ]);
                      } else if($kategori_spop == 1){
-                        return redirect("/perekaman/" . $spop->uuid);
+                        return response()->json([
+                            "value"     => 1,
+                            "uuid"      => $spop->uuid,
+                            "data"      => $spop,
+                            "message"   => "data perekaman berhasil di simpan"
+                        ]);
                      }
                     // redirect to add new
                 }else{
-                    return redirect()->back()->withInput()->with("msg", "jenis tanah yang di pilih tidak ada");
+                    die("jenis tanah yang di pilih tidak ada");
                 }
                 break;
             case "tambah":    
@@ -461,7 +505,7 @@ class SpopController extends Controller
                     $rujukan = Rujukan::where("uuid", $uuid)->first(); #mencari rujukan di table
                 
                     if (empty($rujukan))
-                        return redirect()->back()->withInput()->with("msg", "Rujuan tidak ditemukan");
+                        return response()->json(["value" => 0, "message" => "Rujuan tidak ditemukan"]);
                 }
 
                 $status     = Status::where("id", $request->status)->pluck("id")->first();
@@ -469,16 +513,16 @@ class SpopController extends Controller
                 $desa       = Desa::where("nama", "$request->dlop_desa")->first();
 
                 if (empty($status))
-                    return redirect()->back()->withInput()->with("msg", "Status tidak ada");
+                    return response()->json(["value" => 0, "message" => "Status tidak ada"], 404);
 
                 elseif(empty($pekerjaan))
-                    return redirect()->back()->withInput()->with("msg", "Pekerjaan tidak ada");
+                    return response()->json(["value" => 0, "message" => "Pekerjaan tidak ada"], 404);
 
                 elseif(empty($desa))
-                    return redirect()->back()->withInput()->with("msg", "Desa tidak ditemukan didaerah pati");
+                    return response()->json(["value" => 0, "message" => "Desa tidak ditemukan didaerah pati"], 404);
 
                 if($request->jenis_tanah != 1){
-                    return redirect()->back()->withInput()->with("msg", "jenis tanah yang di pilih harus 1");
+                    return response()->json(["value" => 0, "message" => "jenis tanah yang di pilih harus 1"], 404);
 
                 }elseif($request->jenis_tanah == 1){
                     $kondisi                    = Kondisi::where("id", $request->kondisi)->pluck("id")->first();
@@ -563,36 +607,46 @@ class SpopController extends Controller
                       */
 
                      if ($kategori_spop == 0) {
-                        return redirect("/pemutakhiran/" . $spop->uuid . "/bangunan/create");
+                        return response()->json([
+                            "value" => 0, 
+                            "uuid"  => $spop->uuid,
+                            "data"  => $spop,
+                            "message" => "data pemutakhiran $spop->nop berhasil di simpan"
+                        ]);
                      } else if( $kategori_spop == 1) {
-                        return redirect("/perekaman/" . $spop->uuid . "/bangunan/create");
+                        return response()->json([
+                            "value" => 0, 
+                            "uuid"  => $spop->uuid,
+                            "data"  => $spop,
+                            "message" => "data pemutakhiran $spop->nop berhasil di simpan"
+                        ]);
                      }
 
                 }else
-                    return redirect()->back()->withInput()->with("msg", "jenis tanah tidak ada");        
+                    return response()->json(["value" => 0, "message" => "jenis tanah tidak ada"], 404);
                 break;
             default:
-                return redirect()->back()->withInput()->with("msg", "tidak ada action");        
+                return response()->json(["value" => 0, "message" => "tidak ada action"], 404);
         }
     }
 
     public function show_spop($uuid, $kategori_spop)
     {
         $spop = Spop::with([
-            "dataLetakObjek",
-            "dataLetakObjek.desa",
-            "dataSubjekPajak",
-            "dataSubjekPajak.status",
-            "dataSubjekPajak.pekerjaan",
-            // "dataTanah",
-            "rincianDataBangunans",
-            "rincianDataBangunans.kondisi",
-            "rincianDataBangunans.konstruksi",
-            "rincianDataBangunans.atap",
-            "rincianDataBangunans.lantai",
-            "rincianDataBangunans.langit",
-            "gambars",
-            "gambars.kategori",
+                "dataLetakObjek",
+                "dataLetakObjek.desa",
+                "dataSubjekPajak",
+                "dataSubjekPajak.status",
+                "dataSubjekPajak.pekerjaan",
+                // "dataTanah",
+                "rincianDataBangunans",
+                "rincianDataBangunans.kondisi",
+                "rincianDataBangunans.konstruksi",
+                "rincianDataBangunans.atap",
+                "rincianDataBangunans.lantai",
+                "rincianDataBangunans.langit",
+                "gambars",
+                "gambars.kategori",
             ])->where("uuid", $uuid)->first();
 
         $statuses                   = Status::get();
@@ -608,60 +662,66 @@ class SpopController extends Controller
         $kategori                   = Kategori::get();
 
         if($kategori_spop == 0){
-            return view("pemutakhiran.show", compact([
-                "spop",
-    
-                "statuses",
-                "pekerjaans",
-                "jenisPenggunaanBangunans",
-                "kondisis",
-                "konstruksis",
-                "ataps",
-                "dindings",
-                "lantais",
-                "langits",
-                "jenisTanah",
-                "kategori"
-            ]));
+            return response()->json([
+                "value"     => 1,
+                "message"   => "data pemutakhiran berhasil di tampilkan",
+                "data"      => [
+                    "spop"        => $spop,
+                    "statuses"    => $statuses,
+                    "pekerjaans"  => $pekerjaans,
+                    "jenisPenggunaanBangunans" => $jenisPenggunaanBangunans,
+                    "kondisis"    => $kondisis,
+                    "konstruksis" => $konstruksis,
+                    "ataps"       => $ataps,
+                    "dindings"    => $dindings,
+                    "lantais"     => $lantais,
+                    "langits"     => $langits,
+                    "jenisTanah"  => $jenisTanah,
+                    "kategori"    => $kategori    
+                ]
+            ]);        
         }else if($kategori_spop == 1){
-            return view("perekaman.show", compact([
-                "spop",
-    
-                "statuses",
-                "pekerjaans",
-                "jenisPenggunaanBangunans",
-                "kondisis",
-                "konstruksis",
-                "ataps",
-                "dindings",
-                "lantais",
-                "langits",
-                "jenisTanah",
-                "kategori"
-            ]));
+            return response()->json([
+                "value" => 1,
+                "message"   => "data pemutakhiran berhasil di tampilkan",
+                "data"  => [
+                    "spop" => $spop,
+                    "statuses" => $statuses,
+                    "pekerjaans" => $pekerjaans,
+                    "jenisPenggunaanBangunans" => $jenisPenggunaanBangunans,
+                    "kondisis" => $kondisis,
+                    "konstruksis" => $konstruksis,
+                    "ataps" => $ataps,
+                    "dindings" => $dindings,
+                    "lantais" => $lantais,
+                    "langits" => $langits,
+                    "jenisTanah" => $jenisTanah,
+                    "kategori" => $kategori
+                ]
+            ]);
         }
     }
 
     public function edit_spop($uuid, $kategori_spop)
     {
         $spop = Spop::with([
-            "dataLetakObjek",
-            "dataLetakObjek.desa",
-            "dataSubjekPajak",
-            "dataSubjekPajak.status",
-            "dataSubjekPajak.pekerjaan",
-            // "dataTanah",
-            "rincianDataBangunans",
-            "rincianDataBangunans.kondisi",
-            "rincianDataBangunans.konstruksi",
-            "rincianDataBangunans.atap",
-            "rincianDataBangunans.lantai",
-            "rincianDataBangunans.langit",
-            "gambars",
-            "gambars.kategori",
+                "dataLetakObjek",
+                "dataLetakObjek.desa",
+                "dataSubjekPajak",
+                "dataSubjekPajak.status",
+                "dataSubjekPajak.pekerjaan",
+                // "dataTanah",
+                "rincianDataBangunans",
+                "rincianDataBangunans.kondisi",
+                "rincianDataBangunans.konstruksi",
+                "rincianDataBangunans.atap",
+                "rincianDataBangunans.lantai",
+                "rincianDataBangunans.langit",
+                "gambars",
+                "gambars.kategori",
             ])->where("uuid", $uuid)->first();
 
-        if(empty($spop)) abort(404);
+        if(empty($spop)) return response()->json(["value" => 0, "message" => "data spop tidak di temukan"], 404);
 
         $desas                      = Desa::get()->pluck("nama");
         $statuses                   = Status::get();
@@ -677,39 +737,43 @@ class SpopController extends Controller
         $kategori                   = Kategori::get();
 
         if ($kategori_spop == 0) {
-            return view("pemutakhiran.edit", compact([
-                "spop",
-                "desas",
-    
-                "statuses",
-                "pekerjaans",
-                "jenisPenggunaanBangunans",
-                "kondisis",
-                "konstruksis",
-                "ataps",
-                "dindings",
-                "lantais",
-                "langits",
-                "jenisTanah",
-                "kategori"
-            ]));
+            return response()->json([
+                "value" => 1,
+                "data"  => [
+                    "spop"          => $spop,
+                    "desas"         => $desas,
+                    "statuses"      => $statuses,
+                    "pekerjaans"    => $pekerjaans,
+                    "jenisPenggunaanBangunans" => $jenisPenggunaanBangunans,
+                    "kondisis"      => $kondisis,
+                    "konstruksis"   => $konstruksis,
+                    "ataps"         => $ataps,
+                    "dindings"      => $dindings,
+                    "lantais"       => $lantais,
+                    "langits"       => $langits,
+                    "jenisTanah"    => $jenisTanah,
+                    "kategori"      => $kategori
+                ]
+            ]);
         } else if ($kategori_spop ==  1) {
-            return view("perekaman.edit", compact([
-                "spop",
-                "desas",
-    
-                "statuses",
-                "pekerjaans",
-                "jenisPenggunaanBangunans",
-                "kondisis",
-                "konstruksis",
-                "ataps",
-                "dindings",
-                "lantais",
-                "langits",
-                "jenisTanah",
-                "kategori"
-            ]));
+            return response()->json([
+                "value" => 1,
+                "data"  => [
+                    "spop"          => $spop,
+                    "desas"         => $desas,
+                    "statuses"      => $statuses,
+                    "pekerjaans"    => $pekerjaans,
+                    "jenisPenggunaanBangunans" => $jenisPenggunaanBangunans,
+                    "kondisis"      => $kondisis,
+                    "konstruksis"   => $konstruksis,
+                    "ataps"         => $ataps,
+                    "dindings"      => $dindings,
+                    "lantais"       => $lantais,
+                    "langits"       => $langits,
+                    "jenisTanah"    => $jenisTanah,
+                    "kategori"      => $kategori
+                ]
+            ]);
         }
         
     }
@@ -879,7 +943,7 @@ class SpopController extends Controller
                 }
                 // redirect to add new
         }else{
-            return redirect()->back()->withInput()->with("msg", "jenis tanah yang di pilih tidak ada");
+            die("jenis tanah yang di pilih tidak ada");
         }
     }
 

@@ -10,8 +10,6 @@ class Spop extends Model
         "uuid",
         "nop",
         "nop_asal",
-        "data_letak_objek_id",
-        "data_subjek_pajak_id",
         "data_tanah_id",
         "user_id"
     ];

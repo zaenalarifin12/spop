@@ -67,27 +67,28 @@
       <div class="main-sidebar">
         <aside id="sidebar-wrapper">
           <div class="sidebar-brand">
-            <a href="{{ url("/") }}">Stisla</a>
+            <a href="{{ url("/") }}">BPKAD PATI</a>
           </div>
           <div class="sidebar-brand sidebar-brand-sm">
-            <a href="{{ url("/") }}">St</a>
+            <a href="{{ url("/") }}">BPKAD</a>
           </div>
             <ul class="sidebar-menu">
               <li class="menu-header">Dashboard</li>
 
-              <li><a class="nav-link" href="{{ url("/home") }}"><i class="fas fa-home"></i>Home</a></li>
+              <li>
+                <a class="nav-link" href="{{ url("/home") }}"><i class="fas fa-home"></i>
+                  <span> Home </span>
+                </a>
+              </li>
 
-              <li><a class="nav-link" href="{{ url("/perekaman/create") }}"><i class="fas fa-plus"></i> Daftar Objek baru</a></li>
+              <li>
+                <a class="nav-link" href="{{ url("/perekaman/create") }}"><i class="fas fa-plus"></i> <span> Daftar Objek baru </span></a>
+              </li>
 
-              <li><a class="nav-link" href="{{ url("/pemutakhiran/cari") }}"><i class="fas fa-pencil-ruler"></i> Daftar Perubahan Data</a></li>
-{{-- 
-  TODO 
-  NOMOR HP
-
-  UPLOAD FOTO
-    5 
-  
-  --}}
+              <li>
+                <a class="nav-link" href="{{ url("/pemutakhiran/cari") }}"><i class="fas fa-pencil-ruler"></i> <span> Daftar Perubahan Data </span></a>
+              </li>
+              
               <li class="nav-item dropdown">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-columns"></i> <span>Data Usulan</span></a>
                 <ul class="dropdown-menu">
@@ -97,7 +98,9 @@
               </li>
 
               @if (Auth::user()->role == 1)
-              <li><a class="nav-link" href="{{ url("/users") }}"><i class="fas fa-user"></i> Pengguna</a></li>
+              <li>
+                <a class="nav-link" href="{{ url("/users") }}"><i class="fas fa-user"></i> <span> Pengguna </span></a>
+              </li>
               @endif
 
               <li>
