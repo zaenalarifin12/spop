@@ -800,18 +800,19 @@ class SpopController extends Controller
         ]);
 
         $spop = Spop::where("uuid", $uuid)->first(); #mencari rujukan di table
-        if (empty($spop)) abort(404);
+
+        if (empty($spop)) return response()->json(["value" => 0, "message" => "data spop tidak ada"], 404);
 
         $status     = Status::where("id", $request->status)->pluck("id")->first();
         $pekerjaan  = Pekerjaan::where("id", $request->pekerjaan)->pluck("id")->first();
         $desa       = Desa::where("nama", "$request->dlop_desa")->first();
 
         if (empty($status)) 
-            return redirect()->back()->withInput()->with("msg", "status tidak ditemukan");
+            return response()->json(["value" => 0, "message" => "status tidak ditemukan" ], 404);
         elseif(empty($pekerjaan))
-            return redirect()->back()->withInput()->with("msg", "pekerjaan tidak ditemukan");
+            return response()->json(["value" => 0, "message" => "pekerjaan tidak ditemukan" ], 404);
         elseif(empty($desa))
-            return redirect()->back()->withInput()->with("msg", "desa tidak ditemukan");
+            return response()->json(["value" => 0, "message" => "desa tidak ditemukan" ], 404);
 
         if($request->jenis_tanah == 2 || $request->jenis_tanah == 3 || $request->jenis_tanah == 1){
 
@@ -843,7 +844,7 @@ class SpopController extends Controller
                     $nop_asal_kode      = $request->nop_asal_kode;
     
                     if(empty($nop_asal_kec) || empty($nop_asal_des) || empty($nop_asal_blok) || empty($nop_asal_no_urut) || empty($nop_asal_kode))
-                        return redirect()->back()->withInput()->with("msg", "nop asal ada yang kosong");
+                        return response()->json(["value" => 0, "message" => "nop asal ada yang kosong" ], 404);
     
                     $nop            = "33.18.$kec.$des.$blok.$no_urut.$kode";
                     $nop_replace    = str_replace(".", "", $nop);
@@ -864,7 +865,7 @@ class SpopController extends Controller
                 $nop_asal_kode      = $request->nop_asal_kode;
     
                 if(empty($nop_asal_kec) || empty($nop_asal_des) || empty($nop_asal_blok) || empty($nop_asal_no_urut) || empty($nop_asal_kode))
-                        return redirect()->back()->withInput()->with("msg", "nop asal ada yang kosong");
+                    return response()->json(["value" => 0, "message" => "nop asal ada yang kosong" ], 404);
     
                 $nop_asal       = "33.18.$nop_asal_kec.$nop_asal_des.$nop_asal_blok.$nop_asal_no_urut.$nop_asal_kode";
                 $nop_asal_replace    = str_replace(".", "", $nop_asal);
@@ -905,7 +906,7 @@ class SpopController extends Controller
                     $kategori = Kategori::where("id", $key)->first();
                     
                     if($kategori->id == null){
-                        return redirect()->back()->withInput()->with("msg", "Kategori gambar tidak ada");
+                        return response()->json(["value" => 0, "message" => "Kategori gambar tidak ada"], 404);
                     }
                 }
                 /**
@@ -937,9 +938,19 @@ class SpopController extends Controller
 
                 // jika nop ngga kosong
                 if($kategori_spop == 0){
-                    return redirect("/pemutakhiran/" . $spop->uuid)->with("msg", "data pemutakhiran telah berhasil diubah");
+                    return response()->json([
+                        "value" => 1, 
+                        "uuid"  => $spop->uuid,
+                        "data"  => $spop,
+                        "message" => "data pemutakhiran telah berhasil diubah"
+                    ]);
                 }else if($kategori_spop == 1){
-                    return redirect("/perekaman/" . $spop->uuid)->with("msg", "data perekaman telah berhasil diubah");
+                    return response()->json([
+                        "value" => 1, 
+                        "uuid"  => $spop->uuid,
+                        "data"  => $spop,
+                        "message" => "data perekaman telah berhasil diubah"
+                    ]);
                 }
                 // redirect to add new
         }else{
@@ -970,28 +981,39 @@ class SpopController extends Controller
         $langits                    = Langit::get();
 
         if($kategori_spop == 0){
-            return view("pemutakhiran.createBangunan", compact([
-                "jenisPenggunaanBangunans",
-                "kondisis",
-                "konstruksis",
-                "ataps",
-                "dindings",
-                "lantais",
-                "langits",
-                "uuid"
-            ]))->with("urutan_bangunan", $value);
+            
+            return response()->json([
+                "value" => 1,
+                "urutan_bangunan" => $value,
+                "data"  => [
+                    "jenisPenggunaanBangunans"  => $jenisPenggunaanBangunans,
+                    "kondisis"                  => $kondisis,
+                    "konstruksis"               => $konstruksis,
+                    "ataps"                     => $ataps,
+                    "dindings"                  => $dindings,
+                    "lantais"                   => $lantais,
+                    "langits"                   => $langits,
+                    "uuid"                      => $uuid
+                ]
+            ]);
 
         }elseif($kategori_spop == 1){
-            return view("perekaman.createBangunan", compact([
-                "jenisPenggunaanBangunans",
-                "kondisis",
-                "konstruksis",
-                "ataps",
-                "dindings",
-                "lantais",
-                "langits",
-                "uuid"
-            ]))->with("urutan_bangunan", $value);
+            
+            return response()->json([
+                "value" => 1,
+                "urutan_bangunan" => $value,
+                "data"  => [
+                    "jenisPenggunaanBangunans"  => $jenisPenggunaanBangunans,
+                    "kondisis"                  => $kondisis,
+                    "konstruksis"               => $konstruksis,
+                    "ataps"                     => $ataps,
+                    "dindings"                  => $dindings,
+                    "lantais"                   => $lantais,
+                    "langits"                   => $langits,
+                    "uuid"                      => $uuid
+                ]
+            ]);
+
         }
 
     }
@@ -1028,22 +1050,22 @@ class SpopController extends Controller
                 $langit                     = Langit::where("id", $request->langit)->pluck("id")->first();
 
                 if (empty($spop))
-                    return redirect()->back()->withInput()->with("err","nop belum ada");
+                    return response()->json(["value" => 0, "message" => "nop belum ada"], 404);
 
                 if (empty($kondisi))
-                    return redirect()->back()->withInput()->with("err","Kondisi tidak ada");
+                    return response()->json(["value" => 0, "message" => "Kondisi tidak ada"], 404);
 
                 if (empty($jenisPenggunaanBangunan))
-                    return redirect()->back()->withInput()->with("err","jenisPenggunaanBangunan tidak ada");
+                    return response()->json(["value" => 0, "message" => "jenisPenggunaanBangunan tidak ada"], 404);
                 
                 if (empty($dinding)) 
-                return redirect()->back()->withInput()->with("err","dinding tidak ada");
+                    return response()->json(["value" => 0, "message" => "dinding tidak ada"], 404);
                 
                 if (empty($lantai))
-                    return redirect()->back()->withInput()->with("err","lantai tidak ada");
+                    return response()->json(["value" => 0, "message" => "lantai tidak ada"], 404);
                 
                 if (empty($langit))
-                    return redirect()->back()->withInput()->with("err","langit tidak ada");
+                    return response()->json(["value" => 0, "message" => "langit tidak ada"], 404);
                       
                 $random = Str::random(40);
                 if(RincianDataBangunan::where("uuid", $random)->first() != null){
@@ -1067,15 +1089,21 @@ class SpopController extends Controller
                     "spop_id"                       => $spop->id
                 ]);
 
-                // redirect to add new
-                session()->forget('urutan_bangunan'); // menghapus session
                 if ($kategori_spop == 0) {
-                    return redirect("/pemutakhiran/" . $spop->uuid)->with("msg", "bangunan berhasil ditambahkan");
+                    return response()->json([
+                        "value"     => 1,
+                        "message"   => "bangunan berhasil ditambahkan",
+                        "uuid"      => $spop->uuid,
+                        "data"      => $spop
+                    ]);
                 } else if ($kategori_spop == 1) {
-                    return redirect("/perekaman/" . $spop->uuid)->with("msg", "bangunan berhasil ditambahkan");
+                    return response()->json([
+                        "value"     => 1,
+                        "message"   => "bangunan berhasil ditambahkan",
+                        "uuid"      => $spop->uuid,
+                        "data"      => $spop
+                    ]);
                 }
-                
-
                 break;
             case "tambah":     
                 /**
@@ -1108,22 +1136,22 @@ class SpopController extends Controller
                 $langit                     = Langit::where("id", $request->langit)->pluck("id")->first();
 
                 if (empty($spop))
-                    return redirect()->back()->withInput()->with("err","nop belum ada");
+                    return response()->json(["value" => 0, "message" => "nop belum ada"], 404);
 
                 if (empty($kondisi))
-                    return redirect()->back()->withInput()->with("err","Kondisi tidak ada");
+                    return response()->json(["value" => 0, "message" => "Kondisi tidak ada"], 404);
 
                 if (empty($jenisPenggunaanBangunan))
-                    return redirect()->back()->withInput()->with("err","jenisPenggunaanBangunan tidak ada");
+                    return response()->json(["value" => 0, "message" => "jenisPenggunaanBangunan tidak ada"], 404);
                 
                 if (empty($dinding)) 
-                return redirect()->back()->withInput()->with("err","dinding tidak ada");
+                    return response()->json(["value" => 0, "message" => "dinding tidak ada"], 404);
                 
                 if (empty($lantai))
-                    return redirect()->back()->withInput()->with("err","lantai tidak ada");
+                    return response()->json(["value" => 0, "message" => "lantai tidak ada"], 404);
                 
                 if (empty($langit))
-                    return redirect()->back()->withInput()->with("err","langit tidak ada");
+                    return response()->json(["value" => 0, "message" => "langit tidak ada"], 404);
                         
                         
                 $random = Str::random(40);
@@ -1150,14 +1178,22 @@ class SpopController extends Controller
                 $value = session('urutan_bangunan');
                 $value++;
                 session(["urutan_bangunan" => $value]);
-                // jika nop ngga kosong
+
                 if ($kategori_spop == 0) {
-                    return redirect("/pemutakhiran/" . $spop->uuid . "/bangunan/create");
-                } else if($kategori_spop == 1) {
-                    return redirect("/perekaman/" . $spop->uuid . "/bangunan/create");
+                    return response()->json([
+                        "value"     => 1,
+                        "message"   => "bangunan berhasil ditambahkan",
+                        "uuid"      => $spop->uuid,
+                        "data"      => $spop
+                    ]);
+                } else if ($kategori_spop == 1) {
+                    return response()->json([
+                        "value"     => 1,
+                        "message"   => "bangunan berhasil ditambahkan",
+                        "uuid"      => $spop->uuid,
+                        "data"      => $spop
+                    ]);
                 }
-                
-                // redirect to bangunan new
                 break;
             default:
                 return redirect()->back()->withInput()->with("err","tidak ada action");
@@ -1192,36 +1228,39 @@ class SpopController extends Controller
         $lantais                    = Lantai::get();
         $langits                    = Langit::get();
 
-        if ($kategori_spop == 0) {
-            return view("pemutakhiran.bangunan.edit", compact([
-                "rincianDataBangunan",
-                "jenisTanah",
-                "statuses",
-                "pekerjaans",
-                "jenisPenggunaanBangunans",
-                "kondisis",
-                "konstruksis",
-                "ataps",
-                "dindings",
-                "lantais",
-                "langits",
-                "spop"
-            ]));
-        } else if($kategori_spop == 1) {
-            return view("perekaman.bangunan.edit", compact([
-                "rincianDataBangunan",
-                "jenisTanah",
-                "statuses",
-                "pekerjaans",
-                "jenisPenggunaanBangunans",
-                "kondisis",
-                "konstruksis",
-                "ataps",
-                "dindings",
-                "lantais",
-                "langits",
-                "spop"
-            ]));
+        if($kategori_spop == 0){
+            
+            return response()->json([
+                "value" => 1,
+                "data"  => [
+                    "bangunan"                  => $rincianDataBangunan,
+                    "jenisPenggunaanBangunans"  => $jenisPenggunaanBangunans,
+                    "kondisis"                  => $kondisis,
+                    "konstruksis"               => $konstruksis,
+                    "ataps"                     => $ataps,
+                    "dindings"                  => $dindings,
+                    "lantais"                   => $lantais,
+                    "langits"                   => $langits,
+                ]
+            ]);
+
+        }elseif($kategori_spop == 1){
+            
+            return response()->json([
+                "value" => 1,
+                "data"  => [
+                    "bangunan"                  => $rincianDataBangunan,
+                    "jenisPenggunaanBangunans"  => $jenisPenggunaanBangunans,
+                    "kondisis"                  => $kondisis,
+                    "konstruksis"               => $konstruksis,
+                    "ataps"                     => $ataps,
+                    "dindings"                  => $dindings,
+                    "lantais"                   => $lantais,
+                    "langits"                   => $langits,
+                    
+                ]
+            ]);
+
         }
         
     }
@@ -1251,7 +1290,7 @@ class SpopController extends Controller
             ["spop_id"  ,$spop->id]
         ])->first();
 
-        if(empty($spop) || empty($rincianDataBangunan)) abort(404);
+        if(empty($spop) || empty($rincianDataBangunan)) return response()->json(["value" => 0, "message" => "rincian data bangunan atau spop tidak ditemukan"], 404);
 
         $kondisi                    = Kondisi::where("id", $request->kondisi)->pluck("id")->first();
         $jenisPenggunaanBangunan    = JenisPenggunaanBangunan::where("id", $request->penggunaan)->pluck("id")->first();
@@ -1277,9 +1316,19 @@ class SpopController extends Controller
         ]);
 
         if($kategori_spop == 0){
-            return redirect("/pemutakhiran/$spop->uuid/bangunan/$rincianDataBangunan->uuid")->with("msg", "data bangunan berhasil di edit");
+            return response()->json([
+                "value"         => 0,
+                "message"       => "data bangunan berhasil di edit",
+                "uuid"          => $spop->uuid,
+                "uuid_bangunan" => $rincianDataBangunan->uuid
+            ]);
         }else if($kategori_spop == 1){
-            return redirect("/perekaman/$spop->uuid/bangunan/$rincianDataBangunan->uuid")->with("msg", "data bangunan berhasil di edit");
+            return response()->json([
+                "value"         => 0,
+                "message"       => "data bangunan berhasil di edit",
+                "uuid"          => $spop->uuid,
+                "uuid_bangunan" => $rincianDataBangunan->uuid
+            ]);
         }
     }
 
@@ -1314,35 +1363,41 @@ class SpopController extends Controller
         $langits                    = Langit::get();
 
         if ($kategori_spop == 0) {
-            return view("pemutakhiran.bangunan.show", compact([
-                "rincianDataBangunan",
-                "jenisTanah",
-                "statuses",
-                "pekerjaans",
-                "jenisPenggunaanBangunans",
-                "kondisis",
-                "konstruksis",
-                "ataps",
-                "dindings",
-                "lantais",
-                "langits",
-                "spop"
-            ]));
+            return response()->json([
+                "value" => 1,
+                "data"  => [
+                    "rincianDataBangunan"   => $rincianDataBangunan,
+                    "jenisTanah"            => $jenisTanah,
+                    "statuses"              => $statuses,
+                    "pekerjaans"            => $pekerjaans,
+                    "jenisPenggunaanBangunans"  => $jenisPenggunaanBangunans,
+                    "kondisis"              => $kondisis,
+                    "konstruksis"           => $konstruksis,
+                    "ataps"                 => $ataps,
+                    "dindings"              => $dindings,
+                    "lantais"               => $lantais,
+                    "langits"               => $langits,
+                    "spop"                  => $spop
+                ]
+            ]);
         } else if($kategori_spop == 1) {
-            return view("perekaman.bangunan.show", compact([
-                "rincianDataBangunan",
-                "jenisTanah",
-                "statuses",
-                "pekerjaans",
-                "jenisPenggunaanBangunans",
-                "kondisis",
-                "konstruksis",
-                "ataps",
-                "dindings",
-                "lantais",
-                "langits",
-                "spop"
-            ]));
+            return response()->json([
+                "value" => 1,
+                "data"  => [
+                    "rincianDataBangunan"   => $rincianDataBangunan,
+                    "jenisTanah"            => $jenisTanah,
+                    "statuses"              => $statuses,
+                    "pekerjaans"            => $pekerjaans,
+                    "jenisPenggunaanBangunans"  => $jenisPenggunaanBangunans,
+                    "kondisis"              => $kondisis,
+                    "konstruksis"           => $konstruksis,
+                    "ataps"                 => $ataps,
+                    "dindings"              => $dindings,
+                    "lantais"               => $lantais,
+                    "langits"               => $langits,
+                    "spop"                  => $spop
+                ]
+            ]);
         }
         
     }
@@ -1361,9 +1416,19 @@ class SpopController extends Controller
         $rincianDataBangunan->delete();
 
         if ($kategori_spop == 0) {
-            return redirect("/pemutakhiran/".$spop->uuid)->with("msg", "data bangunan berhasil di hapus");
+            return response()->json([
+                "value"     => 1,
+                "message"   => "data bangunan berhasil di hapus",
+                "uuid"      => $spop->uuid,
+                "data"      => $spop
+            ]);
         } else {
-            return redirect("/perekaman/".$spop->uuid)->with("msg", "data bangunan berhasil di hapus");
+            return response()->json([
+                "value"     => 1,
+                "message"   => "data bangunan berhasil di hapus",
+                "uuid"      => $spop->uuid,
+                "data"      => $spop
+            ]);
         }
     
     }
