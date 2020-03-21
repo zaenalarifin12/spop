@@ -16,7 +16,7 @@ class CreateDataLetakObjeksTable extends Migration
         Schema::create('data_letak_objeks', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->text('nama_jalan');
-            $table->string('blok_kav');
+            $table->string('blok_kav')->nullable();
             $table->string('rw', 3);
             $table->string('rt', 2);
             $table->unsignedBigInteger('desa_id')->nullable();

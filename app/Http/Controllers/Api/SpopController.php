@@ -56,6 +56,10 @@ class SpopController extends Controller
         ]);
     }
 
+    /**
+     * @param uuid pemutakhiran
+     */
+
     public function create_spop($uuid = null, $kategori_spop)
     {
         /**
@@ -155,6 +159,32 @@ class SpopController extends Controller
 
     }
 
+    /**
+     * @param uuid pemutakhiran
+     */
+
+    /**
+     * @param action save
+     * 
+     * 	"dlop_nama_jalan"       : "required",
+     *  "dlop_desa"             : "PAKEM",
+     *  "dlop_rw"               : "01",
+     *  "dlop_rt"               : "010",
+     *  "status"                : "2",
+     *  "pekerjaan"             : "1",
+     *  "dsp_nama_subjek_pajak" : "required",
+     *  "dsp_nama_jalan"        : "required",
+     *  "dsp_kabupaten"         : "required",
+     *  "dsp_desa"              : "required",
+     *  "dsp_rw"                : "01",
+     *  "dsp_rt"                : "010",
+     *  "dsp_no_ktp"            : "1111111111111111",
+     *  
+     *  "dsp_luas_tanah"        : "1212",
+     *  "jenis_tanah"           : "2",
+     *  
+     *  "action": "save"
+     */
     public function store_spop($request, $kategori_spop, $uuid = null)
     {
         /**
@@ -172,7 +202,10 @@ class SpopController extends Controller
             $nop_replace    = str_replace(".", "", $nop);
         }
         
-
+        /**
+         * ada tombol 2 , namanya SAVE dan TAMBAH
+         * DI bagian body
+         */
         switch ($request->input("action")) {
             case "save":
                 /**
