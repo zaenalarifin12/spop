@@ -159,12 +159,9 @@ class SpopController extends Controller
 
     }
 
-    /**
-     * @param uuid pemutakhiran
-     */
 
     /**
-     * @
+     * ==========================================================
      * @param action save
      * 
      * @var string  dlop_nama_jalan       => "required",
@@ -211,6 +208,11 @@ class SpopController extends Controller
      * @var integer langit                => "required",
      
      *  "action": "save"
+     */
+
+     /**
+      * ==========================================================
+     * @param uuid pemutakhiran
      */
 
     public function store_spop($request, $kategori_spop, $uuid = null)
@@ -691,6 +693,12 @@ class SpopController extends Controller
         }
     }
 
+    /**
+     * @param uuid 
+     * @param bool kategori_spop
+     * 
+     * @return json data
+     */
     public function show_spop($uuid, $kategori_spop)
     {
         $spop = Spop::with([
@@ -1079,6 +1087,28 @@ class SpopController extends Controller
 
     }
 
+
+    /**
+     * CREATE DOCS
+     * @var string penggunaan"            => "required",
+     * @var integer luas_bangunan"         => "required|numeric|min:0",
+     * @var integer jumlah_lantai"         => "required|numeric|min:0",
+     * @var integer tahun_dibangun"        => "required|numeric|digits:4",
+     * @var integer tahun_renovasi"        => "required|numeric|digits:4",
+     * @var integer daya"                  => "required|numeric|min:0",
+     * @var integer kondisi"               => "required",
+     * @var integer konstruksi"            => "required",
+     * @var integer atap"                  => "required",
+     * @var integer dinding"               => "required",
+     * @var integer lantai"                => "required",
+     * @var integer langit"                => "required",
+     */
+
+    /**
+     * @param request $request
+     * @param uuid 
+     * @param bool kategori_spop
+     */
     public function store_bangunan_spop($request, $uuid, $kategori_spop)
     {
         switch ($request->input("action")) {
