@@ -164,27 +164,55 @@ class SpopController extends Controller
      */
 
     /**
+     * @
      * @param action save
      * 
-     * 	"dlop_nama_jalan"       : "required",
-     *  "dlop_desa"             : "PAKEM",
-     *  "dlop_rw"               : "01",
-     *  "dlop_rt"               : "010",
-     *  "status"                : "2",
-     *  "pekerjaan"             : "1",
-     *  "dsp_nama_subjek_pajak" : "required",
-     *  "dsp_nama_jalan"        : "required",
-     *  "dsp_kabupaten"         : "required",
-     *  "dsp_desa"              : "required",
-     *  "dsp_rw"                : "01",
-     *  "dsp_rt"                : "010",
-     *  "dsp_no_ktp"            : "1111111111111111",
-     *  
-     *  "dsp_luas_tanah"        : "1212",
-     *  "jenis_tanah"           : "2",
-     *  
+     * @var string  dlop_nama_jalan       => "required",
+     * @var string  dlop_blok             => NULLABLE
+     * @var string  dlop_desa             => "required",
+     * @var integer dlop_rw               => "required|numeric|digits:2",
+     * @var integer dlop_rt               => "required|numeric|digits:3",
+     * @var integer status                => "required",
+     * @var integer pekerjaan"             => "required",
+     * @var string  dsp_nama_subjek_pajak" => "required",
+     * @var string  dsp_nama_jalan"        => "required",
+     * @var string  dsp_kabupaten"         => "required",
+     * @var string  dsp_desa"              => "required",
+     * @var integer dsp_rw"                => "required|numeric|digits:2",
+     * @var integer dsp_rt"                => "required|numeric|digits:3",
+     * @var integer dsp_no_ktp"            => "required|numeric|digits:16",
+     * @var string  dsp_no_hp              => NULLABLE
+     * @var integer dsp_luas_tanah"        => "required|numeric",
+     * @var integer jenis_tanah"           => "required", //  masih kurang validasi 2,3
+     * 
+     * @see untuk gambar menggunakan array
+     * @var array gambar
+     * @var item->id itu merujuk ke table kategori
+     * @example  
+     * @var gambar[$item->id][]
+     * @var gambar[id_kategori][urutan_gambar]
+     * @example gambar[1][0]
+     * @example gambar[1][1]
+     * @example gambar[2][0]
+     * @example gambar[3][0]
+     * 
+     * 
+     * @var string penggunaan             => "required",
+     * @var integer luas_bangunan         => "required|numeric|min:0",
+     * @var integer jumlah_lantai         => "required|numeric|min:0",
+     * @var integer tahun_dibangun        => "required|numeric|digits:4",
+     * @var integer tahun_renovasi        => "required|numeric|digits:4",
+     * @var integer daya                  => "required|numeric|min:0",
+     * @var integer kondisi               => "required",
+     * @var integer konstruksi            => "required",
+     * @var integer atap                  => "required",
+     * @var integer dinding               => "required",
+     * @var integer lantai                => "required",
+     * @var integer langit                => "required",
+     
      *  "action": "save"
      */
+
     public function store_spop($request, $kategori_spop, $uuid = null)
     {
         /**
@@ -236,7 +264,7 @@ class SpopController extends Controller
                  */
                 if($kategori_spop == 0){
                     $rujukan = Rujukan::where("uuid", $uuid)->pluck("nop")->first(); #mencari rujukan di table
-                    if (empty($rujukan)) abort(404);
+                    if (empty($rujukan)) return response()->json(["value" => 0, "message" => "data rujukan kosong"], 404);
 
                 }else if($kategori_spop == 1){
                     $spop_asal  = Spop::where("nop", $nop_replace)->first(); #mencari nop di table
@@ -338,7 +366,7 @@ class SpopController extends Controller
                             }
                         }
                         /**
-                         * insert @image
+                         * @see insert image
                          */
                         foreach($request->gambar as $image => $valueImage){
                             foreach($valueImage as $key => $gambar){

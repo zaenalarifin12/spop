@@ -148,7 +148,6 @@ class SpopController extends Controller
             $nop            = "33.18.$kec.$des.$blok.$no_urut.$kode";
             $nop_replace    = str_replace(".", "", $nop);
         }
-        
 
         switch ($request->input("action")) {
             case "save":
