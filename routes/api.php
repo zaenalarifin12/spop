@@ -33,7 +33,22 @@ Route::group(["middleware" => ["jwt.verify"]], function(){
     Route::delete('/pemutakhiran/{uuid}/gambar/{id}',                   'Api\GambarController@destroy');
 });    
 
+Route::get("/v1/status",                    "Api\DataSpopController@Status");
+Route::get("/v1/pekerjaan",                 "Api\DataSpopController@Pekerjaan");
+Route::get("/v1/jenisPenggunaanBangunan",   "Api\DataSpopController@JenisPenggunaanBangunan");
+Route::get("/v1/rincianDataBangunan",       "Api\DataSpopController@RincianDataBangunan");
+Route::get("/v1/kondisi",                   "Api\DataSpopController@Kondisi");
+Route::get("/v1/konstruksi",                "Api\DataSpopController@Konstruksi");
+Route::get("/v1/atap",                      "Api\DataSpopController@Atap");
+Route::get("/v1/dinding",                   "Api\DataSpopController@Dinding");
+Route::get("/v1/lantai",                    "Api\DataSpopController@Lantai");
+Route::get("/v1/langit",                    "Api\DataSpopController@Langit");
+Route::get("/v1/desa",                      "Api\DataSpopController@Desa");
+Route::get("/v1/kategori",                  "Api\DataSpopController@Kategori");
 
+/**
+ * URL DI BAWAH DI GUNAKAN UNTUK MENGAMBIL DATA DARI API ORANG
+ */
 Route::get("/v1/getKabupaten",    "Api\GetApiLokasiController@getKabupaten");
 Route::get("/v1/getKecamatan",    "Api\GetApiLokasiController@getKecamatan");
 Route::get("/v1/getDesa",         "Api\GetApiLokasiController@getDesa");
