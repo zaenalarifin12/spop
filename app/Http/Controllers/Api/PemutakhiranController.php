@@ -7,6 +7,8 @@ use App\Http\Controllers\Api\SpopController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
+use App\Models\Rujukan;
+use App\Models\Spop;
 use Auth;
 use DataTables;
 
