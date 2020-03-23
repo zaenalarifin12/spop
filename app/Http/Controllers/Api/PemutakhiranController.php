@@ -693,6 +693,9 @@ class PemutakhiranController extends Controller
         return redirect("/pemutakhiran/".$spop->uuid)->with("msg", "data bangunan berhasil di hapus");
     }
 
+    /**
+     * @param rujukan string nop
+     */
     public function cari(Request $request)
     {
         $rujukan    = urlencode($request->rujukan);
