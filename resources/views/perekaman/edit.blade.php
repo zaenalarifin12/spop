@@ -272,10 +272,6 @@
                         <label>Nomor HP</label>
                         <input type="text" class="form-control @error('dsp_no_hp') is-invalid @enderror" name="dsp_no_hp" value="{{ old("dsp_no_hp") ? old("dsp_no_hp") : $spop->dataSubjekPajak->nomor_hp }}">
                     </div>
-
-                    <div class="form-group">
-                        <h2 class="text-center"><u>Daftar Foto</u></h2>
-                    </div>
                     
                     @foreach ($spop->gambars as $item)
                             <div class="form-group">
@@ -284,10 +280,6 @@
                             </div>
                     @endforeach
 
-                    <br>
-                    <div class="form-group">
-                        <h2 class="text-center"><u>Tambah Foto</u></h2>
-                    </div>
 
                     @foreach ($kategori as $item)
                         <div class="form-group">
@@ -387,7 +379,6 @@
 
             <div class="container-fluid">
                 @csrf
-                @method("PUT")
                 <div class="row">
                     <div class="col-6 col-md-6 col-lg-6">
                         <input type="submit" name="action" class="btn btn-dark btn-block" value="save" >

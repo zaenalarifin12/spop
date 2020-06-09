@@ -34,7 +34,8 @@ Route::group(["middleware" => ["auth"]], function(){
     Route::post('/pemutakhiran/create/{uuid}',                       'PemutakhiranController@store');
     Route::get('/pemutakhiran/{uuid}',                               'PemutakhiranController@show');
     Route::get('/pemutakhiran/{uuid}/edit',                          'PemutakhiranController@edit');
-    Route::put('/pemutakhiran/{uuid}',                               'PemutakhiranController@update');
+    // edit
+    Route::post('/pemutakhiran/{uuid}',                               'PemutakhiranController@update');
     Route::get('/pemutakhiran/{uuid}/bangunan/create',               'PemutakhiranController@createBangunan');
     Route::post('/pemutakhiran/{uuid}/bangunan/create',              'PemutakhiranController@storeBangunan');
     Route::get('/pemutakhiran/{uuid}/bangunan/{uuid_bangunan}',      'PemutakhiranController@showBangunan');
@@ -49,7 +50,8 @@ Route::group(["middleware" => ["auth"]], function(){
     Route::post('/perekaman/create',                              'PerekamanController@store');
     Route::get('/perekaman/{uuid}',                               'PerekamanController@show');
     Route::get('/perekaman/{uuid}/edit',                          'PerekamanController@edit');
-    Route::put('/perekaman/{uuid}',                               'PerekamanController@update');
+    // edit
+    Route::post('/perekaman/{uuid}',                               'PerekamanController@update');
     Route::get('/perekaman/{uuid}/bangunan/create',               'PerekamanController@createBangunan');
     Route::post('/perekaman/{uuid}/bangunan/create',              'PerekamanController@storeBangunan');
     Route::get('/perekaman/{uuid}/bangunan/{uuid_bangunan}',      'PerekamanController@showBangunan');

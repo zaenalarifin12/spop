@@ -249,7 +249,7 @@
                     </div>
                     @foreach ($spop->gambars as $item)
                             <div class="form-group">
-                                <label for="">{{ $item->kategori->nama }}</label>
+                                <label for="" class=""> {{ $item->kategori->nama }}</label>
                                 <img src="{{asset("storage/data_spop/$item->nama")}}" alt="" style="width:100%" />
                             </div>
                     @endforeach
@@ -357,7 +357,6 @@
 
             <div class="container-fluid">
                 @csrf
-                @method("PUT")
                 <div class="row">
                     <div class="col-6 col-md-6 col-lg-6">
                         <input type="submit" name="action" class="btn btn-dark btn-block" value="save" >

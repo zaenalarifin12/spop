@@ -758,11 +758,11 @@ class SpopController extends Controller
              if ($kategori_spop == 1) {
                 if(Auth::user()->role == 1){
                     $this->validate($request, [
-                        "nop_kec"      => "required",
-                        "nop_des"      => "required",
-                        "nop_blok"     => "required",
-                        "nop_no_urut"  => "required",
-                        "nop_kode"     => "required",
+                        // "nop_kec"      => "required",
+                        // "nop_des"      => "required",
+                        // "nop_blok"     => "required",
+                        // "nop_no_urut"  => "required",
+                        // "nop_kode"     => "required",
                     ]);
     
                     $kec    = $request->nop_kec;
@@ -780,16 +780,23 @@ class SpopController extends Controller
                     if(empty($nop_asal_kec) || empty($nop_asal_des) || empty($nop_asal_blok) || empty($nop_asal_no_urut) || empty($nop_asal_kode))
                         return redirect()->back()->withInput()->with("msg", "nop asal ada yang kosong");
     
-                    $nop            = "33.18.$kec.$des.$blok.$no_urut.$kode";
-                    $nop_replace    = str_replace(".", "", $nop);
-    
                     $nop_asal       = "33.18. $nop_asal_kec . $nop_asal_des . $nop_asal_blok . $nop_asal_no_urut . $nop_asal_kode";
                     $nop_asal_replace    = str_replace(".", "", $nop_asal);
     
-                    $spop->update([
-                        "nop"       => $nop_replace,
-                        "nop_asal"  => $nop_asal
+                    // jika nop kosong
+                    if(empty($kec) || empty($des) || empty($blok) || empty($no_urut) || empty($kode)){
+                        $spop->update([
+                            "nop"  => "3318",
+                            "nop_asal"  => $nop_asal
                         ]);
+                    }else{
+                        $nop            = "33.18.$kec.$des.$blok.$no_urut.$kode";
+                        $nop_replace    = str_replace(".", "", $nop);
+                        $spop->update([
+                            "nop"       => $nop_replace,
+                            "nop_asal"  => $nop_asal
+                        ]);
+                    }
                 }
     
                 $nop_asal_kec       = $request->nop_asal_kec;
@@ -849,7 +856,7 @@ class SpopController extends Controller
                 
                 foreach($request->gambar as $image => $valueImage){
                     foreach($valueImage as $key => $gambar){
-                        dd($valueImage);
+                        
                         $name = Str::random(20).time(). ".jpg";
 
                         $gambar->storeAs(
