@@ -1,45 +1,28 @@
-cara deploy web ini
-```
-- install composer
-- install git
-- pull file ini menggunakan git
-- jalankan perintah php artisan migrate / import database yang sudah ada
-- konfigurasi nama databasenya ada di file .env
-```
+code 
+r = required
+======================
+# LOGIN
+nip     = 16 digit
+password= minimal 8 digit
 
-===============================================
+# REGISTER
+nip         = 16 digit
+nama        = tidak boleh kosong
+instansi    = 
+password    = minimal 8 digit
 
-#cara menggunakan aplikasi ini
+# HOME
+tentang aplikasi
 
-login admin
-```
-nip         : admin
-password    : admin
-```
-user biasa
-```
-nip         : [nip-yang-terdaftar]
-password    : [pwd];
-```
-###HOME
-
-    BAGIAN PEREKAMAN
-    - INPUT SEPERTI BIASA
-    - UPLOAD IMAGE , JIKA SALAH UPLOAD IMAGE (MAU MENGGANTI GAMBAR MAKA TOMBOL RESET DITEKAN DULU)
-    
-    BAGIAN PREVIEW(HASIL DATA PEREKAMAN) [SEPERTI BIASA]
-    
-    - EDIT IMAGE
-
-<!-- bug 
-edit perekaman
-EDIT PEMUTAKHIRAN
-
- -->
+# daftar objek baru
+nop asal            = boleh di kosongi
+nama jalan          = r
+blok                = r
+desa                = nama desa harus ada dipati
+rt                  = r
+rw                  = r
+nama subjek pajak   = 
 
 
-```
-    TASK
--   AUTO GENERATE RANDOM STRING SAAT PROSES PENCARIAN [ JIKA BELUM DIGENERATE]
-
-```
+# task
+nama pemutakhiran dan perekaman

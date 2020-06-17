@@ -1,7 +1,7 @@
 @extends('layouts.parent')
 
 @section('title')
-    Edit profil anda
+    Edit profil {{$user->name}}
 @endsection
 
 @section('style')
@@ -13,12 +13,7 @@
      <div class="main-content">
         <section class="section">
           <div class="section-header">
-            <h1 class="text-info text-uppercase">Profil Anda</h1>
-            <div class="section-header-breadcrumb">
-              <div class="breadcrumb-item active"><a href="#">Home</a></div>
-              <div class="breadcrumb-item"><a href="#">Profile</a></div>
-              <div class="breadcrumb-item">Edit</div>
-            </div>
+            <h1 class="text-info text-uppercase">Profil {{$user->name}}</h1>
           </div>
           
           <div class="section-body" >

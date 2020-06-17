@@ -16,11 +16,10 @@ class UserTableSeeder extends Seeder
     {
         DB::table("users")->insert([
             "name"       => "zainal",
-            "uuid"       => Str::random(40).time(),
-            "nip"        => "22222222",
+            "nip"        => "1111111111111111",
             "instansi"   => "xd",
             "role"       => 1,   
-            "password"   => Hash::make("mantapjewa")   
+            "password"   => Hash::make("11111111")   
         ]);
     }
 }

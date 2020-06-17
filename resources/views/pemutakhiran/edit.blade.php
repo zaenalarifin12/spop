@@ -1,7 +1,7 @@
 @extends('layouts.parent')
 
 @section('title')
-    Edit Data Pemutakhiran
+    Edit Perubahan Data
 @endsection
 
 @section('style')
@@ -15,12 +15,7 @@
      <div class="main-content">
         <section class="section">
           <div class="section-header">
-            <h1 class="text-info text-uppercase">Edit Data Pemutakhiran</h1>
-            <div class="section-header-breadcrumb">
-              <div class="breadcrumb-item active"><a href="#">Home</a></div>
-              <div class="breadcrumb-item"><a href="#">Pemutakhiran</a></div>
-              <div class="breadcrumb-item">Edit</div>
-            </div>
+            <h1 class="text-info text-uppercase">Edit Data Perubahan</h1>
           </div>
 
           <div class="section-body" >
@@ -42,7 +37,7 @@
                     
                   <div class="card">
                     <div class="card-header">
-                      <h4>PEMUTAKHIRAN </h4>
+                      <h4>Perubahan Data </h4>
                     </div>
                     <div class="card-body">
                       <div class="form-group">
@@ -244,9 +239,6 @@
                         <input type="text" class="form-control @error('dsp_no_hp') is-invalid @enderror" name="dsp_no_hp" value="{{ old("dsp_no_hp") ? old("dsp_no_hp") : $spop->dataSubjekPajak->nomor_hp }}">
                     </div>
   
-                    <div class="form-group">
-                        <h2 class="text-center"><u>Daftar Foto</u></h2>
-                    </div>
                     @foreach ($spop->gambars as $item)
                             <div class="form-group">
                                 <label for="" class=""> {{ $item->kategori->nama }}</label>
@@ -255,9 +247,6 @@
                     @endforeach
 
                     <br>
-                    <div class="form-group">
-                        <h2 class="text-center"><u>Tambah Foto</u></h2>
-                    </div>
 
                     @foreach ($kategori as $item)
                         <div class="form-group">

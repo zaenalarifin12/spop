@@ -206,7 +206,7 @@ class SpopController extends Controller
                  * JENIS TANAH
                  */
                 if($request->jenis_tanah == 1){
-
+                    
                     $this->validate($request, [
                         // BANGUNAN
                         "penggunaan"            => "required",
@@ -325,7 +325,6 @@ class SpopController extends Controller
                         "lantai_id"                     => $lantai,
                         "langit_id"                     => $langit,
                     ]);
-
                     /**
                      * SECTION
                      */
@@ -805,15 +804,16 @@ class SpopController extends Controller
                 $nop_asal_no_urut   = $request->nop_asal_no_urut;
                 $nop_asal_kode      = $request->nop_asal_kode;
     
-                if(empty($nop_asal_kec) || empty($nop_asal_des) || empty($nop_asal_blok) || empty($nop_asal_no_urut) || empty($nop_asal_kode))
-                        return redirect()->back()->withInput()->with("msg", "nop asal ada yang kosong");
+                if(!empty($nop_asal_kec) || !empty($nop_asal_des) || !empty($nop_asal_blok) || !empty($nop_asal_no_urut) || !empty($nop_asal_kode)){
+                    $nop_asal       = "33.18.$nop_asal_kec.$nop_asal_des.$nop_asal_blok.$nop_asal_no_urut.$nop_asal_kode";
+                    $nop_asal_replace    = str_replace(".", "", $nop_asal);
+        
+                    $spop->update([
+                        "nop_asal"  => $nop_asal_replace
+                        ]);
+                }
+                // return redirect()->back()->withInput()->with("msg", "nop asal ada yang kosong");
     
-                $nop_asal       = "33.18.$nop_asal_kec.$nop_asal_des.$nop_asal_blok.$nop_asal_no_urut.$nop_asal_kode";
-                $nop_asal_replace    = str_replace(".", "", $nop_asal);
-    
-                $spop->update([
-                    "nop_asal"  => $nop_asal_replace
-                    ]);
              } 
 
             DataLetakObjek::where("spop_id", $spop->id)->update([
@@ -879,9 +879,9 @@ class SpopController extends Controller
 
                 // jika nop ngga kosong
                 if($kategori_spop == 0){
-                    return redirect("/pemutakhiran/" . $spop->uuid)->with("msg", "data pemutakhiran telah berhasil diubah");
+                    return redirect("/pemutakhiran/" . $spop->uuid)->with("msg", "data perubahan telah berhasil diubah");
                 }else if($kategori_spop == 1){
-                    return redirect("/perekaman/" . $spop->uuid)->with("msg", "data perekaman telah berhasil diubah");
+                    return redirect("/perekaman/" . $spop->uuid)->with("msg", "data objek pajak telah berhasil diubah");
                 }
                 // redirect to add new
         }else{
@@ -942,7 +942,6 @@ class SpopController extends Controller
     {
         switch ($request->input("action")) {
             case "save":
-
                 $this->validate($request, [
                     // BANGUNAN
                     "penggunaan"            => "required",

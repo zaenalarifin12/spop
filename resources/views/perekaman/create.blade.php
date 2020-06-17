@@ -1,7 +1,7 @@
 @extends('layouts.parent')
 
 @section('title')
-    Perekaman data
+    Objek Baru
 @endsection
 
 @section('style')
@@ -15,10 +15,10 @@
      <div class="main-content">
         <section class="section">
           <div class="section-header">
-            <h1 class="text-info text-uppercase">Daftar Perekaman Data</h1>
+            <h1 class="text-info text-uppercase">Daftar Objek Baru</h1>
             <div class="section-header-breadcrumb">
               <div class="breadcrumb-item active"><a href="#">Home</a></div>
-              <div class="breadcrumb-item"><a href="#">Perekaman</a></div>
+              <div class="breadcrumb-item"><a href="#">Objek Baru</a></div>
               <div class="breadcrumb-item">Buat</div>
             </div>
           </div>
@@ -42,7 +42,7 @@
                     
                   <div class="card">
                     <div class="card-header">
-                      <h4>Perekaman Data </h4>
+                      <h4>Objek Baru </h4>
                     </div>
                     <div class="card-body">
 

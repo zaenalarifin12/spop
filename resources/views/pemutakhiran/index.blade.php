@@ -71,7 +71,7 @@
             ajax: 'pemutakhiran/json',
             columns: [
           { data: 'nop',                  name: 'nop' },
-          { data: 'user.name',                 name: 'user'},
+          { data: 'user.name' ,                 name: 'user'},
           { data: 'action',               name: 'action'}
             ]
           } );

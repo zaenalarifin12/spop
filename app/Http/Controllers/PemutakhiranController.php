@@ -139,6 +139,13 @@ class PemutakhiranController extends Controller
             $nop_replace    = str_replace(".", "", $nop);
             
             $rujukan    = Rujukan::where("nop", $nop)->first();
+            // jika record rujukan ada maka generate uuid
+            if($rujukan->uuid == null){
+                $uu = Str::random(40) .time();
+                $rujukan->update([
+                    "uuid" => $uu
+                ]);
+            }
             if(empty($rujukan)){
                 return redirect()->back()->withInput()->with("err", "nop tidak ada");
             }

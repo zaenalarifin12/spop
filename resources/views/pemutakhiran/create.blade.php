@@ -1,7 +1,7 @@
 @extends('layouts.parent')
 
 @section('title')
-    pemutakhiran data
+    perubahan data
 @endsection
 
 @section('style')
@@ -15,7 +15,7 @@
      <div class="main-content">
         <section class="section">
           <div class="section-header">
-            <h1 class="text-info text-uppercase">Pemutakhiran Data</h1>
+            <h1 class="text-info text-uppercase">perubahan Data</h1>
             <div class="section-header-breadcrumb">
               <div class="breadcrumb-item active"><a href="#">Home</a></div>
               <div class="breadcrumb-item"><a href="#">Pemutakhiran</a></div>
@@ -42,7 +42,7 @@
                     
                   <div class="card">
                     <div class="card-header">
-                      <h4>PEMUTAKHIRAN DATA </h4>
+                      <h4>perubahan data </h4>
                     </div>
                     <div class="card-body">
                       <div class="form-group">
